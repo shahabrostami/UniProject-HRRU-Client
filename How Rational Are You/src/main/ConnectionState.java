@@ -2,10 +2,17 @@ package main;
 
 public class ConnectionState {
 	
+	private final int failed = -3;
+	private final int cancelled = -2;
+	private final int initial = -1;
+	private final int waiting = 0; 
+	private final int joined = 1;
+	private final int established = 2;
+	
 	private int player;
 	private String p1name;
 	private String p2name;
-	private int state = -1;
+	private int state = initial;
 	private int sessionID;
 	private String password;
 	

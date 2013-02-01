@@ -16,6 +16,7 @@ public class NetworkListener extends Listener{
 	private final int waiting = 0; 
 	private final int joined = 1;
 	private final int established = 2;
+	private final int ready = 3;
 	
 	public void init(Client client) {
 		this.client = client;
@@ -73,6 +74,21 @@ public class NetworkListener extends Listener{
 		{
 			Log.info("Cancelled");
 			HRRUClient.cs.setState(cancelled);
+		}
+		if(o instanceof Packet7Ready)
+		{
+			int player = ((Packet7Ready)o).player;
+			if(player == 1)
+			{
+				HostServer.p1ready = true;
+				JoinServer.p1ready = true;
+			}
+			else if(player == 2)
+			{
+				HostServer.p2ready = true;
+				JoinServer.p2ready = true;
+			}
+				
 		}
 		
 	}

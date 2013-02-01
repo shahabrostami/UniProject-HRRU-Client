@@ -28,13 +28,17 @@ import de.matthiasmann.twl.theme.ThemeManager;
 
 public class HostServer extends BasicTWLGameState {
 
+	public static boolean p1ready = false;
+	public static boolean p2ready = false;
+	
 	private final int failed = -3;
 	private final int cancelled = -2;
 	private final int waiting = 0; 
 	private final int joined = 1;
 	private final int established = 2;
+	private final int ready = 3;
+	private final int start = 4;
 	
-	public String mouse = "No input yet!";
 	private int state;
 	private boolean back = false;
 	public Client client;
@@ -49,10 +53,11 @@ public class HostServer extends BasicTWLGameState {
 	DialogLayout hostPanel;
     EditField efName;
     EditField efPassword;
-    Label lStatus;
-    Button btnJoin, btnBack, btnCancel;
+    Label lName, lPassword, lStatus, lPlayer1, lPlayer2;
+    Button btnJoin, btnBack, btnCancel, btnReady, btnStart;
     
 	private Packet0CreateRequest createRequest;
+	private Packet7Ready readyRequest;
 	
 	public HostServer(int joinserver) {
 		client = new Client();
@@ -65,7 +70,7 @@ public class HostServer extends BasicTWLGameState {
 		register();
 		
 		try{
-			client.connect(5000, "127.0.0.1", 54555, 54777);
+			client.connect(5000, "localhost", 9991, 9992);
 			HRRUClient.ConnectionSuccessful = true;
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -83,6 +88,7 @@ public class HostServer extends BasicTWLGameState {
 		kryo.register(Packet4ConnectionEstablished.class);
 		kryo.register(Packet5CancelRequest.class);
 		kryo.register(Packet6CancelRequestResponse.class);
+		kryo.register(Packet7Ready.class);
 	}
 	
 	@Override
@@ -90,7 +96,9 @@ public class HostServer extends BasicTWLGameState {
 		super.enter(gc, sbg);
         
 		lStatus = new Label("Enter your name and a password for your game.");
-
+		lPlayer1 = new Label();
+		lPlayer2 = new Label();
+		
         hostPanel = new DialogLayout();
         hostPanel.setTheme("login-panel");
         
@@ -113,11 +121,27 @@ public class HostServer extends BasicTWLGameState {
             }
         });
         
-        Label lName = new Label("Your Name");
+        lName = new Label("Your Name");
         lName.setLabelFor(efName);
         
-        Label lPassword = new Label("Password");
+        lPassword = new Label("Password");
         lPassword.setLabelFor(efPassword);
+        
+        btnStart = new Button("Start");
+        btnStart.addCallback(new Runnable() {
+            public void run() {
+                emulateStart();
+            }
+        });
+        btnStart.setVisible(false);
+        
+        btnReady = new Button("Ready");
+        btnReady.addCallback(new Runnable() {
+            public void run() {
+                emulateReady();
+            }
+        });
+        btnReady.setVisible(false);
         
         btnJoin = new Button("Host");
         btnJoin.addCallback(new Runnable() {
@@ -141,25 +165,40 @@ public class HostServer extends BasicTWLGameState {
         });
         btnCancel.setEnabled(false);
 
+	    hostPanel.setIncludeInvisibleWidgets(false);
         DialogLayout.Group hLabels = hostPanel.createParallelGroup(lName, lPassword);
         DialogLayout.Group hFields = hostPanel.createParallelGroup(efName, efPassword);
         DialogLayout.Group hBtnJoin = hostPanel.createSequentialGroup().addWidget(btnJoin);
         DialogLayout.Group hBtnBack = hostPanel.createSequentialGroup().addWidget(btnBack);
         DialogLayout.Group hBtnCancel = hostPanel.createSequentialGroup().addWidget(btnCancel);
+        DialogLayout.Group hBtnReady = hostPanel.createSequentialGroup().addWidget(btnReady);
+        DialogLayout.Group hBtnStart = hostPanel.createSequentialGroup().addWidget(btnStart);
+        
         DialogLayout.Group hStatus = hostPanel.createSequentialGroup().addWidget(lStatus);
+        DialogLayout.Group hPlayer1Ready = hostPanel.createSequentialGroup().addWidget(lPlayer1);
+        DialogLayout.Group hPlayer2Ready = hostPanel.createSequentialGroup().addWidget(lPlayer2);
+        
         hostPanel.setHorizontalGroup(hostPanel.createParallelGroup()
         		.addGroup(hStatus)
+        		.addGroup(hPlayer1Ready)
+        		.addGroup(hPlayer2Ready)
                 .addGroup(hostPanel.createSequentialGroup(hLabels, hFields))
                 .addGroup(hBtnJoin)
                 .addGroup(hBtnBack)
+                .addGroup(hBtnReady)
+                .addGroup(hBtnStart)
                 .addGroup(hBtnCancel));
         
         hostPanel.setVerticalGroup(hostPanel.createSequentialGroup()
-        		.addWidget(lStatus).addGap(20)
+        		.addWidget(lStatus)
+        		.addWidget(lPlayer1)
+        		.addWidget(lPlayer2).addGap(10)
         		.addGroup(hostPanel.createParallelGroup(lName, efName))
                 .addGroup(hostPanel.createParallelGroup(lPassword, efPassword))
                 .addWidget(btnJoin)
         		.addWidget(btnBack)
+        		.addWidget(btnReady)
+        		.addWidget(btnStart)
         		.addWidget(btnCancel));
 
 		rootPane.add(hostPanel);
@@ -168,32 +207,61 @@ public class HostServer extends BasicTWLGameState {
 	}
 	
 	void enableGUI() {
-		efName.setEnabled(true);
-	    efPassword.setEnabled(true);
-	    btnJoin.setEnabled(true);
-	    btnBack.setEnabled(true);
-	    btnCancel.setEnabled(false);
+		lName.setVisible(true);
+	    lPassword.setVisible(true);
+	    efName.setVisible(true);
+	    efPassword.setVisible(true);
+	    btnJoin.setVisible(true);
+	    btnBack.setVisible(true);
+	    
+	    lPlayer1.setVisible(false);
+	    lPlayer2.setVisible(false);
+	    btnReady.setVisible(false);
+	    btnStart.setVisible(false);
+	    p1ready = false;
+	    p2ready = false;
+	    lPlayer1.setText(null);
+	    lPlayer2.setText(null);
+	    
+	    resetPosition();
 	}
 	
 	void disableGUI() {
-		efName.setEnabled(false);
-	    efPassword.setEnabled(false);
-	    btnJoin.setEnabled(false);
-	    btnBack.setEnabled(false);
+	    lName.setVisible(false);
+	    lPassword.setVisible(false);
+	    efName.setVisible(false);
+	    efPassword.setVisible(false);
+	    btnJoin.setVisible(false);
+	    btnBack.setVisible(false);
+
 	    btnCancel.setEnabled(true);
+	    
+	    resetPosition();
+	}
+	
+	void emulateStart() {
+		
+	}
+	
+	void emulateReady() {
+		btnReady.setVisible(false);
+		HRRUClient.cs.setState(ready);
+		readyRequest = new Packet7Ready();
+		readyRequest.sessionID = HRRUClient.cs.getSessionID();
+		readyRequest.player = 1;
+		client.sendTCP(readyRequest);
+		p1ready = true;
+		resetPosition();
 	}
 	
 	void emulateCancel() {
-		enableGUI();
-	    
-	    Packet5CancelRequest cancelRequest = new Packet5CancelRequest();
+		Packet5CancelRequest cancelRequest = new Packet5CancelRequest();
 	    cancelRequest.sessionID = HRRUClient.cs.getSessionID();
 	    HRRUClient.cs.setState(cancelled);
 	    client.sendTCP(cancelRequest);
 	    
 	    lStatus.setText("Enter your name and a password for your game.");
-	    resetPosition();
-		
+	    enableGUI();
 	}
 	
 	void emulateLogin() {
@@ -206,6 +274,8 @@ public class HostServer extends BasicTWLGameState {
 		createRequest.password = password;
 		createRequest.player1Name = p1name;
 		client.sendTCP(createRequest);
+		
+	    disableGUI();
 	}
 	
 	void resetPosition() {
@@ -234,9 +304,7 @@ public class HostServer extends BasicTWLGameState {
 		
 		Input input = gc.getInput();
 		int xpos = Mouse.getX();
-		int ypos= Mouse.getY();
-		mouse = "xpos: " + xpos + "\nypos: " + ypos;
-		
+		int ypos= Mouse.getY();	
 	}
 
 	@Override
@@ -248,6 +316,7 @@ public class HostServer extends BasicTWLGameState {
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
 		// Back to main menu
 		if(back) {
+			lStatus.setText("Enter your name and a password for your game.");
 			sbg.enterState(0);
 			back = false;
 		}
@@ -256,19 +325,17 @@ public class HostServer extends BasicTWLGameState {
 		
 		// Connection cancelled.
 		if(HRRUClient.cs.getState() == cancelled) {
-			enableGUI();
 			lStatus.setText("Session cancelled.\nEnter your name and a password for your game.");
-			resetPosition();
+			enableGUI();
 		}
 		// Waiting for player 2.
 		else if(state == waiting) {
-			disableGUI();
-			lStatus.setText("Hosting Game..." +
+			lStatus.setText("Hosting Game...\n" +
 					"\nSession ID: \t" + HRRUClient.cs.getSessionID() +
 					"\nPassword: \t" + HRRUClient.cs.getPassword() + 
 					"\n\nWaiting for Player 2.");
 			HRRUClient.cs.setP1Name(p1name);
-			resetPosition();
+			disableGUI();
 		}
 		// Connection established with player 2.
 		else if(state == established)
@@ -276,12 +343,29 @@ public class HostServer extends BasicTWLGameState {
 			
 			HRRUClient.cs.setP1Name(p1name);
 			p2name = HRRUClient.cs.getP2Name();
-			lStatus.setText("Connection Established!" +
+			lStatus.setText("Connection Established!\n" +
 					"\nSession ID: \t" + HRRUClient.cs.getSessionID() +
-					"\nPlayer 1: \t" + HRRUClient.cs.getP1Name() + 
-					"\nPlayer 2: \t" + HRRUClient.cs.getP2Name() + 
 					"\n\nReady?");
-			resetPosition();
+			lPlayer1.setText("Player 1: \t" + HRRUClient.cs.getP1Name());
+			lPlayer2.setText("Player 2 : \t" + HRRUClient.cs.getP2Name());
+		    lPlayer1.setVisible(true);
+		    lPlayer2.setVisible(true);
+			btnReady.setVisible(true);
+			disableGUI();
+		}
+		else if(state == ready)
+		{
+			lPlayer1.setText("Player 1: \t" + HRRUClient.cs.getP1Name() + " is ready!");
+			if((p1ready == true) && (p2ready == true))
+			{
+				btnStart.setVisible(true);
+				resetPosition();
+				state = start;
+			}
+		}
+		if(p2ready == true)
+		{
+			lPlayer2.setText("Player 2: \t" + HRRUClient.cs.getP2Name() + " is ready!");
 		}
 	}
 

@@ -70,12 +70,12 @@ public class Main extends BasicTWLGameState {
 
 	@Override
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
-		/*if(!HRRUClient.ConnectionSuccessful)
+		if(!HRRUClient.ConnectionSuccessful)
 		{
 			btnJoin.setEnabled(false);
 			btnHost.setEnabled(false);
 			lConnection.setText("Connection Failed...\nPlease restart the application.");
-		}*/
+		}
 	}
 
 	@Override
