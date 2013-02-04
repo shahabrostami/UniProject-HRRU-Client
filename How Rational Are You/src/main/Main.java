@@ -20,6 +20,7 @@ public class Main extends BasicTWLGameState {
 	int enterState = 0;
 	Label lConnection;
 	Button btnHost, btnJoin;
+	
 	@Override
 	public void enter(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		super.enter(gc, sbg);

@@ -1,6 +1,8 @@
-package main;
+package conn;
 
-import main.Packet.*;
+import conn.*;
+import conn.Packet.*;
+import main.HRRUClient;
 
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
@@ -17,6 +19,7 @@ public class NetworkListener extends Listener{
 	private final int joined = 1;
 	private final int established = 2;
 	private final int ready = 3;
+	private final int start = 4;
 	
 	public void init(Client client) {
 		this.client = client;
@@ -88,10 +91,11 @@ public class NetworkListener extends Listener{
 				HostServer.p2ready = true;
 				JoinServer.p2ready = true;
 			}
-				
 		}
-		
+		if(o instanceof Packet8Start)
+		{
+			HRRUClient.cs.setState(start);
+		}
 	}
-
 
 }

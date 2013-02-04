@@ -1,4 +1,7 @@
-package main;
+package conn;
+
+import conn.*;
+import conn.Packet.*;
 
 public class Packet {
 	public static class Packet0CreateRequest{ String player1Name; String password; }
@@ -9,4 +12,5 @@ public class Packet {
 	public static class Packet5CancelRequest { int sessionID; }
 	public static class Packet6CancelRequestResponse { String message; }
 	public static class Packet7Ready { int sessionID; int player; }
+	public static class Packet8Start { int sessionID; }
 }

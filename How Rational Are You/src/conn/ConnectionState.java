@@ -1,4 +1,4 @@
-package main;
+package conn;
 
 public class ConnectionState {
 	
@@ -8,6 +8,9 @@ public class ConnectionState {
 	private final int waiting = 0; 
 	private final int joined = 1;
 	private final int established = 2;
+	private final int ready = 3;
+	private final int start = 4;
+	private final int p1_charselect = 5;
 	
 	private int player;
 	private String p1name;
@@ -16,10 +19,8 @@ public class ConnectionState {
 	private int sessionID;
 	private String password;
 	
-	private static final int WAITING_FOR_PLAYER2_TO_JOIN = 0;
 	
 	public ConnectionState(){
-
 	}
 	
 	public void init(int sessionID, String password, int player){
@@ -27,6 +28,11 @@ public class ConnectionState {
 		this.sessionID = sessionID;
 		this.password = password;
 		this.state = 0;
+	}
+	
+	public int getPlayer()
+	{
+		return player;
 	}
 	
 	public int getSessionID()
