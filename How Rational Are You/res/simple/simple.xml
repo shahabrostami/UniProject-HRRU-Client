@@ -380,6 +380,41 @@
         <fontParam if="hover"/>
     
     </fontDef>
+
+    <fontDef name="title" filename="title.fnt" color="white">
+        <fontParam if="disabled" color="gray"/>
+        <fontParam if="pressed" offsetX="1" offsetY="1"/>
+        <fontParam if="hover"/>
+    
+    </fontDef>
+
+    <fontDef name="atarititle" filename="atarititle.fnt" color="white">
+        <fontParam if="disabled" color="gray"/>
+        <fontParam if="pressed" offsetX="1" offsetY="1"/>
+        <fontParam if="hover"/>
+    
+    </fontDef>
+
+    <fontDef name="subtitletwo" filename="subtitletwo.fnt" color="white">
+        <fontParam if="disabled" color="gray"/>
+        <fontParam if="pressed" offsetX="1" offsetY="1"/>
+        <fontParam if="hover"/>
+    
+    </fontDef>
+
+    <fontDef name="subtitle" filename="subtitle.fnt" color="white">
+        <fontParam if="disabled" color="gray"/>
+        <fontParam if="pressed" offsetX="1" offsetY="1"/>
+        <fontParam if="hover"/>
+    
+    </fontDef>
+
+    <fontDef name="atarisubtitle" filename="atarisubtitle.fnt" color="white">
+        <fontParam if="disabled" color="gray"/>
+        <fontParam if="pressed" offsetX="1" offsetY="1"/>
+        <fontParam if="hover"/>
+    
+    </fontDef>
     
 	<fontDef name="combobox" filename="Font/font.fnt" color="black">
         <fontParam if="comboboxKeyboardFocus" color="white"/>
@@ -476,6 +511,46 @@
 
     <theme name="label" ref="-defaults" allowWildcard="true">
         <param name="font"><font>label</font></param>
+        <param name="minWidth"><int>0</int></param>
+        <param name="maxWidth"><int>0</int></param>
+        <param name="minHeight"><int>0</int></param>
+        <param name="maxHeight"><int>0</int></param>
+    </theme>
+
+    <theme name="title" ref="-defaults" allowWildcard="true">
+        <param name="font"><font>title</font></param>
+        <param name="minWidth"><int>0</int></param>
+        <param name="maxWidth"><int>0</int></param>
+        <param name="minHeight"><int>0</int></param>
+        <param name="maxHeight"><int>0</int></param>
+    </theme>
+
+    <theme name="atarititle" ref="-defaults" allowWildcard="true">
+        <param name="font"><font>atarititle</font></param>
+        <param name="minWidth"><int>0</int></param>
+        <param name="maxWidth"><int>0</int></param>
+        <param name="minHeight"><int>0</int></param>
+        <param name="maxHeight"><int>0</int></param>
+    </theme>
+
+    <theme name="subtitle" ref="-defaults" allowWildcard="true">
+        <param name="font"><font>subtitle</font></param>
+        <param name="minWidth"><int>0</int></param>
+        <param name="maxWidth"><int>0</int></param>
+        <param name="minHeight"><int>0</int></param>
+        <param name="maxHeight"><int>0</int></param>
+    </theme>
+
+    <theme name="atarisubtitle" ref="-defaults" allowWildcard="true">
+        <param name="font"><font>atarisubtitle</font></param>
+        <param name="minWidth"><int>0</int></param>
+        <param name="maxWidth"><int>0</int></param>
+        <param name="minHeight"><int>0</int></param>
+        <param name="maxHeight"><int>0</int></param>
+    </theme>
+
+    <theme name="subtitle2" ref="-defaults" allowWildcard="true">
+        <param name="font"><font>subtitletwo</font></param>
         <param name="minWidth"><int>0</int></param>
         <param name="maxWidth"><int>0</int></param>
         <param name="minHeight"><int>0</int></param>
@@ -1067,7 +1142,6 @@
         <param name="fadeDurationDeactivate"><int>0</int></param>
         <param name="fadeDurationShow"><int>0</int></param>
         <param name="fadeDurationHide"><int>0</int></param>
-        <param name="mouseCursor"><cursor>arrow.*</cursor></param>
         <theme name="title" ref="label">
             <param name="textAlignment"><enum type="alignment">left</enum></param>
             <param name="font"><fontDef filename="Font/font.fnt" color="white">

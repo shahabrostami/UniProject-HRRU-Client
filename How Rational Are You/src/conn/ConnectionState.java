@@ -1,5 +1,7 @@
 package conn;
 
+import main.Character;
+
 public class ConnectionState {
 	
 	private final int failed = -3;
@@ -15,6 +17,8 @@ public class ConnectionState {
 	private int player;
 	private String p1name;
 	private String p2name;
+	private int p1Character;
+	private int p2Character;
 	private int state = initial;
 	private int sessionID;
 	private String password;
@@ -68,4 +72,22 @@ public class ConnectionState {
 	public String getP2Name() {
 		return p2name;
 	}
+
+	public int getP1Character() {
+		return p1Character;
+	}
+
+	public void setP1Character(int character) {
+		this.p1Character = character;
+	}
+
+	public int getP2Character() {
+		return p2Character;
+	}
+
+	public void setP2Character(int character) {
+		this.p2Character = character;
+	}
+
+
 }

@@ -38,7 +38,7 @@ public class JoinServer extends BasicTWLGameState {
 	private final int p1_charselect = 5;
 	
 	private int attempts = 0;
-	int clock = 600;
+	int clock;
 	
 	public String mouse = "No input yet!";
 	private int state;
@@ -46,7 +46,6 @@ public class JoinServer extends BasicTWLGameState {
 	public Client client;
 	private int joinSessionID;
 	private String joinPassword;
-	private String p1name;
 	private String p2name;
 
 	int gcw;
@@ -69,124 +68,25 @@ public class JoinServer extends BasicTWLGameState {
 	@Override
 	public void enter(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		super.enter(gc, sbg);
-        
-		lStatus = new Label("Enter your name and game details.");
-		lPlayer1 = new Label();
-		lPlayer2 = new Label();
 		
-        joinPanel = new DialogLayout();
+		rootPane.removeAllChildren();
+		clock = 300;
+		
         joinPanel.setTheme("login-panel");
-        
-        efName = new EditField();
-        efName.addCallback(new Callback() {
-            public void callback(int key) {
-                if(key == Event.KEY_RETURN) {
-                    efSessionID.requestKeyboardFocus();
-                }
-            }
-        });
-        
-        efSessionID = new EditField();
-        efSessionID.addCallback(new Callback() {
-            public void callback(int key) {
-                if(key == Event.KEY_RETURN) {
-                    efPassword.requestKeyboardFocus();
-                }
-            }
-        });
-        
-        efPassword = new EditField();
-        efPassword.addCallback(new Callback() {
-            public void callback(int key) {
-                if(key == Event.KEY_RETURN) {
-                    emulateLogin();
-                }
-            }
-        });
-
-        
-        lName = new Label("Your Name");
         lName.setLabelFor(efName);
-        
-        lSessionID = new Label("Session ID");
         lName.setLabelFor(efSessionID);
-        
-        lPassword = new Label("Password");
         lPassword.setLabelFor(efPassword);
-        
-        btnReady = new Button("Ready");
-        btnReady.addCallback(new Runnable() {
-            public void run() {
-                emulateReady();
-            }
-        });
         btnReady.setVisible(false);
-        
-        
-        btnJoin = new Button("Join");
-        btnJoin.addCallback(new Runnable() {
-            public void run() {
-                emulateLogin();
-            }
-        });
-        
-        btnBack = new Button("Back");
-        btnBack.addCallback(new Runnable() {
-            public void run() {
-                back = true;
-            }
-        });
-
-        btnCancel= new Button("Cancel");
-        btnCancel.addCallback(new Runnable() {
-            public void run() {
-                emulateCancel();
-            }
-        });
         btnCancel.setEnabled(false);
-        
-        
-        DialogLayout.Group hLabels = joinPanel.createParallelGroup(lName, lSessionID, lPassword);
-        DialogLayout.Group hFields = joinPanel.createParallelGroup(efName, efSessionID, efPassword);
-        DialogLayout.Group hBtn = joinPanel.createSequentialGroup().addWidget(btnJoin);
-        DialogLayout.Group hBtn2 = joinPanel.createSequentialGroup().addWidget(btnBack);
-        DialogLayout.Group hBtnCancel = joinPanel.createSequentialGroup().addWidget(btnCancel);
-        DialogLayout.Group hBtnReady = joinPanel.createSequentialGroup().addWidget(btnReady);
-        DialogLayout.Group hStatus = joinPanel.createSequentialGroup().addWidget(lStatus);
-        DialogLayout.Group hPlayer1Ready = joinPanel.createSequentialGroup().addWidget(lPlayer1);
-        DialogLayout.Group hPlayer2Ready = joinPanel.createSequentialGroup().addWidget(lPlayer2);
-        joinPanel.setIncludeInvisibleWidgets(false);
-        
-        joinPanel.setHorizontalGroup(joinPanel.createParallelGroup()
-        		.addGroup(hStatus)
-        		.addGroup(hPlayer1Ready)
-        		.addGroup(hPlayer2Ready)
-        		.addGroup(hBtnReady)
-                .addGroup(joinPanel.createSequentialGroup(hLabels, hFields))
-                .addGroup(hBtn)
-                .addGroup(hBtn2)
-                .addGroup(hBtnCancel));
-        
-        joinPanel.setVerticalGroup(joinPanel.createSequentialGroup()
-        		.addWidget(lStatus)
-        		.addWidget(lPlayer1)
-        		.addWidget(lPlayer2).addGap(10)
-                .addGroup(joinPanel.createParallelGroup(lName, efName))
-                .addGroup(joinPanel.createParallelGroup(lSessionID, efSessionID))
-                .addGroup(joinPanel.createParallelGroup(lPassword, efPassword))
-                .addWidget(btnJoin)
-        		.addWidget(btnBack)
-        		.addWidget(btnReady)
-        		.addWidget(btnCancel));
 
-
-		rootPane.add(joinPanel);
+        rootPane.add(joinPanel);
 		rootPane.setTheme("");
 		
 		joinPanel.adjustSize();
 		joinPanel.setPosition(
                (gcw/2 - joinPanel.getWidth()/2),
                 (gch/2 - joinPanel.getHeight()/2));
+	
 	}
 	
 	void enableGUI() {
@@ -227,7 +127,6 @@ public class JoinServer extends BasicTWLGameState {
 		resetPosition();
 	}
 
-	
 	void disableGUI() {
 	    lName.setVisible(false);
 	    lSessionID.setVisible(false);
@@ -301,6 +200,97 @@ public class JoinServer extends BasicTWLGameState {
 		gcw = gc.getWidth();
 		gch = gc.getHeight();
 		gc.setShowFPS(false);
+		
+		lStatus = new Label("Enter your name and game details.");
+		lPlayer1 = new Label();
+		lPlayer2 = new Label();
+        joinPanel = new DialogLayout();
+        efName = new EditField();
+        efSessionID = new EditField();
+        efPassword = new EditField();
+        lName = new Label("Your Name");
+        lSessionID = new Label("Session ID");
+        lPassword = new Label("Password");
+        btnReady = new Button("Ready");
+        btnJoin = new Button("Join");
+        btnBack = new Button("Back");
+        btnCancel= new Button("Cancel");
+        
+        efName.addCallback(new Callback() {
+            public void callback(int key) {
+                if(key == Event.KEY_RETURN) {
+                    efSessionID.requestKeyboardFocus();
+                }
+            }
+        });
+        efSessionID.addCallback(new Callback() {
+            public void callback(int key) {
+                if(key == Event.KEY_RETURN) {
+                    efPassword.requestKeyboardFocus();
+                }
+            }
+        });
+        efPassword.addCallback(new Callback() {
+            public void callback(int key) {
+                if(key == Event.KEY_RETURN) {
+                    emulateLogin();
+                }
+            }
+        });
+        btnReady.addCallback(new Runnable() {
+            public void run() {
+                emulateReady();
+            }
+        });
+        btnJoin.addCallback(new Runnable() {
+            public void run() {
+                emulateLogin();
+            }
+        });
+        btnBack.addCallback(new Runnable() {
+            public void run() {
+                back = true;
+            }
+        });
+        btnCancel.addCallback(new Runnable() {
+            public void run() {
+                emulateCancel();
+            }
+        });
+
+        
+        DialogLayout.Group hLabels = joinPanel.createParallelGroup(lName, lSessionID, lPassword);
+        DialogLayout.Group hFields = joinPanel.createParallelGroup(efName, efSessionID, efPassword);
+        DialogLayout.Group hBtn = joinPanel.createSequentialGroup().addWidget(btnJoin);
+        DialogLayout.Group hBtn2 = joinPanel.createSequentialGroup().addWidget(btnBack);
+        DialogLayout.Group hBtnCancel = joinPanel.createSequentialGroup().addWidget(btnCancel);
+        DialogLayout.Group hBtnReady = joinPanel.createSequentialGroup().addWidget(btnReady);
+        DialogLayout.Group hStatus = joinPanel.createSequentialGroup().addWidget(lStatus);
+        DialogLayout.Group hPlayer1Ready = joinPanel.createSequentialGroup().addWidget(lPlayer1);
+        DialogLayout.Group hPlayer2Ready = joinPanel.createSequentialGroup().addWidget(lPlayer2);
+        joinPanel.setIncludeInvisibleWidgets(false);
+        
+        joinPanel.setHorizontalGroup(joinPanel.createParallelGroup()
+        		.addGroup(hStatus)
+        		.addGroup(hPlayer1Ready)
+        		.addGroup(hPlayer2Ready)
+        		.addGroup(hBtnReady)
+                .addGroup(joinPanel.createSequentialGroup(hLabels, hFields))
+                .addGroup(hBtn)
+                .addGroup(hBtn2)
+                .addGroup(hBtnCancel));
+        
+        joinPanel.setVerticalGroup(joinPanel.createSequentialGroup()
+        		.addWidget(lStatus)
+        		.addWidget(lPlayer1)
+        		.addWidget(lPlayer2).addGap(10)
+                .addGroup(joinPanel.createParallelGroup(lName, efName))
+                .addGroup(joinPanel.createParallelGroup(lSessionID, efSessionID))
+                .addGroup(joinPanel.createParallelGroup(lPassword, efPassword))
+                .addWidget(btnJoin)
+        		.addWidget(btnBack)
+        		.addWidget(btnReady)
+        		.addWidget(btnCancel));
 	}
 
 	@Override
@@ -348,15 +338,15 @@ public class JoinServer extends BasicTWLGameState {
 		else if(state == ready)
 		{
 			lPlayer2.setText("Player 2: \t" + HRRUClient.cs.getP2Name() + " is ready!");
+			resetPosition();
 		}
 		else if(state == start)
 		{
 			clock--;
 			disableAllGUI();
-			lStatus.setText("Game Stating in " + (clock/100) + "...");
+			lStatus.setText("Game Starting in " + (clock/100+1) + "...");
 			if(clock<0)
 			{
-				HRRUClient.cs.setState(p1_charselect);
 				sbg.enterState(4);
 			}
 		}
@@ -364,6 +354,7 @@ public class JoinServer extends BasicTWLGameState {
 		if(p1ready == true)
 		{
 			lPlayer1.setText("Player 1: \t" + HRRUClient.cs.getP1Name() + " is ready!");
+			resetPosition();
 		}
 		
 	}

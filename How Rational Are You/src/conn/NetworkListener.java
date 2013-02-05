@@ -20,6 +20,8 @@ public class NetworkListener extends Listener{
 	private final int established = 2;
 	private final int ready = 3;
 	private final int start = 4;
+	private final int player1char = 5;
+	private final int player2char = 6;
 	
 	public void init(Client client) {
 		this.client = client;
@@ -95,6 +97,23 @@ public class NetworkListener extends Listener{
 		if(o instanceof Packet8Start)
 		{
 			HRRUClient.cs.setState(start);
+		}
+		if(o instanceof Packet9CharacterSelect)
+		{
+			int characterID = ((Packet.Packet9CharacterSelect)o).characterID;
+			int player = ((Packet.Packet9CharacterSelect)o).player;
+			
+			
+			if(player == 1)
+			{
+				HRRUClient.cs.setP1Character(characterID);
+				HRRUClient.cs.setState(player1char);
+			}
+			if(player == 2)
+			{
+				HRRUClient.cs.setP2Character(characterID);
+				HRRUClient.cs.setState(player2char);
+			}
 		}
 	}
 
