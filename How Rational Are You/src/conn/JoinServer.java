@@ -163,18 +163,24 @@ public class JoinServer extends BasicTWLGameState {
 	}
 	
 	void emulateLogin() {
-	    attempts++;
-		joinSessionID = Integer.parseInt(efSessionID.getText());
-		joinPassword = efPassword.getText();
-		p2name = efName.getText();
+		try {
+	        String test = String.valueOf(joinSessionID);
+	        joinSessionID = Integer.parseInt(efSessionID.getText());
+	        joinPassword = efPassword.getText();
+	        p2name = efName.getText();
+	        attempts++;
+			joinRequest = new Packet2JoinRequest();
+			joinRequest.sessionID = joinSessionID;
+			joinRequest.password = joinPassword;
+			joinRequest.player2Name = p2name;
+			client.sendTCP(joinRequest);
 		
-		joinRequest = new Packet2JoinRequest();
-		joinRequest.sessionID = joinSessionID;
-		joinRequest.password = joinPassword;
-		joinRequest.player2Name = p2name;
-		client.sendTCP(joinRequest);
-		
-	    disableGUI();
+	    	disableGUI();
+		 } catch (NumberFormatException e) {
+			 	HRRUClient.cs.setState(initial);
+		        lStatus.setText("Please enter numbers only for the Session ID.");
+		        resetPosition();
+		 }
 	}
 	
 	void resetPosition() {
