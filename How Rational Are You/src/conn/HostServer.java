@@ -151,6 +151,7 @@ public class HostServer extends BasicTWLGameState {
 		readyRequest.player = 1;
 		client.sendTCP(readyRequest);
 		p1ready = true;
+		lPlayer1.setText("Player 1: \t" + HRRUClient.cs.getP1Name() + " is ready!");
 		resetPosition();
 	}
 	
@@ -343,7 +344,6 @@ public class HostServer extends BasicTWLGameState {
 		}
 		else if(state == ready)
 		{
-			lPlayer1.setText("Player 1: \t" + HRRUClient.cs.getP1Name() + " is ready!");
 			if((p1ready == true) && (p2ready == true))
 			{
 				btnStart.setVisible(true);

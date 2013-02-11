@@ -63,41 +63,11 @@ public class Play extends BasicTWLGameState {
 	public Play(int main) {
 		client = HRRUClient.conn.getClient();
 	}
-
 	
 	@Override
 	public void enter(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		super.enter(gc, sbg);
-        
-		playerPanel = new DialogLayout();
-		playerPanel.setSize(300,100);
-		playerPanel.setTheme("login-panel");
-		
-		lStatus = new Label("Score:");
-		lPlayer1 = new Label("Player1");
-		lPlayer2 = new Label("Player2");
-		lPlayer1Score = new Label("100");
-		lPlayer2Score = new Label("200");
-		lImgPlayer1 = new Label();
-		lImgPlayer2 = new Label();
-		
-		lImgPlayer1.setTheme("labelsnowman");
-		lImgPlayer2.setTheme("labelcat");
-		
-	    DialogLayout.Group hStatus = playerPanel.createSequentialGroup().addWidget(lStatus);
-        DialogLayout.Group hPictures = playerPanel.createParallelGroup(lImgPlayer1, lImgPlayer2);
-	    DialogLayout.Group hLabels = playerPanel.createParallelGroup(lPlayer1, lPlayer2);
-        DialogLayout.Group hScores = playerPanel.createParallelGroup(lPlayer1Score, lPlayer2Score);
-	        
-	    playerPanel.setHorizontalGroup(playerPanel.createParallelGroup()
-	        		.addGroup(hStatus)
-	        		.addGroup(playerPanel.createSequentialGroup(hPictures, hLabels, hScores)));
-	        
-	      playerPanel.setVerticalGroup(playerPanel.createSequentialGroup()
-	        		.addWidget(lStatus)
-	        		.addGroup(playerPanel.createParallelGroup(lImgPlayer1, lPlayer1, lPlayer1Score))
-	        		.addGroup(playerPanel.createParallelGroup(lImgPlayer2, lPlayer2, lPlayer2Score)));
-		
+		rootPane.removeAllChildren();
 		rootPane.add(playerPanel);
 		rootPane.setTheme("");		
 		resetPosition();
@@ -106,7 +76,6 @@ public class Play extends BasicTWLGameState {
 	void resetPosition() {
 		playerPanel.setPosition(0,0);
 	}
-
 
 	@Override
 	protected RootPane createRootPane() {
@@ -120,6 +89,7 @@ public class Play extends BasicTWLGameState {
 
 	@Override
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
+		// Game 
 		gcw = gc.getWidth();
 		gch = gc.getHeight();
 		
@@ -139,6 +109,36 @@ public class Play extends BasicTWLGameState {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		// UI
+		playerPanel = new DialogLayout();
+		playerPanel.setSize(300,100);
+		playerPanel.setTheme("login-panel");
+		
+		lStatus = new Label(":");
+		lPlayer1 = new Label("");
+		lPlayer2 = new Label("");
+		lPlayer1Score = new Label("");
+		lPlayer2Score = new Label("");
+		lImgPlayer1 = new Label();
+		lImgPlayer2 = new Label();
+		
+		lImgPlayer1.setTheme("labelsnowman");
+		lImgPlayer2.setTheme("labelcat");
+		
+	    DialogLayout.Group hStatus = playerPanel.createSequentialGroup().addWidget(lStatus);
+        DialogLayout.Group hPictures = playerPanel.createParallelGroup(lImgPlayer1, lImgPlayer2);
+	    DialogLayout.Group hLabels = playerPanel.createParallelGroup(lPlayer1, lPlayer2);
+        DialogLayout.Group hScores = playerPanel.createParallelGroup(lPlayer1Score, lPlayer2Score);
+	        
+	    playerPanel.setHorizontalGroup(playerPanel.createParallelGroup()
+	        		.addGroup(hStatus)
+	        		.addGroup(playerPanel.createSequentialGroup(hPictures, hLabels, hScores)));
+	        
+	      playerPanel.setVerticalGroup(playerPanel.createSequentialGroup()
+	        		.addWidget(lStatus)
+	        		.addGroup(playerPanel.createParallelGroup(lImgPlayer1, lPlayer1, lPlayer1Score))
+	        		.addGroup(playerPanel.createParallelGroup(lImgPlayer2, lPlayer2, lPlayer2Score)));
 		
 		sbg.addState(new PlayQuestion(playquestion, question_list));
 		sbg.addState(new PlayPuzzle(puzzlequestion));

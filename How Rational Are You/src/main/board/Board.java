@@ -45,11 +45,11 @@ public class Board {
 		for(int i = 0; i < size; i++)
 		{
 			tile_random_number = Math.random();
-			if(tile_random_number <= 0.9)
+			if(tile_random_number <= 0.2)
 				tileOrder[i] = 1;
-			else if(tile_random_number <= 0.6)
+			else if(tile_random_number <= 0.4)
 				tileOrder[i] = 2;
-			else if(tile_random_number <= 0.9)
+			else if(tile_random_number <= 0.6)
 				tileOrder[i] = 3;
 			else tileOrder[i] = 0;
 		}
