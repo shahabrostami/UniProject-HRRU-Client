@@ -3,6 +3,7 @@ package conn;
 import conn.*;
 import conn.Packet.*;
 import main.HRRUClient;
+import main.Player;
 
 import java.io.IOException;
 import java.net.URL;
@@ -47,6 +48,7 @@ public class JoinServer extends BasicTWLGameState {
 	private int joinSessionID;
 	private String joinPassword;
 	private String p2name;
+	private Player player1, player2;
 
 	int gcw;
 	int gch;
@@ -329,12 +331,13 @@ public class JoinServer extends BasicTWLGameState {
 		// Connected to player1.
 		else if(state == joined)
 		{
-			HRRUClient.cs.setP2Name(p2name);
+			player2 = new Player(p2name);
+			HRRUClient.cs.setP2(player2);
 			lStatus.setText("Connection Established!\n" +
 					"\nSession ID: \t" + HRRUClient.cs.getSessionID() +
 					"\n\nReady?");
-			lPlayer1.setText("Player 1: \t" + HRRUClient.cs.getP1Name());
-			lPlayer2.setText("Player 2 : \t" + HRRUClient.cs.getP2Name());
+			lPlayer1.setText("Player 1: \t" + HRRUClient.cs.getP1().getName());
+			lPlayer2.setText("Player 2 : \t" + HRRUClient.cs.getP2().getName());
 		    lPlayer1.setVisible(true);
 		    lPlayer2.setVisible(true);
 			btnReady.setVisible(true);
@@ -343,11 +346,12 @@ public class JoinServer extends BasicTWLGameState {
 		// Player 2 is ready
 		else if(state == ready)
 		{
-			lPlayer2.setText("Player 2: \t" + HRRUClient.cs.getP2Name() + " is ready!");
+			lPlayer2.setText("Player 2: \t" + HRRUClient.cs.getP2().getName() + " is ready!");
 			resetPosition();
 		}
 		else if(state == start)
 		{
+			HRRUClient.cs.setP2(player2);
 			clock--;
 			disableAllGUI();
 			lStatus.setText("Game Starting in " + (clock/100+1) + "...");
@@ -359,7 +363,7 @@ public class JoinServer extends BasicTWLGameState {
 		// Player 1 is ready
 		if(p1ready == true)
 		{
-			lPlayer1.setText("Player 1: \t" + HRRUClient.cs.getP1Name() + " is ready!");
+			lPlayer1.setText("Player 1: \t" + HRRUClient.cs.getP1().getName() + " is ready!");
 			resetPosition();
 		}
 		

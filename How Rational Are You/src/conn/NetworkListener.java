@@ -1,8 +1,12 @@
 package conn;
 
+import org.newdawn.slick.SlickException;
+
 import conn.*;
 import conn.Packet.*;
 import main.HRRUClient;
+import main.Play;
+import main.Player;
 
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
@@ -35,7 +39,7 @@ public class NetworkListener extends Listener{
 		Log.info("[SERVER] Someone has disconnected.");		
 	}
 	
-	public void received(Connection c, Object o) {
+	public void received(Connection c, Object o){
 		if(o instanceof Packet1CreateAnswer)
 		{
 			boolean answer = ((Packet1CreateAnswer)o).accepted;
@@ -47,7 +51,6 @@ public class NetworkListener extends Listener{
 				HRRUClient.cs.setState(waiting);
 				Log.info("Connected to session " + sessionID + " with password " + password + " as player 1");
 			}
-			
 		}
 		if(o instanceof Packet3JoinAnswer)
 		{
@@ -57,7 +60,14 @@ public class NetworkListener extends Listener{
 				int sessionID = ((Packet3JoinAnswer)o).sessionID;
 				String password = ((Packet3JoinAnswer)o).password;	
 				HRRUClient.cs.init(sessionID, password, 2);
-				HRRUClient.cs.setP1Name(((Packet3JoinAnswer)o).player1Name);
+				Player player1;
+				try {
+					player1 = new Player(((Packet3JoinAnswer)o).player1Name);
+					HRRUClient.cs.setP1(player1);
+				} catch (SlickException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				HRRUClient.cs.setState(joined);
 				Log.info("Connected to previous session " + sessionID + " with password " + password + " as player 2");
 			}
@@ -70,10 +80,17 @@ public class NetworkListener extends Listener{
 		}
 		if(o instanceof Packet4ConnectionEstablished)
 		{
-			HRRUClient.cs.setState(2);
 			String player2Name = ((Packet4ConnectionEstablished)o).player2Name;
 			Log.info("Connection established with " + player2Name);
-			HRRUClient.cs.setP2Name(player2Name);
+			Player player2;
+			try {
+				player2 = new Player(player2Name);
+				HRRUClient.cs.setP2(player2);
+			} catch (SlickException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			HRRUClient.cs.setState(2);
 		}
 		if(o instanceof Packet6CancelRequestResponse)
 		{
@@ -96,6 +113,7 @@ public class NetworkListener extends Listener{
 		}
 		if(o instanceof Packet8Start)
 		{
+			HRRUClient.cs.setBoard(((Packet.Packet8Start)o).board);
 			HRRUClient.cs.setState(start);
 		}
 		if(o instanceof Packet9CharacterSelect)
@@ -106,14 +124,18 @@ public class NetworkListener extends Listener{
 			
 			if(player == 1)
 			{
-				HRRUClient.cs.setP1Character(characterID);
+				HRRUClient.cs.getP1().setPlayerCharacterID(characterID);
 				HRRUClient.cs.setState(player1char);
 			}
 			if(player == 2)
 			{
-				HRRUClient.cs.setP2Character(characterID);
+				HRRUClient.cs.getP2().setPlayerCharacterID(characterID);
 				HRRUClient.cs.setState(player2char);
 			}
+		}
+		if(o instanceof Packet10ChatMessage)
+		{
+			Play.chatFrame.appendRowOther("color2", ((Packet10ChatMessage)o).message);
 		}
 	}
 

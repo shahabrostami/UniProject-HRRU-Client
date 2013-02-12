@@ -71,8 +71,8 @@ public class CharacterSelect extends BasicTWLGameState {
 		super.enter(gc, sbg);
 		rootPane.removeAllChildren();
 		player = HRRUClient.cs.getPlayer();
-		p1name = HRRUClient.cs.getP1Name();
-		p2name = HRRUClient.cs.getP2Name();
+		p1name = HRRUClient.cs.getP1().getName();
+		p2name = HRRUClient.cs.getP2().getName();
 		
         btnSelect.setVisible(false);
 		lSelCharacter.setVisible(false);
@@ -120,14 +120,14 @@ public class CharacterSelect extends BasicTWLGameState {
 		{
 			lStatus.setText("Waiting for " + p2name);
 			picking = false;
-			HRRUClient.cs.setP1Character(selectedCharacter.getId());
+			HRRUClient.cs.getP1().setPlayerCharacterID(selectedCharacter.getId());
 			HRRUClient.cs.setState(player1char);
-			p1charid = HRRUClient.cs.getP1Character();
+			p1charid = HRRUClient.cs.getP1().getPlayerCharacterID();
 			
 			Packet9CharacterSelect characterRequest = new Packet9CharacterSelect();
 			characterRequest.sessionID = HRRUClient.cs.getSessionID();
 			characterRequest.player = player;
-			characterRequest.characterID = HRRUClient.cs.getP1Character();
+			characterRequest.characterID = HRRUClient.cs.getP1().getPlayerCharacterID();
 			client.sendTCP(characterRequest);
 			
 			btnSelect.setEnabled(false);
@@ -136,14 +136,14 @@ public class CharacterSelect extends BasicTWLGameState {
 		else if(player == 2)
 		{
 			picking = false;
-			HRRUClient.cs.setP2Character(selectedCharacter.getId());
+			HRRUClient.cs.getP2().setPlayerCharacterID(selectedCharacter.getId());
 			HRRUClient.cs.setState(player2char);
-			p2charid = HRRUClient.cs.getP2Character();
+			p2charid = HRRUClient.cs.getP2().getPlayerCharacterID();
 			
 			Packet9CharacterSelect characterRequest = new Packet9CharacterSelect();
 			characterRequest.sessionID = HRRUClient.cs.getSessionID();
 			characterRequest.player = player;
-			characterRequest.characterID = HRRUClient.cs.getP2Character();
+			characterRequest.characterID = HRRUClient.cs.getP2().getPlayerCharacterID();
 			client.sendTCP(characterRequest);
 			
 			btnSelect.setEnabled(false);
@@ -258,13 +258,13 @@ public class CharacterSelect extends BasicTWLGameState {
 		
 		if(player == 1) {
 			if(HRRUClient.cs.getState() == player2char) {
-				p2charid = HRRUClient.cs.getP2Character();
+				p2charid = HRRUClient.cs.getP2().getPlayerCharacterID();
 				p2chosen = true;
 			}
 		}
 		else if(player == 2) {
 			if(HRRUClient.cs.getState() == player1char) {
-				p1charid = HRRUClient.cs.getP1Character();
+				p1charid = HRRUClient.cs.getP1().getPlayerCharacterID();
 				p1chosen = true;
 				lStatus.setText(p2name + ", it's your turn!");
 				picking = true;
@@ -298,7 +298,7 @@ public class CharacterSelect extends BasicTWLGameState {
 				currenty = -1;
 			}
 			if(player == 2 && selected) {
-				if(selectedCharacter.getId() == HRRUClient.cs.getP1Character())
+				if(selectedCharacter.getId() == HRRUClient.cs.getP1().getPlayerCharacterID())
 					btnSelect.setEnabled(false);
 			}
 		}
@@ -309,8 +309,7 @@ public class CharacterSelect extends BasicTWLGameState {
 			lStatus.setText("Game Starting in " + (clock/100+1) + "...");
 			if(clock<0)
 			{
-				ConnectionState connectionobject = HRRUClient.cs;
-				sbg.enterState(3);
+				sbg.enterState(5);
 			}
 		}
 	}

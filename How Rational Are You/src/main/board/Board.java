@@ -14,11 +14,10 @@ public class Board {
 	private int shiftx;
 	private int shifty;
 	private int middlex = HRRUClient.resX/2 + 150;
-	private int middley = HRRUClient.resY/2 - 50;
+	private int middley = HRRUClient.resY/2 + 50;
 	
 	public GridSquareContainer[] gridSquares;
 	private int counter = 0;
-	private double tile_random_number = 0;
 	
 	public Board(int scale) throws SlickException
 	{
@@ -36,23 +35,7 @@ public class Board {
 		
 		gridSquares = new GridSquareContainer[size];
 		
-		int[] tileOrder = new int[size];
-		
-		tileOrder[0] = 0;
-		
-		
-		// calculate order of tiletypes
-		for(int i = 0; i < size; i++)
-		{
-			tile_random_number = Math.random();
-			if(tile_random_number <= 0.2)
-				tileOrder[i] = 1;
-			else if(tile_random_number <= 0.4)
-				tileOrder[i] = 2;
-			else if(tile_random_number <= 0.6)
-				tileOrder[i] = 3;
-			else tileOrder[i] = 0;
-		}
+		int[] tileOrder = HRRUClient.cs.getBoard();
 		
 		// create board grid
 		for(int row1 = 0; row1 < scale-1; row1++)

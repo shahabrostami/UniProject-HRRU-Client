@@ -10,15 +10,16 @@ public class Player {
 	private String name;
 	private int score;
 	private int position;
-	private Image playerImage;
+	private int playerCharacterID;
+	private Character playerCharacter;
+	CharacterSheet characterSheet = new CharacterSheet();
+	Character[] characters = characterSheet.getCharacters();
 	
 	public Player(String name) throws SlickException
 	{
 		this.setName(name);
 		this.setScore(0);
 		this.setPosition(0);
-		sheet = new SpriteSheet("res/simple/characters.png", 36,36);
-		setPlayerImage(sheet.getSprite(0,0));
 	}
 
 	public String getName() {
@@ -49,15 +50,25 @@ public class Player {
 		this.position = position;
 	}
 
-	public Image getPlayerImage() {
-		return playerImage;
+	public Character getPlayerCharacter() {
+		return playerCharacter;
 	}
-
-	public void setPlayerImage(Image playerImage) {
-		this.playerImage = playerImage;
+	
+	public void setPlayerCharacter(Character playerCharacter) {
+		this.playerCharacter = playerCharacter;
 	}
-
+	
+	public int getPlayerCharacterID() {
+		return playerCharacterID;
+	}
+	
+	public void setPlayerCharacterID(int playerCharacterID) {
+		this.playerCharacterID = playerCharacterID;
+		setPlayerCharacter(characters[playerCharacterID]);
+	}
+	
 	public void addScore(int i) {
 		this.score += i;
 	}
+
 }

@@ -38,7 +38,7 @@ public class HRRUClient extends TWLStateBasedGame {
 		this.addState(new Tutorial(tutorial));
 		this.addState(new CharacterSelect(characterselect));
 		this.addState(new Play(play));
-		this.enterState(play);
+		this.enterState(main);
 	}
 
 	public static void main(String[] args) {
@@ -56,7 +56,7 @@ public class HRRUClient extends TWLStateBasedGame {
 
 	@Override
 	protected URL getThemeURL() {
-		String fileName = "../../res/simple/simple.xml";
+		String fileName = "../../res/simple/simple2.xml";
 		System.out.println("Loading file: " + fileName);
 
 		System.out.println("Class path set to: ");

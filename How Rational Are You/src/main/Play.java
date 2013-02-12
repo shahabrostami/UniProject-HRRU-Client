@@ -19,12 +19,16 @@ import com.esotericsoftware.kryonet.Client;
 
 import TWLSlick.BasicTWLGameState;
 import TWLSlick.RootPane;
+import de.matthiasmann.twl.Alignment;
 import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.ColumnLayout.Panel;
+import de.matthiasmann.twl.ResizableFrame.ResizableAxis;
 import de.matthiasmann.twl.DialogLayout;
+import de.matthiasmann.twl.Event;
 import de.matthiasmann.twl.Label;
 import de.matthiasmann.twl.ScrollPane;
 import de.matthiasmann.twl.renderer.DynamicImage;
+import main.Chat.ChatFrame;
 import main.board.*;
 import main.grid.*;
 
@@ -39,8 +43,10 @@ public class Play extends BasicTWLGameState {
 	private Board board;
 	private Dice dice;
 	private QuestionList question_list;
-	static Player currentPlayer;
-	private static Player player;
+	private int playerID;
+	private Player player;
+	private Player player1;
+	private Player player2;
 	
 	public static final int playquestion = 8;
 	public static final int puzzlequestion = 9;
@@ -55,10 +61,12 @@ public class Play extends BasicTWLGameState {
 	
 	DialogLayout playerPanel;
 	Label lStatus, lPlayer1, lPlayer2, lPlayer1Score, lPlayer2Score;
+	Label player1turn;
 	Label lImgPlayer1, lImgPlayer2; 
 	
+	public static ChatFrame chatFrame;
 	
-	
+	Image scorebackground;
 	
 	public Play(int main) {
 		client = HRRUClient.conn.getClient();
@@ -67,14 +75,37 @@ public class Play extends BasicTWLGameState {
 	@Override
 	public void enter(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		super.enter(gc, sbg);
+		
+		state = 0;
+		clock = 0;
+		
+		playerID = HRRUClient.cs.getPlayer();
+		player1 = HRRUClient.cs.getP1();
+		player2 = HRRUClient.cs.getP2();
+		
+		if(HRRUClient.cs.getPlayer() == 1)
+		{
+			player = HRRUClient.cs.getP1();
+		}
+		else {
+			player = HRRUClient.cs.getP2();
+		}
+		
+		board = new Board(10);
+		dice = new Dice(1);
+		
+		chatFrame = new ChatFrame();
+        chatFrame.setSize(300, 200);
+        chatFrame.setDraggable(false);
+        chatFrame.setResizableAxis(ResizableAxis.NONE);
+		
 		rootPane.removeAllChildren();
-		rootPane.add(playerPanel);
-		rootPane.setTheme("");		
+		rootPane.add(chatFrame);
 		resetPosition();
 	}
 	
 	void resetPosition() {
-		playerPanel.setPosition(0,0);
+        chatFrame.setPosition(0, 400);
 	}
 
 	@Override
@@ -92,13 +123,7 @@ public class Play extends BasicTWLGameState {
 		// Game 
 		gcw = gc.getWidth();
 		gch = gc.getHeight();
-		
-		state = 0;
-		clock = 0;
-		
-		board = new Board(10);
-		dice = new Dice(1);
-		player = new Player("player1");
+		scorebackground = new Image("res/simple/playerscorebackground.png");
 		
 		try {
 			question_list = new QuestionList("Question.txt");
@@ -109,36 +134,6 @@ public class Play extends BasicTWLGameState {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		// UI
-		playerPanel = new DialogLayout();
-		playerPanel.setSize(300,100);
-		playerPanel.setTheme("login-panel");
-		
-		lStatus = new Label(":");
-		lPlayer1 = new Label("");
-		lPlayer2 = new Label("");
-		lPlayer1Score = new Label("");
-		lPlayer2Score = new Label("");
-		lImgPlayer1 = new Label();
-		lImgPlayer2 = new Label();
-		
-		lImgPlayer1.setTheme("labelsnowman");
-		lImgPlayer2.setTheme("labelcat");
-		
-	    DialogLayout.Group hStatus = playerPanel.createSequentialGroup().addWidget(lStatus);
-        DialogLayout.Group hPictures = playerPanel.createParallelGroup(lImgPlayer1, lImgPlayer2);
-	    DialogLayout.Group hLabels = playerPanel.createParallelGroup(lPlayer1, lPlayer2);
-        DialogLayout.Group hScores = playerPanel.createParallelGroup(lPlayer1Score, lPlayer2Score);
-	        
-	    playerPanel.setHorizontalGroup(playerPanel.createParallelGroup()
-	        		.addGroup(hStatus)
-	        		.addGroup(playerPanel.createSequentialGroup(hPictures, hLabels, hScores)));
-	        
-	      playerPanel.setVerticalGroup(playerPanel.createSequentialGroup()
-	        		.addWidget(lStatus)
-	        		.addGroup(playerPanel.createParallelGroup(lImgPlayer1, lPlayer1, lPlayer1Score))
-	        		.addGroup(playerPanel.createParallelGroup(lImgPlayer2, lPlayer2, lPlayer2Score)));
 		
 		sbg.addState(new PlayQuestion(playquestion, question_list));
 		sbg.addState(new PlayPuzzle(puzzlequestion));
@@ -158,8 +153,14 @@ public class Play extends BasicTWLGameState {
 		if(state>0 && state < 3)
 			dice.dice.draw(HRRUClient.resX - 100, HRRUClient.resY-250+dice.getY());
 		
+		g.drawImage(scorebackground, 0,0);
 		
-		g.drawImage(player.getPlayerImage(), board.gridSquares[player.getPosition()].getx(), board.gridSquares[player.getPosition()].gety());
+		g.drawImage(player1.getPlayerCharacter().getCharacterImage(), 13,13);
+		g.drawImage(player2.getPlayerCharacter().getCharacterImage(), 13,55);
+		g.drawString("" + player1.getName(), 70, 13);
+		g.drawString("" + player2.getName(), 70, 55);
+		g.drawString("" + player1.getScore(), 200, 13);
+		g.drawString("" + player2.getScore(), 200, 55);
 		
 		g.drawString("Roll!", 650, 470);
 		g.drawString(mouse, 650, 500);
@@ -175,19 +176,11 @@ public class Play extends BasicTWLGameState {
 		// State Management
 		if(state==0)
 		{
-			currentPlayer = player;
 			if((xpos>650&&xpos<700)&&(ypos>110&&ypos<130))
 			{
 				if(input.isMouseButtonDown(0))
 				{
 					state = 1;
-				}
-			}
-			if((xpos>0&&xpos<500)&&(ypos>110&&ypos<130))
-			{
-				if(input.isMouseButtonDown(0))
-				{
-					sbg.enterState(0);
 				}
 			}
 		}

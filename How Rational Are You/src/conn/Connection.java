@@ -44,6 +44,8 @@ public class Connection {
 		kryo.register(Packet7Ready.class);
 		kryo.register(Packet8Start.class);
 		kryo.register(Packet9CharacterSelect.class);
+		kryo.register(Packet10ChatMessage.class);
+		kryo.register(int[].class);
 	}
 	
 	public Client getClient()

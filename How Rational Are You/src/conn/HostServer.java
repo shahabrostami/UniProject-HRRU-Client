@@ -3,6 +3,7 @@ package conn;
 import conn.*;
 import conn.Packet.*;
 import main.HRRUClient;
+import main.Player;
 
 import java.io.IOException;
 import java.net.URL;
@@ -49,6 +50,7 @@ public class HostServer extends BasicTWLGameState {
 	private TextField p1nameTF;
 	private String p1name;
 	private String p2name;
+	private Player player1, player2;
 
 	int gcw;
 	int gch;
@@ -151,7 +153,7 @@ public class HostServer extends BasicTWLGameState {
 		readyRequest.player = 1;
 		client.sendTCP(readyRequest);
 		p1ready = true;
-		lPlayer1.setText("Player 1: \t" + HRRUClient.cs.getP1Name() + " is ready!");
+		lPlayer1.setText("Player 1: \t" + player1.getName() + " is ready!");
 		resetPosition();
 	}
 	
@@ -323,20 +325,18 @@ public class HostServer extends BasicTWLGameState {
 					"\nSession ID: \t" + HRRUClient.cs.getSessionID() +
 					"\nPassword: \t" + HRRUClient.cs.getPassword() + 
 					"\n\nWaiting for Player 2.");
-			HRRUClient.cs.setP1Name(p1name);
+			player1 = new Player(p1name);
+			HRRUClient.cs.setP1(player1);
 			disableGUI();
 		}
 		// Connection established with player 2.
 		else if(state == established)
 		{
-			
-			HRRUClient.cs.setP1Name(p1name);
-			p2name = HRRUClient.cs.getP2Name();
 			lStatus.setText("Connection Established!\n" +
 					"\nSession ID: \t" + HRRUClient.cs.getSessionID() +
 					"\n\nReady?");
-			lPlayer1.setText("Player 1: \t" + HRRUClient.cs.getP1Name());
-			lPlayer2.setText("Player 2 : \t" + HRRUClient.cs.getP2Name());
+			lPlayer1.setText("Player 1: \t" + HRRUClient.cs.getP1().getName());
+			lPlayer2.setText("Player 2 : \t" + HRRUClient.cs.getP2().getName());
 		    lPlayer1.setVisible(true);
 		    lPlayer2.setVisible(true);
 			btnReady.setVisible(true);
@@ -353,6 +353,7 @@ public class HostServer extends BasicTWLGameState {
 		}
 		else if(state == start)
 		{
+			HRRUClient.cs.setP1(player1);
 			clock--;
 			disableAllGUI();
 			lStatus.setText("Game Starting in " + (clock/100+1) + "...");
@@ -363,7 +364,7 @@ public class HostServer extends BasicTWLGameState {
 		}
 		if(p2ready == true)
 		{
-			lPlayer2.setText("Player 2: \t" + HRRUClient.cs.getP2Name() + " is ready!");
+			lPlayer2.setText("Player 2: \t" + HRRUClient.cs.getP2().getName() + " is ready!");
 			resetPosition();
 		}
 	}

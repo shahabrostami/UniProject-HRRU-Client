@@ -353,15 +353,27 @@
         <area name="image.png" xywh="*"/>
     </images>
     <images file="characters.png">
-        <area name="clown" xywh="0,0,36,36"/>
-        <area name="snowman" xywh="0,36,36,36"/>
-        <area name="cat" xywh="0,72,36,36"/>
-        <area name="panda" xywh="0,108,36,36"/>
-        <area name="ghost" xywh="0,144,36,36"/>
+        <area name="grin" xywh="0,0,36,36"/>
+        <area name="princess" xywh="0,36,36,36"/>
+        <area name="batman" xywh="0,72,36,36"/>
+        <area name="powerranger" xywh="0,108,36,36"/>
+        <area name="snowman" xywh="0,144,36,36"/>
     </images>
+    <images file="playerselect.png">
+		<area name="select_grin" xywh="0,0,36,36"/>
+        <area name="select_princess" xywh="0,36,36,36"/>
+        <area name="select_batman" xywh="0,72,36,36"/>
+        <area name="select_powerranger" xywh="0,108,36,36"/>
+        <area name="select_snowman" xywh="0,144,36,36"/>
+	</images>
+
     <images file="player1startbg.png">
         <area name="player1bg" xywh="*"/>
     </images>
+    <images file="playerscorebackground.png">
+        <area name="score-background" xywh="*"/>
+    </images>
+
 
     <fontDef name="normal" filename="Font/font.fnt" color="white">
         <fontParam if="error" color="red"/>
@@ -605,16 +617,16 @@
         <param name="maxWidth"><int>0</int></param>
         <param name="minHeight"><int>0</int></param>
         <param name="maxHeight"><int>0</int></param>
-        <param name="background"><image>snowman</image></param>
+        <param name="background"><image>select_snowman</image></param>
     </theme>
 
-    <theme name="labelcat" ref="-defaults" allowWildcard="true">
+    <theme name="labelbatman" ref="-defaults" allowWildcard="true">
         <param name="font"><font>label</font></param>
         <param name="minWidth"><int>0</int></param>
         <param name="maxWidth"><int>0</int></param>
         <param name="minHeight"><int>0</int></param>
         <param name="maxHeight"><int>0</int></param>
-        <param name="background"><image>cat</image></param>
+        <param name="background"><image>select_batman</image></param>
     </theme>
 
     <theme name="labelghost" ref="-defaults" allowWildcard="true">
@@ -623,7 +635,7 @@
         <param name="maxWidth"><int>0</int></param>
         <param name="minHeight"><int>0</int></param>
         <param name="maxHeight"><int>0</int></param>
-        <param name="background"><image>ghost</image></param>
+        <param name="background"><image>select_snowman</image></param>
     </theme>
 
     <theme name="labelclown" ref="-defaults" allowWildcard="true">
@@ -632,7 +644,7 @@
         <param name="maxWidth"><int>0</int></param>
         <param name="minHeight"><int>0</int></param>
         <param name="maxHeight"><int>0</int></param>
-        <param name="background"><image>clown</image></param>
+        <param name="background"><image>select_grin</image></param>
     </theme>
 
     <theme name="labelpanda" ref="-defaults" allowWildcard="true">
@@ -641,7 +653,7 @@
         <param name="maxWidth"><int>0</int></param>
         <param name="minHeight"><int>0</int></param>
         <param name="maxHeight"><int>0</int></param>
-        <param name="background"><image>panda</image></param>
+        <param name="background"><image>select_powerranger</image></param>
     </theme>
     
     <theme name="button" ref="-defaults" allowWildcard="true">
@@ -706,7 +718,7 @@
     </theme>
 
     <theme name="normal-panel" ref="-defaults" allowWildcard="true">
-                    <param name="background"><image>tooltip.background</image></param>
+                    <param name="background"><image>score-background</image></param>
                     <param name="border"><border>background.border</border></param>
         <param name="defaultGap"><dimension>5,5</dimension></param>
         <param name="smallGap"><dimension>8,8</dimension></param>
@@ -1289,30 +1301,49 @@
             </theme>
         </theme>
     </theme>
-	<theme name="chat">
+	
+	<fontDef name="playnormal" filename="Font/font.fnt" color="white">
+        <fontParam if="error" color="red"/>
+        <fontParam if="disabled" color="gray"/>
+        <fontParam if="textSelection" color="blue"/>
+    </fontDef>
+    <fontDef name="playblack" filename="Font/font.fnt" color="black"/>
+    <fontDef name="playred" filename="Font/font.fnt" color="red"/>
+    <fontDef name="playgreen" filename="Font/font.fnt" color="green"/>
+    <fontDef name="playblue" filename="Font/font.fnt" color="blue"/>
+    <fontDef name="playlink" filename="Font/font.fnt" color="blue" underlineOffset="1">
+        <fontParam if="hover" color="blue" underline="true"/>
+    </fontDef>
 
-    <theme name="-defaults">
+    <inputMapDef name="play-defaultInputMap">
+        <action name="selectAll">ctrl A</action>
+        <action name="cut">ctrl X</action>
+        <action name="copy">ctrl C</action>
+        <action name="paste">ctrl V</action>
+    </inputMapDef>
+
+    <theme name="play-defaults">
         <param name="background"><image>none</image></param>
         <param name="overlay"><image>none</image></param>
-        <param name="font"><font>normal</font></param>
+        <param name="font"><font>playnormal</font></param>
         <param name="textAlignment"><enum type="alignment">left</enum></param>
         <param name="minWidth"><int>0</int></param>
         <param name="minHeight"><int>0</int></param>
         <param name="maxWidth"><int>0</int></param>
         <param name="maxHeight"><int>0</int></param>
-        <param name="inputMap"><inputMap>-defaultInputMap</inputMap></param>
+        <param name="inputMap"><inputMap>play-defaultInputMap</inputMap></param>
     </theme>
 
-    <theme name="tooltipwindow" ref="-defaults">
+    <theme name="playtooltipwindow" ref="play-defaults">
         <param name="background"><image>tooltip.background</image></param>
         <param name="border"><border>5</border></param>
         <param name="fadeInTime"><int>0</int></param>
-        <theme name="label" ref="-defaults">
-            <param name="font"><font>black</font></param>
+        <theme name="label" ref="play-defaults">
+            <param name="font"><font>playblack</font></param>
         </theme>
     </theme>
 
-    <theme name="resizableframe" ref="-defaults" allowWildcard="true">
+    <theme name="playresizableframe" ref="play-defaults" allowWildcard="true">
         <param name="background"><image>frame.background</image></param>
         <param name="border"><border>background.border</border></param>
         <param name="titleAreaTop"><int>1</int></param>
@@ -1331,24 +1362,24 @@
         <param name="fadeDurationShow"><int>0</int></param>
         <param name="fadeDurationHide"><int>0</int></param>
         <param name="mouseCursor"><cursor>arrow.*</cursor></param>
-        <theme name="title" ref="-defaults">
+        <theme name="title" ref="play-defaults">
             <param name="textAlignment"><enum type="alignment">left</enum></param>
-            <param name="font"><font>black</font></param>
+            <param name="font"><font>playblack</font></param>
         </theme>
-        <theme name="closeButton" ref="-defaults"/>
-        <theme name="resizeHandle" ref="-defaults"/>
+        <theme name="closeButton" ref="play-defaults"/>
+        <theme name="resizeHandle" ref="play-defaults"/>
     </theme>
 
-    <theme name="vscrollbar" ref="-defaults" allowWildcard="true">
-        <theme name="upbutton" ref="-defaults">
+    <theme name="playvscrollbar" ref="play-defaults" allowWildcard="true">
+        <theme name="upbutton" ref="play-defaults">
             <param name=""><image>vscrollbar.upbutton.*</image></param>
             <param name="minHeight"><int>9</int></param>
         </theme>
-        <theme name="downbutton" ref="-defaults">
+        <theme name="downbutton" ref="play-defaults">
             <param name=""><image>vscrollbar.downbutton.*</image></param>
             <param name="minHeight"><int>9</int></param>
         </theme>
-        <theme name="thumb" ref="-defaults">
+        <theme name="thumb" ref="play-defaults">
             <param name=""><image>vscrollbar.thumb.*</image></param>
         </theme>
         <param name="scaleThumb"><bool>true</bool></param>
@@ -1356,17 +1387,17 @@
         <param name="minHeight"><int>48</int></param>
     </theme>
 
-    <theme name="hscrollbar" ref="-defaults" allowWildcard="true">
+    <theme name="playhscrollbar" ref="play-defaults" allowWildcard="true">
         <!-- dummy -->
-        <theme name="leftbutton" ref="-defaults"/>
-        <theme name="rightbutton" ref="-defaults"/>
-        <theme name="thumb" ref="-defaults"/>
+        <theme name="leftbutton" ref="play-defaults"/>
+        <theme name="rightbutton" ref="play-defaults"/>
+        <theme name="thumb" ref="play-defaults"/>
         <param name="scaleThumb"><bool>false</bool></param>
     </theme>
 
-    <theme name="scrollpane" ref="-defaults" allowWildcard="true">
-        <theme name="hscrollbar" ref="hscrollbar"/>  <!-- not used -->
-        <theme name="vscrollbar" ref="vscrollbar"/>
+    <theme name="playscrollpane" ref="play-defaults" allowWildcard="true">
+        <theme name="hscrollbar" ref="playhscrollbar"/>  <!-- not used -->
+        <theme name="vscrollbar" ref="playvscrollbar"/>
         <param name="minWidth"><int>100</int></param>
         <param name="minHeight"><int>100</int></param>
         <param name="maxWidth"><int>32767</int></param>
@@ -1377,59 +1408,51 @@
         <param name="scrollbarsAlwaysVisible"><bool>true</bool></param>
     </theme>
 
-    <theme name="editfield" ref="-defaults" allowWildcard="true">
+    <theme name="playeditfield" ref="play-defaults" allowWildcard="true">
         <param name=""><image>editfield.*</image></param>
         <param name="border"><border>background.border</border></param>
         <param name="passwordChar"><int>0x25CF</int></param>
         <param name="maxWidth"><int>32767</int></param>
         <param name="columns"><int>5</int></param>
-        <theme name="renderer" ref="-defaults"/>
+        <theme name="renderer" ref="play-defaults"/>
         <param name="autocompletion-height"><int>150</int></param>
     </theme>
-	
-    <theme name="chatdemo" ref="-defaults">
-        <param name="background"><image>background-image</image></param>
 
-        <theme name="fpscounter" ref="-defaults">
-            <param name="tooltip"><string>Current FPS</string></param>
-        </theme>
 
-        <theme name="chatframe" ref="resizableframe">
-            <theme name="content" ref="-defaults">
+        <theme name="chatframe" ref="playresizableframe">
+            <theme name="content" ref="play-defaults">
                 <param name="defaultGap"><dimension>5,5</dimension></param>
                 <param name="smallGap"><dimension>8,8</dimension></param>
                 <param name="mediumGap"><dimension>10,10</dimension></param>
                 <param name="largeGap"><dimension>15,15</dimension></param>
                 <param name="namedGaps"><map/></param>
 
-                <theme name="scrollpane" ref="scrollpane">
+                <theme name="scrollpane" ref="playscrollpane">
                     <param name="background"><image>innerframe.background</image></param>
                     <param name="border"><border>background.border</border></param>
 
-                    <theme name="textarea" ref="-defaults">
+                    <theme name="textarea" ref="play-defaults">
                         <param name="fonts"><map>
-                            <param name="default"><font>black</font></param>
-                            <param name="color0"><font>red</font></param>
-                            <param name="color1"><font>green</font></param>
-                            <param name="color2"><font>blue</font></param>
-                            <param name="link"><font>link</font></param>
+                            <param name="default"><font>playblack</font></param>
+                            <param name="color0"><font>playred</font></param>
+                            <param name="color1"><font>playgreen</font></param>
+                            <param name="color2"><font>playblue</font></param>
+                            <param name="link"><font>playlink</font></param>
                         </map></param>
                         <param name="images"><map>
                             <param name="smiley"><image>smiley</image></param>
                         </map></param>
                         <param name="classes"><map>
                         </map></param>
-                        <theme name="image" ref="-defaults"/>
+                        <theme name="image" ref="play-defaults"/>
                         <param name="mouseCursor.link"><cursor>cursor.finger</cursor></param>
                     </theme>
                 </theme>
                 
-                <theme name="editfield" ref="editfield">
+                <theme name="editfield" ref="playeditfield">
                     <param name="background"><image>innerframe.background</image></param>
                     <param name="border"><border>background.border</border></param>
                 </theme>
             </theme>
         </theme>
-    </theme>
-	</theme>
 </themes>

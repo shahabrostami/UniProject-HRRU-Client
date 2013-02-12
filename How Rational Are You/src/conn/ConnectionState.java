@@ -1,6 +1,7 @@
 package conn;
 
 import main.Character;
+import main.Player;
 
 public class ConnectionState {
 	
@@ -15,13 +16,12 @@ public class ConnectionState {
 	private final int p1_charselect = 5;
 	
 	private int player;
-	private String p1name;
-	private String p2name;
-	private int p1Character;
-	private int p2Character;
+	private Player p1;
+	private Player p2;
 	private int state = initial;
 	private int sessionID;
 	private String password;
+	private int[] board;
 	
 	
 	public ConnectionState(){
@@ -57,37 +57,27 @@ public class ConnectionState {
 		return state;
 	}
 
-	public void setP1Name(String p1name) {
-		this.p1name = p1name;
+	public Player getP1() {
+		return p1;
+	}
+
+	public void setP1(Player p1) {
+		this.p1 = p1;
+	}
+
+	public Player getP2() {
+		return p2;
+	}
+
+	public void setP2(Player p2) {
+		this.p2 = p2;
+	}
+
+	public int[] getBoard(){
+		return board;
 	}
 	
-	public String getP1Name() {
-		return p1name;
+	public void setBoard(int[] board) {
+		this.board = board;
 	}
-	
-	public void setP2Name(String p2name) {
-		this.p2name = p2name;
-	}
-	
-	public String getP2Name() {
-		return p2name;
-	}
-
-	public int getP1Character() {
-		return p1Character;
-	}
-
-	public void setP1Character(int character) {
-		this.p1Character = character;
-	}
-
-	public int getP2Character() {
-		return p2Character;
-	}
-
-	public void setP2Character(int character) {
-		this.p2Character = character;
-	}
-
-
 }

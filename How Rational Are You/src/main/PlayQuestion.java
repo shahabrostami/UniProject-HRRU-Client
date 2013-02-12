@@ -202,7 +202,7 @@ public class PlayQuestion extends BasicTWLGameState{
 					g.drawString("Easy: x1", 500, 190);
 				g.drawString("Overall Points: ", 100, 400);
 				g.drawString("+" + points, 500, 400);
-				g.drawString(currentPlayer + "'s new score: " +  Play.currentPlayer.getScore(), 100, 450);
+				g.drawString(currentPlayer + "'s new score: playername", 100, 450);
 			}
 			else if(time_out)
 			{
@@ -210,7 +210,7 @@ public class PlayQuestion extends BasicTWLGameState{
 				g.drawString("The correct answer was " + current_choices[correctAnswer], 100, 150);
 				g.drawString("Overall Points: ", 100, 400);
 				g.drawString("+" + points, 500, 400);
-				g.drawString(currentPlayer + "'s score: " +  Play.currentPlayer.getScore(), 100, 450);
+				g.drawString(currentPlayer + "'s score:  playername", 100, 450);
 			}
 			else if(win==false)
 			{
@@ -218,7 +218,7 @@ public class PlayQuestion extends BasicTWLGameState{
 				g.drawString("The correct answer was " + current_choices[correctAnswer], 100, 150);
 				g.drawString("Overall Points: ", 100, 400);
 				g.drawString("+" + points, 500, 400);
-				g.drawString(currentPlayer + "'s score: " +  Play.currentPlayer.getScore(), 100, 450);
+				g.drawString(currentPlayer + "'s score:  playername", 100, 450);
 			}
 			g.drawString("Press Q to continue...", 500, 530);
 		}
@@ -231,7 +231,7 @@ public class PlayQuestion extends BasicTWLGameState{
 		int xpos = Mouse.getX();
 		int ypos= Mouse.getY();
 		mouse = "xpos: " + xpos + "\nypos: " + ypos;
-		currentPlayer = Play.currentPlayer.getName();
+		currentPlayer = null;
 		full_start_message = "Question for " + currentPlayer + "...";
 		clock += delta;
 		
@@ -275,7 +275,6 @@ public class PlayQuestion extends BasicTWLGameState{
 						{
 							points = 100 + timer;
 							points *= question_difficulty;
-							Play.currentPlayer.addScore(points);
 							win = true;
 						}
 						else

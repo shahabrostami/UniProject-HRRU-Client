@@ -20,7 +20,7 @@ public class PlayGame extends BasicTWLGameState{
 	} 
 	
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException{
-		g.drawString("Game " + Play.currentPlayer.getName(), 50, 50);
+		g.drawString("Game  playername", 50, 50);
 	} // render
 	
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException{
