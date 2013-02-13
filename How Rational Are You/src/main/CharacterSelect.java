@@ -25,8 +25,9 @@ import de.matthiasmann.twl.Label;
 public class CharacterSelect extends BasicTWLGameState {
 
 	private final int cancelled = -2;
-	private final int player1char = 5;
-	private final int player2char = 6;
+	private final int p1_charselect = 5;
+	private final int p2_charselect = 6;
+	private final int p1_turn = 7;
 	
 	SpriteSheet gridSheet;
 	public Client client;
@@ -121,7 +122,7 @@ public class CharacterSelect extends BasicTWLGameState {
 			lStatus.setText("Waiting for " + p2name);
 			picking = false;
 			HRRUClient.cs.getP1().setPlayerCharacterID(selectedCharacter.getId());
-			HRRUClient.cs.setState(player1char);
+			HRRUClient.cs.setState(p1_charselect);
 			p1charid = HRRUClient.cs.getP1().getPlayerCharacterID();
 			
 			Packet9CharacterSelect characterRequest = new Packet9CharacterSelect();
@@ -137,7 +138,7 @@ public class CharacterSelect extends BasicTWLGameState {
 		{
 			picking = false;
 			HRRUClient.cs.getP2().setPlayerCharacterID(selectedCharacter.getId());
-			HRRUClient.cs.setState(player2char);
+			HRRUClient.cs.setState(p2_charselect);
 			p2charid = HRRUClient.cs.getP2().getPlayerCharacterID();
 			
 			Packet9CharacterSelect characterRequest = new Packet9CharacterSelect();
@@ -257,13 +258,13 @@ public class CharacterSelect extends BasicTWLGameState {
 		mouse = "xpos: " + xpos + "\nypos: " + ypos;
 		
 		if(player == 1) {
-			if(HRRUClient.cs.getState() == player2char) {
+			if(HRRUClient.cs.getState() == p2_charselect) {
 				p2charid = HRRUClient.cs.getP2().getPlayerCharacterID();
 				p2chosen = true;
 			}
 		}
 		else if(player == 2) {
-			if(HRRUClient.cs.getState() == player1char) {
+			if(HRRUClient.cs.getState() == p1_charselect) {
 				p1charid = HRRUClient.cs.getP1().getPlayerCharacterID();
 				p1chosen = true;
 				lStatus.setText(p2name + ", it's your turn!");
@@ -303,12 +304,13 @@ public class CharacterSelect extends BasicTWLGameState {
 			}
 		}
 		
-		if(HRRUClient.cs.getState() == player2char)
+		if(HRRUClient.cs.getState() == p2_charselect)
 		{
 			clock--;
 			lStatus.setText("Game Starting in " + (clock/100+1) + "...");
 			if(clock<0)
 			{
+				HRRUClient.cs.setState(p1_turn);
 				sbg.enterState(5);
 			}
 		}

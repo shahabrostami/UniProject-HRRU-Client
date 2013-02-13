@@ -26,6 +26,8 @@ public class NetworkListener extends Listener{
 	private final int start = 4;
 	private final int player1char = 5;
 	private final int player2char = 6;
+	private final int p1_turn = 7;
+	private final int p2_turn = 8;
 	
 	public void init(Client client) {
 		this.client = client;
@@ -137,6 +139,23 @@ public class NetworkListener extends Listener{
 		{
 			Play.chatFrame.appendRowOther("color2", ((Packet10ChatMessage)o).message);
 		}
+		if(o instanceof Packet11TurnMessage)
+		{
+			int player = ((Packet11TurnMessage)o).playerID;
+			int moves = ((Packet11TurnMessage)o).moves;
+			if(player == 1)
+			{
+				HRRUClient.cs.getP1().setPosition(moves);
+				HRRUClient.cs.setState(p2_turn);
+			}
+			else if(player == 2)
+			{
+				HRRUClient.cs.getP2().setPosition(moves);
+				HRRUClient.cs.setState(p1_turn);
+			}
+			
+		}
+		
 	}
 
 }

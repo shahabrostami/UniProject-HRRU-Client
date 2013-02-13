@@ -1,5 +1,6 @@
 package main;
 
+import java.awt.Font;
 import java.io.IOException;
 
 import conn.*;
@@ -44,16 +45,20 @@ public class Play extends BasicTWLGameState {
 	private Dice dice;
 	private QuestionList question_list;
 	private int playerID;
+	private boolean currentPlayer, sendPosition;
 	private Player player;
 	private Player player1;
 	private Player player2;
+	
+	private final int p1_turn = 7;
+	private final int p2_turn = 8;
 	
 	public static final int playquestion = 8;
 	public static final int puzzlequestion = 9;
 	public static final int gamequestion = 10;
 	
 	// states: 0 = idle, 1 = rolling, 2 = navigate board
-	private int state;
+	private int state, gameState;
 	private int dice_counter = 0;
 	private int clock;
 	
@@ -63,10 +68,15 @@ public class Play extends BasicTWLGameState {
 	Label lStatus, lPlayer1, lPlayer2, lPlayer1Score, lPlayer2Score;
 	Label player1turn;
 	Label lImgPlayer1, lImgPlayer2; 
+	Button btnRoll;
+	DialogLayout rollPanel;
+	BasicFont header; 
 	
 	public static ChatFrame chatFrame;
 	
 	Image scorebackground;
+	
+	Packet11TurnMessage turnMessage;
 	
 	public Play(int main) {
 		client = HRRUClient.conn.getClient();
@@ -83,25 +93,42 @@ public class Play extends BasicTWLGameState {
 		player1 = HRRUClient.cs.getP1();
 		player2 = HRRUClient.cs.getP2();
 		
+		board = new Board(10);
+		
 		if(HRRUClient.cs.getPlayer() == 1)
 		{
+			btnRoll.setEnabled(true);
+			currentPlayer = true;
 			player = HRRUClient.cs.getP1();
 		}
 		else {
+			currentPlayer = false;
 			player = HRRUClient.cs.getP2();
 		}
 		
-		board = new Board(10);
-		dice = new Dice(1);
-		
 		chatFrame = new ChatFrame();
-        chatFrame.setSize(300, 200);
+        chatFrame.setSize(298, 200);
         chatFrame.setDraggable(false);
         chatFrame.setResizableAxis(ResizableAxis.NONE);
 		
+        lStatus.setText(player1.getName() + ", it's your turn!");
+        lStatus.setPosition(320, 50);
+        lStatus.setTheme("subtitle2");
+        
+		rollPanel.setTheme("roll-panel");
+		rollPanel.setPosition(0,105);
+		rollPanel.setSize(304, 270);
+        
+		btnRoll.setEnabled(false);
+		btnRoll.setSize(100,30);
+		
 		rootPane.removeAllChildren();
+		rootPane.add(rollPanel);
+		rootPane.add(lStatus);
 		rootPane.add(chatFrame);
 		resetPosition();
+		
+		turnMessage = new Packet11TurnMessage();
 	}
 	
 	void resetPosition() {
@@ -118,6 +145,11 @@ public class Play extends BasicTWLGameState {
 		return rp;
 	}
 
+	void emulateRoll() {
+		state = 1;
+		btnRoll.setEnabled(false);
+	}
+	
 	@Override
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		// Game 
@@ -135,6 +167,26 @@ public class Play extends BasicTWLGameState {
 			e.printStackTrace();
 		}
 		
+		dice = new Dice(1);
+		
+		rollPanel = new DialogLayout();
+		lStatus = new Label("");
+		btnRoll = new Button("ROLL!");
+		btnRoll.addCallback(new Runnable() {
+            public void run() {
+                emulateRoll();
+            }
+        });
+		
+        DialogLayout.Group hBtnRoll = rollPanel.createSequentialGroup(btnRoll);
+        rollPanel.setIncludeInvisibleWidgets(false);
+        
+        rollPanel.setHorizontalGroup(rollPanel.createParallelGroup().addGap(100)
+                .addGroup(hBtnRoll));
+        
+        rollPanel.setVerticalGroup(rollPanel.createSequentialGroup()
+        		.addGap(180).addWidget(btnRoll));
+		
 		sbg.addState(new PlayQuestion(playquestion, question_list));
 		sbg.addState(new PlayPuzzle(puzzlequestion));
 		sbg.addState(new PlayGame(gamequestion));
@@ -148,10 +200,6 @@ public class Play extends BasicTWLGameState {
 		
 		for(int j = board.getSize()-1; j >= board.getScale()*3-3; j--)
 			g.drawImage(board.gridSquares[j].gridSquare.getImage(), board.gridSquares[j].getx(), board.gridSquares[j].gety());
-
-		
-		if(state>0 && state < 3)
-			dice.dice.draw(HRRUClient.resX - 100, HRRUClient.resY-250+dice.getY());
 		
 		g.drawImage(scorebackground, 0,0);
 		
@@ -161,9 +209,15 @@ public class Play extends BasicTWLGameState {
 		g.drawString("" + player2.getName(), 70, 55);
 		g.drawString("" + player1.getScore(), 200, 13);
 		g.drawString("" + player2.getScore(), 200, 55);
+
+		g.drawImage(player1.getPlayerCharacter().getCharacterImage(), board.gridSquares[player1.getPosition()].getx(), board.gridSquares[player1.getPosition()].gety());
+		g.drawImage(player2.getPlayerCharacter().getCharacterImage(), board.gridSquares[player2.getPosition()].getx(), board.gridSquares[player2.getPosition()].gety());
 		
-		g.drawString("Roll!", 650, 470);
-		g.drawString(mouse, 650, 500);
+		g.drawString(mouse, 700, 550);
+		
+		g.scale(1.25f, 1.25f);
+		if(state>0 && state < 3)
+			dice.dice.draw(105, 97+dice.getY());
 	}
 
 	@Override
@@ -172,78 +226,122 @@ public class Play extends BasicTWLGameState {
 		int xpos = Mouse.getX();
 		int ypos= Mouse.getY();
 		mouse = "xpos: " + xpos + "\nypos: " + ypos;
-        
-		// State Management
-		if(state==0)
+		
+		gameState = HRRUClient.cs.getState();
+		
+		if(state == 0)
 		{
-			if((xpos>650&&xpos<700)&&(ypos>110&&ypos<130))
+			if(playerID == 1)
 			{
-				if(input.isMouseButtonDown(0))
+				if(gameState == p1_turn)
 				{
-					state = 1;
+					currentPlayer = true;
+					btnRoll.setEnabled(true);
+				}
+				else
+				{
+					currentPlayer = false;
+					btnRoll.setEnabled(false);
+				}
+			}
+			else if(playerID == 2)
+			{
+				if(gameState == p2_turn)
+				{
+					currentPlayer = true;
+					btnRoll.setEnabled(true);
+				}
+				else
+				{
+					currentPlayer = false;
+					btnRoll.setEnabled(false);
 				}
 			}
 		}
 		
-		// Dice State
-		if(state==1)
+		if(currentPlayer)
 		{
-			clock += delta;
-			if(clock>60)
+			//roll dice
+			if(state==1)
 			{
-				dice.rollDice();
-				clock-=60;
-				if(dice.getPosition()==0)
+				clock += delta;
+				if(clock>=60)
 				{
-					dice_counter = dice.getCurrentNumber();
-					state = 2;
+					dice.rollDice();
+					clock-=60;
+					if(dice.getPosition()==0)
+					{
+						dice_counter = dice.getCurrentNumber();
+						state = 2;
+						sendPosition = true;
+					}
 				}
 			}
+			if(sendPosition)
+			{
+				turnMessage.sessionID = HRRUClient.cs.getSessionID();
+				turnMessage.playerID = playerID;
+				turnMessage.moves = dice_counter;
+				client.sendTCP(turnMessage);
+				sendPosition = false;
+			}
+			
+			//navigating board
+			if(state == 2)
+			{
+				clock += delta;
+				if(clock>=200)
+				{
+					if(player.getPosition() >= board.getSize()-1)
+						player.setPosition(0);
+					else player.updatePosition();
+					clock-=200;
+					dice_counter--;
+					if(dice_counter==0)
+					{
+						dice.reset();
+						state = 3;
+					}
+					
+				}
+			}
+			if(state == 3)
+			{
+				if(playerID == 1)
+					HRRUClient.cs.setState(p2_turn);
+				else
+					HRRUClient.cs.setState(p1_turn);
+				btnRoll.setEnabled(false);
+				state = 0;
+			}
+			/*
+			if(state == 3)
+			{
+				clock += delta;
+				if(clock>=2000)
+				{
+					int currentTile = board.gridSquares[player.getPosition()].getTileType();
+					if(currentTile == 1)	
+					{
+						state=0;
+						sbg.enterState(8, null, new HorizontalSplitTransition());
+					}
+					else if(currentTile == 2)	
+					{
+						sbg.enterState(9);
+					}
+					else if(currentTile == 3)
+					{
+						sbg.enterState(10);
+					}
+					else state = 0;
+					clock-=2000;
+				}
+			}
+			*/
 		}
 		
-		// Navigating Board State
-		if(state == 2)
-		{
-			clock += delta;
-			if(clock>200)
-			{
-				if(player.getPosition() >= board.getSize()-1)
-					player.setPosition(0);
-				else player.updatePosition();
-				clock-=200;
-				dice_counter--;
-				if(dice_counter==0)
-				{
-					dice.reset();
-					state = 3;
-				}
-				
-			}
-		}
 		
-		if(state ==3)
-		{
-			clock += delta;
-			if(clock>2000)
-			{
-				int currentTile = board.gridSquares[player.getPosition()].getTileType();
-				if(currentTile == 1)	
-				{
-					state=0;
-					sbg.enterState(8, null, new HorizontalSplitTransition());
-				}
-				else if(currentTile == 2)	
-				{
-					sbg.enterState(9);
-				}
-				else if(currentTile == 3)
-				{
-					sbg.enterState(10);
-				}
-				else state = 0;
-				clock-=2000;
-			}
-		}
 	}
 
 	@Override

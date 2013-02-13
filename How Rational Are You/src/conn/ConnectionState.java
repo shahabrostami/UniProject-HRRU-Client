@@ -14,6 +14,9 @@ public class ConnectionState {
 	private final int ready = 3;
 	private final int start = 4;
 	private final int p1_charselect = 5;
+	private final int p2_charselect = 6;
+	private final int p1_turn = 7;
+	private final int p2_turn = 8;
 	
 	private int player;
 	private Player p1;

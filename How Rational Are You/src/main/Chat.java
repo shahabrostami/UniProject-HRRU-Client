@@ -26,7 +26,8 @@ public class Chat {
         private int playerID;
         private Player player;
     	Client client;
-        Packet10ChatMessage chatMessage;
+        
+    	Packet10ChatMessage chatMessage;
 
         public ChatFrame() {
         	client = HRRUClient.conn.getClient();
@@ -81,6 +82,7 @@ public class Chat {
                     case ':':
                         if(text.startsWith(":)", i)) {
                             sb.append("<img src=\"smiley\" alt=\":)\"/>");
+                            message = message + ":)";
                             i += 1; // skip one less because of i++ in the for loop
                             break;
                         }

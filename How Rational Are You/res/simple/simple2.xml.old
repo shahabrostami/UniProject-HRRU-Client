@@ -366,6 +366,10 @@
         <area name="select_powerranger" xywh="0,108,36,36"/>
         <area name="select_snowman" xywh="0,144,36,36"/>
 	</images>
+    <images file="rollpanelbg.png">
+        <area name="rollpanel.background" xywh="*"/>
+    </images>
+
 
     <images file="player1startbg.png">
         <area name="player1bg" xywh="*"/>
@@ -576,6 +580,14 @@
         <param name="maxHeight"><int>0</int></param>
     </theme>
 
+    <theme name="mainheader" ref="-defaults" allowWildcard="true">
+        <param name="font"><font>playerheader</font></param>
+        <param name="minWidth"><int>0</int></param>
+        <param name="maxWidth"><int>0</int></param>
+        <param name="minHeight"><int>0</int></param>
+        <param name="maxHeight"><int>0</int></param>
+    </theme>
+
     <theme name="subtitle" ref="-defaults" allowWildcard="true">
         <param name="font"><font>subtitle</font></param>
         <param name="minWidth"><int>0</int></param>
@@ -718,7 +730,21 @@
     </theme>
 
     <theme name="normal-panel" ref="-defaults" allowWildcard="true">
-                    <param name="background"><image>tooltip.background</image></param>
+                    <param name="background"><image>score-background</image></param>
+                    <param name="border"><border>background.border</border></param>
+        <param name="defaultGap"><dimension>5,5</dimension></param>
+        <param name="smallGap"><dimension>8,8</dimension></param>
+        <param name="mediumGap"><dimension>10,10</dimension></param>
+        <param name="largeGap"><dimension>15,15</dimension></param>
+        <param name="namedGaps"><map/></param>
+        <param name="minWidth"><int>0</int></param>
+        <param name="maxWidth"><int>0</int></param>
+        <param name="minHeight"><int>0</int></param>
+        <param name="maxHeight"><int>0</int></param>
+    </theme>
+
+    <theme name="roll-panel" ref="-defaults" allowWildcard="true">
+                    <param name="background"><image>score-background</image></param>
                     <param name="border"><border>background.border</border></param>
         <param name="defaultGap"><dimension>5,5</dimension></param>
         <param name="smallGap"><dimension>8,8</dimension></param>
