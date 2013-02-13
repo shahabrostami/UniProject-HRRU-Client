@@ -74,7 +74,7 @@ public class Play extends BasicTWLGameState {
 	
 	public static ChatFrame chatFrame;
 	
-	Image scorebackground;
+	Image scorebackground, background;
 	
 	Packet11TurnMessage turnMessage;
 	
@@ -88,7 +88,8 @@ public class Play extends BasicTWLGameState {
 		
 		state = 0;
 		clock = 0;
-		
+
+		HRRUClient.cs.setPlayer(1);
 		playerID = HRRUClient.cs.getPlayer();
 		player1 = HRRUClient.cs.getP1();
 		player2 = HRRUClient.cs.getP2();
@@ -102,25 +103,25 @@ public class Play extends BasicTWLGameState {
 			player = HRRUClient.cs.getP1();
 		}
 		else {
+			btnRoll.setEnabled(false);
 			currentPlayer = false;
 			player = HRRUClient.cs.getP2();
 		}
 		
 		chatFrame = new ChatFrame();
-        chatFrame.setSize(298, 200);
+        chatFrame.setSize(296, 200);
         chatFrame.setDraggable(false);
         chatFrame.setResizableAxis(ResizableAxis.NONE);
 		
         lStatus.setText(player1.getName() + ", it's your turn!");
-        lStatus.setPosition(320, 50);
-        lStatus.setTheme("subtitle2");
+        lStatus.setPosition(305, 0);
+        lStatus.setTheme("scoreatarititle");
+        lStatus.setSize(495, 106);
         
 		rollPanel.setTheme("roll-panel");
 		rollPanel.setPosition(0,105);
 		rollPanel.setSize(304, 270);
-        
-		btnRoll.setEnabled(false);
-		btnRoll.setSize(100,30);
+		btnRoll.setTheme("rollbutton");
 		
 		rootPane.removeAllChildren();
 		rootPane.add(rollPanel);
@@ -132,7 +133,7 @@ public class Play extends BasicTWLGameState {
 	}
 	
 	void resetPosition() {
-        chatFrame.setPosition(0, 400);
+        chatFrame.setPosition(0, 397);
 	}
 
 	@Override
@@ -153,9 +154,27 @@ public class Play extends BasicTWLGameState {
 	@Override
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		// Game 
+		CharacterSheet characterSheet = new CharacterSheet();
+		Character[] characters = characterSheet.getCharacters();
+		
+		Player player1 = new Player("player1");
+		Player player2 = new Player("player2");
+		player1.setPlayerCharacterID(2);
+		player1.setPlayerCharacter(characters[2]);
+		player2.setPlayerCharacter(characters[4]);
+		player2.setPlayerCharacterID(4);
+		player1.setScore(5000);
+		HRRUClient.cs.setState(6);
+		HRRUClient.cs.setP1(player1);
+		HRRUClient.cs.setP2(player2);
+		HRRUClient.cs.setPlayer(1);
+		
 		gcw = gc.getWidth();
 		gch = gc.getHeight();
 		scorebackground = new Image("res/simple/playerscorebackground.png");
+		background = new Image("res/simple/background.png");
+		
+		header = new BasicFont("Atari Font Full Version", Font.PLAIN, 12);
 		
 		try {
 			question_list = new QuestionList("Question.txt");
@@ -171,7 +190,7 @@ public class Play extends BasicTWLGameState {
 		
 		rollPanel = new DialogLayout();
 		lStatus = new Label("");
-		btnRoll = new Button("ROLL!");
+		btnRoll = new Button("ROLL");
 		btnRoll.addCallback(new Runnable() {
             public void run() {
                 emulateRoll();
@@ -179,9 +198,8 @@ public class Play extends BasicTWLGameState {
         });
 		
         DialogLayout.Group hBtnRoll = rollPanel.createSequentialGroup(btnRoll);
-        rollPanel.setIncludeInvisibleWidgets(false);
         
-        rollPanel.setHorizontalGroup(rollPanel.createParallelGroup().addGap(100)
+        rollPanel.setHorizontalGroup(rollPanel.createParallelGroup()
                 .addGroup(hBtnRoll));
         
         rollPanel.setVerticalGroup(rollPanel.createSequentialGroup()
@@ -195,6 +213,7 @@ public class Play extends BasicTWLGameState {
 
 	@Override
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
+		g.drawImage(background, 0,0);
 		for(int i = 0; i < board.getScale()*3-3; i++)
 			g.drawImage(board.gridSquares[i].gridSquare.getImage(), board.gridSquares[i].getx(), board.gridSquares[i].gety());
 		
@@ -205,10 +224,11 @@ public class Play extends BasicTWLGameState {
 		
 		g.drawImage(player1.getPlayerCharacter().getCharacterImage(), 13,13);
 		g.drawImage(player2.getPlayerCharacter().getCharacterImage(), 13,55);
-		g.drawString("" + player1.getName(), 70, 13);
-		g.drawString("" + player2.getName(), 70, 55);
-		g.drawString("" + player1.getScore(), 200, 13);
-		g.drawString("" + player2.getScore(), 200, 55);
+		g.setFont(header.get());
+		g.drawString("" + player1.getName(), 70, 30);
+		g.drawString("" + player2.getName(), 70, 70);
+		g.drawString("" + player1.getScore(), 200, 30);
+		g.drawString("" + player2.getScore(), 200, 70);
 
 		g.drawImage(player1.getPlayerCharacter().getCharacterImage(), board.gridSquares[player1.getPosition()].getx(), board.gridSquares[player1.getPosition()].gety());
 		g.drawImage(player2.getPlayerCharacter().getCharacterImage(), board.gridSquares[player2.getPosition()].getx(), board.gridSquares[player2.getPosition()].gety());
@@ -235,12 +255,15 @@ public class Play extends BasicTWLGameState {
 			{
 				if(gameState == p1_turn)
 				{
+					lStatus.setText(player1.getName() + ", it's your turn!");
 					currentPlayer = true;
 					btnRoll.setEnabled(true);
 				}
 				else
 				{
+					lStatus.setText("It's " + player2.getName() + "'s turn.");
 					currentPlayer = false;
+					btnRoll.setText("WAITING FOR PLAYER2");
 					btnRoll.setEnabled(false);
 				}
 			}
@@ -248,12 +271,15 @@ public class Play extends BasicTWLGameState {
 			{
 				if(gameState == p2_turn)
 				{
+					lStatus.setText(player2.getName() + ", it's your turn!");
 					currentPlayer = true;
 					btnRoll.setEnabled(true);
 				}
 				else
 				{
+					lStatus.setText("It's " + player1.getName() + "'s turn.");
 					currentPlayer = false;
+					btnRoll.setText("WAITING FOR PLAYER2");
 					btnRoll.setEnabled(false);
 				}
 			}
@@ -311,6 +337,7 @@ public class Play extends BasicTWLGameState {
 					HRRUClient.cs.setState(p2_turn);
 				else
 					HRRUClient.cs.setState(p1_turn);
+				btnRoll.setText("WAITING FOR PLAYER2");
 				btnRoll.setEnabled(false);
 				state = 0;
 			}

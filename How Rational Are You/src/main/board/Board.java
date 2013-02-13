@@ -35,7 +35,10 @@ public class Board {
 		
 		gridSquares = new GridSquareContainer[size];
 		
-		int[] tileOrder = HRRUClient.cs.getBoard();
+		//int[] tileOrder = HRRUClient.cs.getBoard();
+		int[] tileOrder = new int[size];
+		for(int i = 0; i < size; i++)
+			tileOrder[i] = 1;
 		
 		// create board grid
 		for(int row1 = 0; row1 < scale-1; row1++)

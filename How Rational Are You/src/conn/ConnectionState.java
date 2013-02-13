@@ -42,6 +42,11 @@ public class ConnectionState {
 		return player;
 	}
 	
+	public void setPlayer(int player)
+	{
+		this.player = player;
+	}
+	
 	public int getSessionID()
 	{
 		return sessionID;
