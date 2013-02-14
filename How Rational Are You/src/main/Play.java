@@ -89,7 +89,6 @@ public class Play extends BasicTWLGameState {
 		state = 0;
 		clock = 0;
 
-		HRRUClient.cs.setPlayer(1);
 		playerID = HRRUClient.cs.getPlayer();
 		player1 = HRRUClient.cs.getP1();
 		player2 = HRRUClient.cs.getP2();
@@ -156,7 +155,8 @@ public class Play extends BasicTWLGameState {
 		// Game 
 		CharacterSheet characterSheet = new CharacterSheet();
 		Character[] characters = characterSheet.getCharacters();
-		
+
+		/*
 		Player player1 = new Player("player1");
 		Player player2 = new Player("player2");
 		player1.setPlayerCharacterID(2);
@@ -168,6 +168,7 @@ public class Play extends BasicTWLGameState {
 		HRRUClient.cs.setP1(player1);
 		HRRUClient.cs.setP2(player2);
 		HRRUClient.cs.setPlayer(1);
+		*/
 		
 		gcw = gc.getWidth();
 		gch = gc.getHeight();
@@ -257,6 +258,7 @@ public class Play extends BasicTWLGameState {
 				{
 					lStatus.setText(player1.getName() + ", it's your turn!");
 					currentPlayer = true;
+					btnRoll.setText("ROLL");
 					btnRoll.setEnabled(true);
 				}
 				else
@@ -271,6 +273,7 @@ public class Play extends BasicTWLGameState {
 			{
 				if(gameState == p2_turn)
 				{
+					btnRoll.setText("ROLL");
 					lStatus.setText(player2.getName() + ", it's your turn!");
 					currentPlayer = true;
 					btnRoll.setEnabled(true);
