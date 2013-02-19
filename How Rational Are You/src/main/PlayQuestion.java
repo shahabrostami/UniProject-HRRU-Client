@@ -10,7 +10,6 @@ import TWLSlick.BasicTWLGameState;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontFormatException;
-import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.util.Random;
 
@@ -70,24 +69,7 @@ public class PlayQuestion extends BasicTWLGameState{
 	}
 	
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException{
-		// Initialize question lists
-		questions = question_list.getQuestion_list();
-		no_of_questions = question_list.getNumberOfQuestions();
-		
-		
-		current_question_id = rand.nextInt(no_of_questions);
-		current_question = questions[current_question_id];
-
-		current_choices = current_question.getChoices();
-		full_question_description = current_question.getDescription();
-		noOfAnswers = current_question.getAmountOfAnswers();
-		correctAnswer = current_question.getAnswer();
-		question_difficulty = current_question.getDifficulty();
-		backgroundx = 0;
-		backgroundx2 = -959;
-		
-		timer = 50*question_difficulty;
-		timer2 = 999;
+		// Initialize question list
 		
 		// Create custom font for question
 		 try {
@@ -128,8 +110,29 @@ public class PlayQuestion extends BasicTWLGameState{
 		
 	} 
 	
+	public void enter(GameContainer gc, StateBasedGame sbg) throws SlickException {
+		super.enter(gc, sbg);
+		
+		questions = question_list.getQuestion_list();
+		no_of_questions = question_list.getNumberOfQuestions();
+		
+		current_question_id = HRRUClient.cs.getActivity_id();
+		current_question = questions[current_question_id];
+
+		current_choices = current_question.getChoices();
+		full_question_description = current_question.getDescription();
+		noOfAnswers = current_question.getAmountOfAnswers();
+		correctAnswer = current_question.getAnswer();
+		question_difficulty = current_question.getDifficulty();
+		backgroundx = 0;
+		backgroundx2 = -959;
+		
+		timer = 50*question_difficulty;
+		timer2 = 999;
+	}
+	
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException{
-		g.drawImage(new Image("res/img/questionui.png"), 0, 0);
+		g.drawImage(new Image("res/img/questionbg.png"), 0, 0);
 		g.drawString(mouse, 650, 50);
 		
 		g.setFont(mainFont.get());
@@ -225,7 +228,6 @@ public class PlayQuestion extends BasicTWLGameState{
 		
 	} // render
 	
-		
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException{
 		Input input = gc.getInput();
 		int xpos = Mouse.getX();
@@ -381,7 +383,7 @@ public class PlayQuestion extends BasicTWLGameState{
 	}
 	
 	public int getID(){
-		return 8;
+		return 6;
 	}
 	
 }

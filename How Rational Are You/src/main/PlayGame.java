@@ -3,11 +3,7 @@ package main;
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.*;
 
-import org.lwjgl.input.Mouse;
-
 import TWLSlick.BasicTWLGameState;
-
-import java.awt.Font;
 
 public class PlayGame extends BasicTWLGameState{
 	

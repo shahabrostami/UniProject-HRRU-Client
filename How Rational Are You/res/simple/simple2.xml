@@ -41,6 +41,10 @@
     <include filename="cursors.xml"/>
     <images file="chat.png" format="RGBA" filter="linear">
         <area name="tooltip.background" border="3" xywh="1,24,7,7" splitx="L3,R3" splity="T3,B3"/>
+        <area name="choice.norm.background" border="3" xywh="1,32,7,7" splitx="L3,R3" splity="T3,B3"/>
+    
+        <area name="choice.hover.background" border="3" xywh="9,32,7,7" splitx="L3,R3" splity="T3,B3"/>
+        <area name="choice.sel.background" border="3" xywh="17,32,7,7" splitx="L3,R3" splity="T3,B3"/>
         <grid name="frame.background" weightsX="0,1,0" weightsY="0,1,0" border="20,4,4,4" tint="#DFFF">
             <area xywh="1,1,2,17"/>
             <area xywh="4,1,1,17"/>
@@ -61,6 +65,11 @@
             <area tint="#FF0000" if="pressed" xywh="16,12,7,4"/>
             <area tint="#5A5A5A" if="hover" xywh="16,12,7,4"/>
             <area tint="#000000" xywh="16,12,7,4"/>
+        </select>
+        <select name="choice.button">
+            <area if="pressed" xywh="17,32,7,7" splitx="L3,R3" splity="T3,B3"/>
+            <area if="hover" xywh="9,32,7,7" tint="#FFFFFF" splitx="L3,R3" splity="T3,B3"/>
+            <area xywh="1,32,7,7" splitx="L3,R3" splity="T3,B3"/>
         </select>
         <select name="vscrollbar.thumb.background">
             <area splity="4,5" tint="#FF0000" if="pressed" xywh="16,17,7,10"/>
@@ -453,6 +462,27 @@
     
     </fontDef>
 
+    <fontDef name="atarigreen16" filename="atarigreen16.fnt" color="white">
+        <fontParam if="disabled" color="gray"/>
+        <fontParam if="pressed" offsetX="1" offsetY="1"/>
+        <fontParam if="hover"/>
+    
+    </fontDef>
+
+    <fontDef name="questionatari26" filename="questionatari26.fnt">
+        <fontParam if="disabled" color="gray"/>
+        <fontParam if="pressed" offsetX="1" offsetY="1"/>
+        <fontParam if="hover"/>
+    
+    </fontDef>
+
+    <fontDef name="questionatari16" filename="questionatari16.fnt">
+        <fontParam if="disabled" color="gray"/>
+        <fontParam if="pressed" offsetX="1" offsetY="1"/>
+        <fontParam if="hover"/>
+    
+    </fontDef>
+
     <fontDef name="whiteatari30" filename="whiteatari30.fnt" color="white">
         <fontParam if="disabled" color="gray"/>
         <fontParam if="pressed" offsetX="1" offsetY="1"/>
@@ -656,6 +686,16 @@
         <param name="background"><image>none</image></param>
     </theme>
 
+    <theme name="atarigreen16" ref="-defaults" allowWildcard="true">
+        <param name="font"><font>atarigreen16</font></param>
+        <param name="minWidth"><int>0</int></param>
+        <param name="maxWidth"><int>0</int></param>
+        <param name="minHeight"><int>0</int></param>
+        <param name="maxHeight"><int>0</int></param>
+        <param name="background"><image>none</image></param>
+        <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
+    </theme>
+
     <theme name="player1atari" ref="-defaults" allowWildcard="true">
         <param name="font"><font>button_font</font></param>
         <param name="minWidth"><int>0</int></param>
@@ -664,42 +704,6 @@
         <param name="maxHeight"><int>0</int></param>
         <param name="background"><image>player1bg</image></param>
         <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
-    </theme>
-
-    <theme name="labelsnowman" ref="-defaults" allowWildcard="true">
-        <param name="font"><font>label</font></param>
-        <param name="minWidth"><int>0</int></param>
-        <param name="maxWidth"><int>0</int></param>
-        <param name="minHeight"><int>0</int></param>
-        <param name="maxHeight"><int>0</int></param>
-        <param name="background"><image>select_snowman</image></param>
-    </theme>
-
-    <theme name="labelbatman" ref="-defaults" allowWildcard="true">
-        <param name="font"><font>label</font></param>
-        <param name="minWidth"><int>0</int></param>
-        <param name="maxWidth"><int>0</int></param>
-        <param name="minHeight"><int>0</int></param>
-        <param name="maxHeight"><int>0</int></param>
-        <param name="background"><image>select_batman</image></param>
-    </theme>
-
-    <theme name="labelghost" ref="-defaults" allowWildcard="true">
-        <param name="font"><font>label</font></param>
-        <param name="minWidth"><int>0</int></param>
-        <param name="maxWidth"><int>0</int></param>
-        <param name="minHeight"><int>0</int></param>
-        <param name="maxHeight"><int>0</int></param>
-        <param name="background"><image>select_snowman</image></param>
-    </theme>
-
-    <theme name="labelclown" ref="-defaults" allowWildcard="true">
-        <param name="font"><font>label</font></param>
-        <param name="minWidth"><int>0</int></param>
-        <param name="maxWidth"><int>0</int></param>
-        <param name="minHeight"><int>0</int></param>
-        <param name="maxHeight"><int>0</int></param>
-        <param name="background"><image>select_grin</image></param>
     </theme>
 
     <theme name="labelpanda" ref="-defaults" allowWildcard="true">
@@ -720,6 +724,18 @@
         <param name="maxWidth"><int>0</int></param>
         <param name="minHeight"><int>0</int></param>
         <param name="maxHeight"><int>0</int></param>
+    </theme>
+    
+    <theme name="choicebutton" ref="-defaults" allowWildcard="true">
+        <param name="background"><image>choice.button</image></param>
+        <param name="border"><border>background.border</border></param>
+        <param name="font"><font>label</font></param>
+        <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
+        <param name="minWidth"><int>0</int></param>
+        <param name="maxWidth"><int>600</int></param>
+        <param name="minHeight"><int>0</int></param>
+        <param name="inputMap"><inputMap>-defaultInputMap</inputMap></param>
+        <param name="maxHeight"><int>60</int></param>
     </theme>
     
     <theme name="rollbutton" ref="-defaults" allowWildcard="true">
@@ -809,6 +825,35 @@
         <param name="maxWidth"><int>0</int></param>
         <param name="minHeight"><int>0</int></param>
         <param name="maxHeight"><int>0</int></param>
+    </theme>
+
+    <theme name="choices-panel" ref="-defaults" allowWildcard="true">
+                    <param name="background"><image>none</image></param>
+                    <param name="border"><border>background.border</border></param>
+        <param name="defaultGap"><dimension>5,5</dimension></param>
+        <param name="smallGap"><dimension>8,8</dimension></param>
+        <param name="mediumGap"><dimension>10,10</dimension></param>
+        <param name="largeGap"><dimension>15,15</dimension></param>
+        <param name="namedGaps"><map/></param>
+        <param name="minWidth"><int>0</int></param>
+        <param name="maxWidth"><int>0</int></param>
+        <param name="minHeight"><int>0</int></param>
+        <param name="maxHeight"><int>0</int></param>
+    </theme>
+
+    <theme name="question-panel" ref="-defaults" allowWildcard="true">
+                    <param name="background"><image>none</image></param>
+                    <param name="border"><border>background.border</border></param>
+        <param name="defaultGap"><dimension>5,5</dimension></param>
+        <param name="smallGap"><dimension>8,8</dimension></param>
+        <param name="mediumGap"><dimension>10,10</dimension></param>
+        <param name="largeGap"><dimension>15,15</dimension></param>
+        <param name="namedGaps"><map/></param>
+        <param name="minWidth"><int>0</int></param>
+        <param name="maxWidth"><int>0</int></param>
+        <param name="minHeight"><int>0</int></param>
+        <param name="maxHeight"><int>0</int></param>
+        <param name="font"><font>questionatari26</font></param>
     </theme>
 
     <!-- the fallback theme is used when the requested theme can't be found -->
@@ -1381,6 +1426,19 @@
             </theme>
         </theme>
     </theme>
+
+    <theme name="questiontextarea" ref="-defaults">
+        <param name="images">
+            <map>
+            </map>
+        </param>
+        <param name="fonts">
+            <map>
+                <param name="default"><font>questionatari16</font></param>
+            </map>
+        </param>
+        <param name="font"><font>questionatari16</font></param>
+    </theme>
 	
 	<fontDef name="playnormal" filename="Font/font.fnt" color="white">
         <fontParam if="error" color="red"/>
@@ -1388,8 +1446,9 @@
         <fontParam if="textSelection" color="blue"/>
     </fontDef>
     <fontDef name="playblack" filename="Font/font.fnt" color="black"/>
+    <fontDef name="playwhite" filename="Font/font.fnt" color="#FFFFFF"/>
     <fontDef name="playred" filename="Font/font.fnt" color="red"/>
-    <fontDef name="playgreen" filename="Font/font.fnt" color="green"/>
+    <fontDef name="playgreen" filename="Font/font.fnt" color="#87FF87"/>
     <fontDef name="playblue" filename="Font/font.fnt" color="blue"/>
     <fontDef name="playlink" filename="Font/font.fnt" color="blue" underlineOffset="1">
         <fontParam if="hover" color="blue" underline="true"/>
@@ -1513,7 +1572,7 @@
 
                     <theme name="textarea" ref="play-defaults">
                         <param name="fonts"><map>
-                            <param name="default"><font>playblack</font></param>
+                            <param name="default"><font>playwhite</font></param>
                             <param name="color0"><font>playred</font></param>
                             <param name="color1"><font>playgreen</font></param>
                             <param name="color2"><font>playblue</font></param>

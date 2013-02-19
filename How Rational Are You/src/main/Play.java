@@ -3,35 +3,24 @@ package main;
 import java.awt.Font;
 import java.io.IOException;
 
-import conn.*;
 import conn.Packet.*;
 
 import org.lwjgl.input.Mouse;
-import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
-import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
-import org.newdawn.slick.state.transition.HorizontalSplitTransition;
-
 import com.esotericsoftware.kryonet.Client;
 
 import TWLSlick.BasicTWLGameState;
 import TWLSlick.RootPane;
-import de.matthiasmann.twl.Alignment;
 import de.matthiasmann.twl.Button;
-import de.matthiasmann.twl.ColumnLayout.Panel;
 import de.matthiasmann.twl.ResizableFrame.ResizableAxis;
 import de.matthiasmann.twl.DialogLayout;
-import de.matthiasmann.twl.Event;
 import de.matthiasmann.twl.Label;
-import de.matthiasmann.twl.ScrollPane;
-import de.matthiasmann.twl.renderer.DynamicImage;
 import main.Chat.ChatFrame;
 import main.board.*;
-import main.grid.*;
 
 public class Play extends BasicTWLGameState {
 
@@ -45,22 +34,23 @@ public class Play extends BasicTWLGameState {
 	private Dice dice;
 	private QuestionList question_list;
 	private int playerID;
-	private boolean currentPlayer, sendPosition;
+	private boolean currentPlayer;
 	private Player player;
 	private Player player1;
 	private Player player2;
 	
+	private final int cancelled = -2;
 	private final int p1_turn = 7;
 	private final int p2_turn = 8;
+	private final int start_play = 9;
+	private final int play = 10;
 	
-	public static final int playquestion = 8;
-	public static final int puzzlequestion = 9;
-	public static final int gamequestion = 10;
+	private final int play_question = 6;
 	
 	// states: 0 = idle, 1 = rolling, 2 = navigate board
 	private int state, gameState;
-	private int dice_counter = 0;
-	private int clock;
+	private int dice_counter, dice_counter_copy = 0;
+	private int clock, timer;
 	
 	String mouse = "no input";
 	
@@ -77,6 +67,7 @@ public class Play extends BasicTWLGameState {
 	Image scorebackground, background;
 	
 	Packet11TurnMessage turnMessage;
+	Packet12PlayReady readyMessage;
 	
 	public Play(int main) {
 		client = HRRUClient.conn.getClient();
@@ -88,7 +79,8 @@ public class Play extends BasicTWLGameState {
 		
 		state = 0;
 		clock = 0;
-
+		timer = HRRUClient.cs.getTimer();
+		
 		playerID = HRRUClient.cs.getPlayer();
 		player1 = HRRUClient.cs.getP1();
 		player2 = HRRUClient.cs.getP2();
@@ -129,6 +121,9 @@ public class Play extends BasicTWLGameState {
 		resetPosition();
 		
 		turnMessage = new Packet11TurnMessage();
+		readyMessage = new Packet12PlayReady();
+		readyMessage.sessionID = HRRUClient.cs.getSessionID();
+		readyMessage.player = playerID;
 	}
 	
 	void resetPosition() {
@@ -153,9 +148,6 @@ public class Play extends BasicTWLGameState {
 	@Override
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		// Game 
-		CharacterSheet characterSheet = new CharacterSheet();
-		Character[] characters = characterSheet.getCharacters();
-
 		/*
 		Player player1 = new Player("player1");
 		Player player2 = new Player("player2");
@@ -199,6 +191,7 @@ public class Play extends BasicTWLGameState {
         });
 		
         DialogLayout.Group hBtnRoll = rollPanel.createSequentialGroup(btnRoll);
+         
         
         rollPanel.setHorizontalGroup(rollPanel.createParallelGroup()
                 .addGroup(hBtnRoll));
@@ -206,10 +199,10 @@ public class Play extends BasicTWLGameState {
         rollPanel.setVerticalGroup(rollPanel.createSequentialGroup()
         		.addGap(180).addWidget(btnRoll));
 		
-		sbg.addState(new PlayQuestion(playquestion, question_list));
-		sbg.addState(new PlayPuzzle(puzzlequestion));
-		sbg.addState(new PlayGame(gamequestion));
-		sbg.getState(playquestion).init(gc, sbg);
+		sbg.addState(new PlayQuestionTest(play_question, question_list));
+		//sbg.addState(new PlayPuzzle(9));
+		//sbg.addState(new PlayGame(10));
+		sbg.getState(play_question).init(gc, sbg);
 	}
 
 	@Override
@@ -234,7 +227,7 @@ public class Play extends BasicTWLGameState {
 		g.drawImage(player1.getPlayerCharacter().getCharacterImage(), board.gridSquares[player1.getPosition()].getx(), board.gridSquares[player1.getPosition()].gety());
 		g.drawImage(player2.getPlayerCharacter().getCharacterImage(), board.gridSquares[player2.getPosition()].getx(), board.gridSquares[player2.getPosition()].gety());
 		
-		g.drawString(mouse, 700, 550);
+		g.drawString(mouse, 650, 550);
 		
 		g.scale(1.25f, 1.25f);
 		if(state>0 && state < 3)
@@ -243,12 +236,18 @@ public class Play extends BasicTWLGameState {
 
 	@Override
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
-		Input input = gc.getInput();
+		gc.getInput();
 		int xpos = Mouse.getX();
 		int ypos= Mouse.getY();
-		mouse = "xpos: " + xpos + "\nypos: " + ypos;
-		
+		mouse = "timer:" + ((timer/100)+1) + "\nxpos: " + xpos + "\nypos: " + ypos;
 		gameState = HRRUClient.cs.getState();
+		timer--;
+		
+		if(gameState == cancelled) {
+			if(playerID == 1)
+				sbg.enterState(1);
+			else sbg.enterState(2);
+		}
 		
 		if(state == 0)
 		{
@@ -265,7 +264,7 @@ public class Play extends BasicTWLGameState {
 				{
 					lStatus.setText("It's " + player2.getName() + "'s turn.");
 					currentPlayer = false;
-					btnRoll.setText("WAITING FOR PLAYER2");
+					btnRoll.setText("WAITING FOR " + player2.getName());
 					btnRoll.setEnabled(false);
 				}
 			}
@@ -282,7 +281,7 @@ public class Play extends BasicTWLGameState {
 				{
 					lStatus.setText("It's " + player1.getName() + "'s turn.");
 					currentPlayer = false;
-					btnRoll.setText("WAITING FOR PLAYER2");
+					btnRoll.setText("WAITING FOR " + player1.getName());
 					btnRoll.setEnabled(false);
 				}
 			}
@@ -301,18 +300,10 @@ public class Play extends BasicTWLGameState {
 					if(dice.getPosition()==0)
 					{
 						dice_counter = dice.getCurrentNumber();
+						dice_counter_copy = dice.getCurrentNumber();
 						state = 2;
-						sendPosition = true;
 					}
 				}
-			}
-			if(sendPosition)
-			{
-				turnMessage.sessionID = HRRUClient.cs.getSessionID();
-				turnMessage.playerID = playerID;
-				turnMessage.moves = dice_counter;
-				client.sendTCP(turnMessage);
-				sendPosition = false;
 			}
 			
 			//navigating board
@@ -331,47 +322,53 @@ public class Play extends BasicTWLGameState {
 						dice.reset();
 						state = 3;
 					}
-					
 				}
 			}
 			if(state == 3)
 			{
+				turnMessage.sessionID = HRRUClient.cs.getSessionID();
+				turnMessage.playerID = playerID;
+				turnMessage.moves = dice_counter_copy;
+				turnMessage.tile = board.gridSquares[player.getPosition()].getTileType();
+				client.sendTCP(turnMessage);
+				
 				if(playerID == 1)
-					HRRUClient.cs.setState(p2_turn);
-				else
-					HRRUClient.cs.setState(p1_turn);
-				btnRoll.setText("WAITING FOR PLAYER2");
-				btnRoll.setEnabled(false);
-				state = 0;
-			}
-			/*
-			if(state == 3)
-			{
-				clock += delta;
-				if(clock>=2000)
 				{
-					int currentTile = board.gridSquares[player.getPosition()].getTileType();
-					if(currentTile == 1)	
-					{
-						state=0;
-						sbg.enterState(8, null, new HorizontalSplitTransition());
-					}
-					else if(currentTile == 2)	
-					{
-						sbg.enterState(9);
-					}
-					else if(currentTile == 3)
-					{
-						sbg.enterState(10);
-					}
-					else state = 0;
-					clock-=2000;
+					HRRUClient.cs.setState(p2_turn);
+					btnRoll.setText("WAITING FOR " + player2.getName());
+				}
+				else
+					btnRoll.setText("WAITING FOR " + player1.getName());
+				btnRoll.setEnabled(false);
+				state = 4;
+				clock = 200;
+			}
+		}
+	
+		if(state == 4)
+		{
+			if(gameState == start_play)
+			{
+				clock--;
+				lStatus.setText("Starting in " + (clock/100+1) + "...");
+				if(clock<=0)
+				{
+					clock=0;
+					client.sendTCP(readyMessage);
+					state = 5;
 				}
 			}
-			*/
+		}
+		else if(state == 5)
+		{
+			state = 6;
 		}
 		
-		
+		if(state == 6)
+		{
+			if(gameState == play)
+				sbg.enterState(play_question);
+		}
 	}
 
 	@Override

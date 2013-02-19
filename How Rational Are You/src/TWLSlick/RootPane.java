@@ -98,7 +98,8 @@ public class RootPane extends DesktopArea {
         return super.requestKeyboardFocus(child);
     }
 
-    @Override
+    @SuppressWarnings("incomplete-switch")
+	@Override
     protected boolean handleEvent(Event evt) {
         if (super.handleEvent(evt)) {
             return true;

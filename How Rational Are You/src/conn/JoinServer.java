@@ -1,21 +1,14 @@
 package conn;
 
-import conn.*;
 import conn.Packet.*;
 import main.HRRUClient;
 import main.Player;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLClassLoader;
-
-import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
-import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Client;
 
 import TWLSlick.BasicTWLGameState;
@@ -31,13 +24,9 @@ public class JoinServer extends BasicTWLGameState {
 	private final int failed = -3;
 	private final int cancelled = -2;
 	private final int initial = -1;
-	private final int waiting = 0; 
 	private final int joined = 1;
-	private final int established = 2;
 	private final int ready = 3;
 	private final int start = 4;
-	private final int p1_charselect = 5;
-	
 	private int attempts = 0;
 	int clock;
 	
@@ -48,7 +37,7 @@ public class JoinServer extends BasicTWLGameState {
 	private int joinSessionID;
 	private String joinPassword;
 	private String p2name;
-	private Player player1, player2;
+	private Player player2;
 
 	int gcw;
 	int gch;
@@ -166,7 +155,7 @@ public class JoinServer extends BasicTWLGameState {
 	
 	void emulateLogin() {
 		try {
-	        String test = String.valueOf(joinSessionID);
+	        String.valueOf(joinSessionID);
 	        joinSessionID = Integer.parseInt(efSessionID.getText());
 	        joinPassword = efPassword.getText();
 	        p2name = efName.getText();

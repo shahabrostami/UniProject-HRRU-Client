@@ -9,8 +9,6 @@ public class Board {
 	private int size;
 	private int scale;
 	
-	private int maxxpos;
-	private int maxypos;
 	private int shiftx;
 	private int shifty;
 	private int middlex = HRRUClient.resX/2 + 150;
@@ -23,9 +21,6 @@ public class Board {
 	{
 		this.size = (scale*4)-4;
 		this.setScale(scale);
-		this.maxxpos = GridSquare.width * (scale-1);
-		this.maxypos = GridSquare.height * (scale-1);
-		
 		int tempxpos = 0;
 		int tempypos = 0;
 		

@@ -1,23 +1,7 @@
 package main;
 
-import conn.*;
-import conn.Packet.*;
-
-import org.newdawn.slick.Color;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
-import org.newdawn.slick.state.StateBasedGame;
-
-import com.esotericsoftware.kryonet.Client;
-
-import TWLSlick.BasicTWLGameState;
-import TWLSlick.RootPane;
-import de.matthiasmann.twl.Button;
-import de.matthiasmann.twl.DialogLayout;
-import de.matthiasmann.twl.Label;
-import de.matthiasmann.twl.renderer.Image;
 
 public class CharacterSheet  {
 

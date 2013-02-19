@@ -4,7 +4,6 @@ import org.newdawn.slick.*;
 
 public class QuestionGridSquare implements GridSquare{
 
-	private int tile_type = questionTile;
 	private Image tile_image;
 
 	SpriteSheet sheet = new SpriteSheet("res/img/tileset/tile2.png", width,height);

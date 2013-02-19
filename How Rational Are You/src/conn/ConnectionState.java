@@ -1,27 +1,17 @@
 package conn;
 
-import main.Character;
 import main.Player;
 
 public class ConnectionState {
 	
-	private final int failed = -3;
-	private final int cancelled = -2;
 	private final int initial = -1;
-	private final int waiting = 0; 
-	private final int joined = 1;
-	private final int established = 2;
-	private final int ready = 3;
-	private final int start = 4;
-	private final int p1_charselect = 5;
-	private final int p2_charselect = 6;
-	private final int p1_turn = 7;
-	private final int p2_turn = 8;
-	
+	private int timer = 120000;	
 	private int player;
 	private Player p1;
 	private Player p2;
 	private int state = initial;
+	private int activity;
+	private int activity_id;
 	private int sessionID;
 	private String password;
 	private int[] board;
@@ -88,4 +78,29 @@ public class ConnectionState {
 	public void setBoard(int[] board) {
 		this.board = board;
 	}
+
+	public int getTimer() {
+		return timer;
+	}
+	
+	public void setTimer(int timer) {
+		this.timer = timer;
+	}
+	
+	public int getActivity() {
+		return this.activity;
+	}
+	
+	public void setActivity(int activity) {
+		this.activity = activity;
+	}
+
+	public int getActivity_id() {
+		return activity_id;
+	}
+
+	public void setActivity_id(int activity_id) {
+		this.activity_id = activity_id;
+	}
+	
 }

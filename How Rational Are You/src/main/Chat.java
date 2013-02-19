@@ -1,7 +1,5 @@
 package main;
 
-import org.lwjgl.Sys;
-
 import com.esotericsoftware.kryonet.Client;
 
 import conn.Packet.Packet10ChatMessage;

@@ -1,42 +1,28 @@
 package conn;
 
-import conn.*;
 import conn.Packet.*;
 import main.HRRUClient;
 import main.Player;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLClassLoader;
-
-import org.lwjgl.input.Mouse;
-import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.gui.TextField;
 import org.newdawn.slick.state.StateBasedGame;
 
-import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Client;
 
 import TWLSlick.BasicTWLGameState;
 import TWLSlick.RootPane;
 import de.matthiasmann.twl.*;
 import de.matthiasmann.twl.EditField.Callback;
-import de.matthiasmann.twl.theme.ThemeManager;
 
 public class HostServer extends BasicTWLGameState {
 
 	public static boolean p1ready = false;
 	public static boolean p2ready = false;
 	
-	private final int failed = -3;
 	private final int cancelled = -2;
-	private final int initial = -1;
 	private final int waiting = 0; 
-	private final int joined = 1;
 	private final int established = 2;
 	private final int ready = 3;
 	private final int start = 4;
@@ -47,10 +33,8 @@ public class HostServer extends BasicTWLGameState {
 	private boolean back = false;
 	public Client client;
 	private String password;
-	private TextField p1nameTF;
 	private String p1name;
-	private String p2name;
-	private Player player1, player2;
+	private Player player1;
 
 	int gcw;
 	int gch;

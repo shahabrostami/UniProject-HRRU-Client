@@ -1,11 +1,8 @@
 package main;
 
-import conn.*;
-import conn.Packet.Packet2JoinRequest;
 import conn.Packet.*;
 
 import org.lwjgl.input.Mouse;
-import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -33,6 +30,7 @@ public class CharacterSelect extends BasicTWLGameState {
 	public Client client;
 	DialogLayout firstPanel;
 	
+	private int gameState;
 	int clock;
 	int player;
 	boolean picking, selected, p1chosen, p2chosen;
@@ -256,27 +254,28 @@ public class CharacterSelect extends BasicTWLGameState {
 		int xpos = Mouse.getX();
 		int ypos= Mouse.getY();
 		mouse = "xpos: " + xpos + "\nypos: " + ypos;
+		gameState = HRRUClient.cs.getState();
+		
+		if(gameState == cancelled) {
+			if(player == 1)
+				sbg.enterState(1);
+			else
+				sbg.enterState(2);
+		}
 		
 		if(player == 1) {
-			if(HRRUClient.cs.getState() == p2_charselect) {
+			if(gameState == p2_charselect) {
 				p2charid = HRRUClient.cs.getP2().getPlayerCharacterID();
 				p2chosen = true;
 			}
 		}
 		else if(player == 2) {
-			if(HRRUClient.cs.getState() == p1_charselect) {
+			if(gameState == p1_charselect) {
 				p1charid = HRRUClient.cs.getP1().getPlayerCharacterID();
 				p1chosen = true;
 				lStatus.setText(p2name + ", it's your turn!");
 				picking = true;
 			}
-		}
-		
-		if(HRRUClient.cs.getState() == cancelled) {
-			if(player == 1)
-				sbg.enterState(1);
-			else
-				sbg.enterState(2);
 		}
 		
 		if(picking) {
@@ -304,7 +303,7 @@ public class CharacterSelect extends BasicTWLGameState {
 			}
 		}
 		
-		if(HRRUClient.cs.getState() == p2_charselect)
+		if(gameState == p2_charselect)
 		{
 			clock--;
 			lStatus.setText("Game Starting in " + (clock/100+1) + "...");

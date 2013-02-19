@@ -1,6 +1,5 @@
 package conn;
 
-import conn.*;
 import conn.Packet.*;
 import main.HRRUClient;
 
@@ -46,6 +45,8 @@ public class Connection {
 		kryo.register(Packet9CharacterSelect.class);
 		kryo.register(Packet10ChatMessage.class);
 		kryo.register(Packet11TurnMessage.class);
+		kryo.register(Packet12PlayReady.class);
+		kryo.register(Packet13Play.class);
 		kryo.register(int[].class);
 	}
 	

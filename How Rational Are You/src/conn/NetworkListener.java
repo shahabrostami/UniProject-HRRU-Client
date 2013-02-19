@@ -2,7 +2,6 @@ package conn;
 
 import org.newdawn.slick.SlickException;
 
-import conn.*;
 import conn.Packet.*;
 import main.HRRUClient;
 import main.Play;
@@ -15,22 +14,18 @@ import com.esotericsoftware.minlog.Log;
 
 public class NetworkListener extends Listener{
 	
-	private Client client;
-	
 	private final int failed = -3;
 	private final int cancelled = -2;
 	private final int waiting = 0; 
 	private final int joined = 1;
-	private final int established = 2;
-	private final int ready = 3;
 	private final int start = 4;
 	private final int player1char = 5;
 	private final int player2char = 6;
-	private final int p1_turn = 7;
 	private final int p2_turn = 8;
+	private final int start_play = 9;
+	private final int play = 10;
 	
 	public void init(Client client) {
-		this.client = client;
 	}
 
 	public void connected(Connection c) {
@@ -137,7 +132,7 @@ public class NetworkListener extends Listener{
 		}
 		if(o instanceof Packet10ChatMessage)
 		{
-			Play.chatFrame.appendRowOther("color2", ((Packet10ChatMessage)o).message);
+			Play.chatFrame.appendRowOther("color1", ((Packet10ChatMessage)o).message);
 		}
 		if(o instanceof Packet11TurnMessage)
 		{
@@ -150,9 +145,22 @@ public class NetworkListener extends Listener{
 			}
 			else if(player == 2)
 			{
-				HRRUClient.cs.getP2().setPosition(moves);
-				HRRUClient.cs.setState(p1_turn);
+				if(moves > 0)
+					HRRUClient.cs.getP2().setPosition(moves);	
+				System.out.println("receive");
+				HRRUClient.cs.setState(start_play);
 			}
+			
+		}
+		if(o instanceof Packet13Play)
+		{
+			int activity = ((Packet13Play)o).activity;
+			int activity_id = ((Packet13Play)o).activity_id;
+			HRRUClient.cs.setActivity(activity);
+			HRRUClient.cs.setActivity_id(activity_id);
+			HRRUClient.cs.setState(play);
+			System.out.println(activity);
+			System.out.println(activity_id);
 			
 		}
 		

@@ -4,7 +4,6 @@ import org.newdawn.slick.SlickException;
 
 public class Question {
 
-	private int id;
 	private String[] description;
 	private int amountOfAnswers;
 	private int descriptionLines;
@@ -15,7 +14,6 @@ public class Question {
 	
 	public Question (int id, int descriptionLines, int amountOfAnswers, int answer, int difficulty, String[] description, String[] choices) throws SlickException
 	{
-		this.id = id;
 		this.description = description;
 		this.descriptionLines = descriptionLines;
 		this.amountOfAnswers = amountOfAnswers;

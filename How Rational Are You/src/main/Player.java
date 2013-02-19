@@ -1,6 +1,5 @@
 package main;
 
-import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
 
@@ -44,6 +43,8 @@ public class Player {
 	
 	public void updatePosition(){
 		this.position++;
+		if(this.position == 35)
+			this.position = 0;
 	}
 
 	public void setPosition(int position) {
