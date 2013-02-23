@@ -1055,6 +1055,7 @@
         <param name="autoScrollArea"><int>5</int></param>
         <param name="autoScrollSpeed"><int>10</int></param>
         <param name="scrollbarsAlwaysVisible"><bool>false</bool></param>
+        <param name="background"><image>none</image></param>
     </theme>
 
     <theme name="splitpane" ref="-defaults" allowWildcard="true">
@@ -1078,7 +1079,7 @@
         <param name="namedGaps"><map/></param>
     </theme>
 
-    <theme name="textarea" ref="-defaults" allowWildcard="true">
+    <theme name="textarea2" ref="-defaults" allowWildcard="true">
         <param name="background"><image>-borderC</image></param>
         <param name="border"><border>background.border</border></param>
         <param name="fonts"><map>
@@ -1433,7 +1434,6 @@
         </theme>
     </theme>
     <theme name="resizableframe" ref="resizableframe-title" allowWildcard="true">
-        <param name="background"><image>-borderA</image></param>
         <param name="border"><border>background.border</border></param>
         <param name="hasCloseButton"><bool>false</bool></param>
         <param name="titleAreaBottom"><int>4</int></param>
@@ -1474,8 +1474,8 @@
         </inputMapDef></param>
     </theme>
 
-    <theme name="textareademo" ref="-defaults">
-        <param name="background"><image>background-image</image></param>
+    <theme name="textpageframe" ref="resizableframe">
+        <param name="background"><image>none</image></param>
 
         <theme name="fpscounter" ref="-defaults">
             <param name="tooltip"><string>Current FPS</string></param>
@@ -1483,10 +1483,14 @@
 
         <theme name="textframe" ref="resizableframe">
             <theme name="scrollpane" ref="scrollpane">
-                <param name="background"><image>innerframe.background</image></param>
                 <param name="border"><border>background.border</border></param>
-
-                <theme name="textarea" ref="-defaults">
+                <param name="background"><image>none</image></param>
+            </theme>
+            <param name="background"><image>none</image></param>
+        </theme>
+    </theme>
+	
+	<theme name="textarea" ref="-defaults">
                     <param name="fonts"><map>
                         <param name="default"><fontDef filename="Font/font.fnt"/></param>
                         <param name="link"><fontDef filename="Font/font.fnt" underlineOffset="1">
@@ -1504,9 +1508,7 @@
                     </map></param>
                     <param name="mouseCursor.link"><cursor>cursor.finger</cursor></param>
                     <theme name="" ref="*"/>
-                </theme>
-            </theme>
-        </theme>
+                    <param name="background"><image>none</image></param>
     </theme>
 
     <theme name="questiontextarea" ref="-defaults">

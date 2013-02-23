@@ -16,6 +16,7 @@ import com.esotericsoftware.kryonet.Client;
 
 import TWLSlick.BasicTWLGameState;
 import TWLSlick.RootPane;
+import de.matthiasmann.twl.ResizableFrame.ResizableAxis;
 import de.matthiasmann.twl.utils.PNGDecoder;
 import de.matthiasmann.twl.DialogLayout;
 import de.matthiasmann.twl.Label;
@@ -37,10 +38,12 @@ public class Test extends BasicTWLGameState {
 	@Override
 	public void enter(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		super.enter(gc, sbg);
-		TextPage page = new TextPage();
 		TextPageFrame textpageframe = new TextPageFrame("demo.html");
-		rootPane.add(textpageframe);
-		rootPane.setTheme("");
+		textpageframe.setSize(600, 200);
+		textpageframe.setDraggable(false);
+		textpageframe.setResizableAxis(ResizableAxis.NONE);
+		textpageframe.setTheme("textpageframe");
+        rootPane.add(textpageframe);
 	}
 
 	@Override
