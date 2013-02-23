@@ -3,6 +3,7 @@ package conn;
 import org.newdawn.slick.SlickException;
 
 import conn.Packet.*;
+import main.ActivityScore;
 import main.HRRUClient;
 import main.Play;
 import main.Player;
@@ -117,15 +118,17 @@ public class NetworkListener extends Listener{
 		{
 			int characterID = ((Packet.Packet9CharacterSelect)o).characterID;
 			int player = ((Packet.Packet9CharacterSelect)o).player;
-			
+			System.out.println("derp");
 			
 			if(player == 1)
 			{
+				System.out.println("derp1");
 				HRRUClient.cs.getP1().setPlayerCharacterID(characterID);
 				HRRUClient.cs.setState(player1char);
 			}
 			if(player == 2)
 			{
+				System.out.println("derp2");
 				HRRUClient.cs.getP2().setPlayerCharacterID(characterID);
 				HRRUClient.cs.setState(player2char);
 			}
@@ -154,6 +157,8 @@ public class NetworkListener extends Listener{
 		}
 		if(o instanceof Packet13Play)
 		{
+			HRRUClient.cs.getP1().setReady(0);
+			HRRUClient.cs.getP2().setReady(0);
 			int activity = ((Packet13Play)o).activity;
 			int activity_id = ((Packet13Play)o).activity_id;
 			HRRUClient.cs.setActivity(activity);
@@ -162,6 +167,38 @@ public class NetworkListener extends Listener{
 			System.out.println(activity);
 			System.out.println(activity_id);
 			
+		}
+		if(o instanceof Packet14QuestionComplete)
+		{
+			int player = ((Packet14QuestionComplete)o).player;
+			int question_difficulty = ((Packet14QuestionComplete)o).difficulty;
+			int elapsedtime = ((Packet14QuestionComplete)o).elapsedtime;
+			int points = ((Packet14QuestionComplete)o).points;
+			int overall = ((Packet14QuestionComplete)o).overall;
+			boolean correct = ((Packet14QuestionComplete)o).correct;
+			ActivityScore otherPlayerResult = new ActivityScore(0,0,0,0,0, false);
+			
+			otherPlayerResult.setActivity(1);
+			otherPlayerResult.setDifficulty(question_difficulty);
+			otherPlayerResult.setElapsedtime(elapsedtime);
+			otherPlayerResult.setPoints(points);
+			otherPlayerResult.setOverall(overall);
+			otherPlayerResult.setCorrect(correct);
+			
+			if(player == 1)
+			{
+				HRRUClient.cs.getP1().setReady(1);
+				HRRUClient.cs.getP1().setActivityScore(otherPlayerResult);
+			}
+			else
+			{
+				HRRUClient.cs.getP2().setReady(1);
+				HRRUClient.cs.getP2().setActivityScore(otherPlayerResult);
+			}
+		}
+		if(o instanceof Packet00SyncMessage)
+		{
+			HRRUClient.cs.setSync(true);
 		}
 		
 	}

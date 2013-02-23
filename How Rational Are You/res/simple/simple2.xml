@@ -45,6 +45,7 @@
     
         <area name="choice.hover.background" border="3" xywh="9,32,7,7" splitx="L3,R3" splity="T3,B3"/>
         <area name="choice.sel.background" border="3" xywh="17,32,7,7" splitx="L3,R3" splity="T3,B3"/>
+        <area name="choice.red.background" border="3" xywh="25,32,7,7" splitx="L3,R3" splity="T3,B3"/>
         <grid name="frame.background" weightsX="0,1,0" weightsY="0,1,0" border="20,4,4,4" tint="#DFFF">
             <area xywh="1,1,2,17"/>
             <area xywh="4,1,1,17"/>
@@ -86,7 +87,7 @@
         </animation>
         <area name="editfield.selection" tint="#E000FEFF" xywh="1,1,1,1"/>
         <area name="evilframe.background" border="19,5,5,5" xywh="40,1,20,29" splitx="L5,R5" splity="T19,B5"/>
-        <area name="evilframe.background7260959053317" border="19,5,5,5" xywh="40,1,20,29" splitx="L5,R5" splity="T19,B5"/>
+        <area name="evilframe.background7260959053317" border="19,5,5,5" xywh="86,1,20,61" splitx="L2,R3" splity="T2,B3"/>
 
         <composed name="valueadjuster.background" border="2">
             <area tint="#cccc" xywh="1,1,1,1"/>
@@ -389,6 +390,13 @@
     <images file="headerbg.png">
         <area name="new27923765893294" xywh="0,0,1,1"/>
     </images>
+    <images file="correctbg.png">
+        <area name="correct-background" xywh="*" border="20"/>
+    </images>
+    <images file="incorrectbg.png">
+        <area name="incorrect-background" xywh="*" border="20"/>
+    </images>
+
 
 
 
@@ -454,6 +462,11 @@
         <fontParam if="hover"/>
     
     </fontDef>
+    <fontDef name="scoreatari12" filename="scoreatari12.fnt" color="white"/>
+    <fontDef name="scoreatari12r" filename="scoreatari12r.fnt" color="white"/>
+    <fontDef name="scoretotal12" filename="scoretotal12.fnt" color="white"/>
+
+
 
     <fontDef name="whiteatari14" filename="plainatari14.fnt" color="white">
         <fontParam if="disabled" color="gray"/>
@@ -696,6 +709,16 @@
         <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
     </theme>
 
+    <theme name="labelscoretotal" ref="-defaults" allowWildcard="true">
+        <param name="font"><font>scoretotal12</font></param>
+        <param name="minWidth"><int>0</int></param>
+        <param name="maxWidth"><int>0</int></param>
+        <param name="minHeight"><int>0</int></param>
+        <param name="maxHeight"><int>0</int></param>
+        <param name="background"><image>none</image></param>
+        <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
+    </theme>
+
     <theme name="player1atari" ref="-defaults" allowWildcard="true">
         <param name="font"><font>button_font</font></param>
         <param name="minWidth"><int>0</int></param>
@@ -704,15 +727,6 @@
         <param name="maxHeight"><int>0</int></param>
         <param name="background"><image>player1bg</image></param>
         <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
-    </theme>
-
-    <theme name="labelpanda" ref="-defaults" allowWildcard="true">
-        <param name="font"><font>label</font></param>
-        <param name="minWidth"><int>0</int></param>
-        <param name="maxWidth"><int>0</int></param>
-        <param name="minHeight"><int>0</int></param>
-        <param name="maxHeight"><int>0</int></param>
-        <param name="background"><image>select_powerranger</image></param>
     </theme>
     
     <theme name="button" ref="-defaults" allowWildcard="true">
@@ -797,6 +811,74 @@
         <param name="maxWidth"><int>0</int></param>
         <param name="minHeight"><int>0</int></param>
         <param name="maxHeight"><int>0</int></param>
+    </theme>
+
+    <theme name="correct-panel" ref="-defaults" allowWildcard="true">
+                    <param name="background"><image>correct-background</image></param>
+                    <param name="border"><border>background.border</border></param>
+        <param name="defaultGap"><dimension>5,5</dimension></param>
+        <param name="smallGap"><dimension>8,8</dimension></param>
+        <param name="mediumGap"><dimension>10,10</dimension></param>
+        <param name="largeGap"><dimension>15,15</dimension></param>
+        <param name="namedGaps"><map/></param>
+        <param name="minWidth"><int>350</int></param>
+        <param name="maxWidth"><int>350</int></param>
+        <param name="minHeight"><int>350</int></param>
+        <param name="maxHeight"><int>350</int></param>
+        <param name="textAlignment"><enum type="alignment">FILL</enum></param>
+        <param name="font"><font>whiteatari14</font></param>
+        <theme name="label" ref="-defaults">
+            <param name="font"><font>scoreatari12</font></param>
+        </theme>
+        <theme name="labelright" ref="-defaults">
+            <param name="font"><font>whiteatari14</font></param>
+            <param name="textAlignment"><enum type="alignment">RIGHT</enum></param>
+        </theme>
+        <theme name="labelmiddle" ref="-defaults">
+            <param name="font"><font>whiteatari14</font></param>
+            <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
+        </theme>
+        <theme name="labelscoretotal" ref="-defaults">
+            <param name="font"><font>scoretotal12</font></param>
+            <param name="textAlignment"><enum type="alignment">LEFT</enum></param>
+        </theme>
+        <theme name="labelscoretotalright" ref="-defaults">
+            <param name="font"><font>scoretotal12</font></param>
+            <param name="textAlignment"><enum type="alignment">RIGHT</enum></param>
+        </theme>
+    </theme>
+
+    <theme name="incorrect-panel" ref="-defaults" allowWildcard="true">
+                    <param name="background"><image>incorrect-background</image></param>
+                    <param name="border"><border>background.border</border></param>
+        <param name="defaultGap"><dimension>5,5</dimension></param>
+        <param name="smallGap"><dimension>8,8</dimension></param>
+        <param name="mediumGap"><dimension>10,10</dimension></param>
+        <param name="largeGap"><dimension>15,15</dimension></param>
+        <param name="namedGaps"><map/></param>
+        <param name="minWidth"><int>350</int></param>
+        <param name="maxWidth"><int>350</int></param>
+        <param name="minHeight"><int>350</int></param>
+        <param name="maxHeight"><int>350</int></param>
+        <theme name="label" ref="-defaults">
+            <param name="font"><font>scoreatari12r</font></param>
+        </theme>
+        <theme name="labelright" ref="-defaults">
+            <param name="font"><font>whiteatari14</font></param>
+            <param name="textAlignment"><enum type="alignment">RIGHT</enum></param>
+        </theme>
+        <theme name="labelmiddle" ref="-defaults">
+            <param name="font"><font>whiteatari14</font></param>
+            <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
+        </theme>
+        <theme name="labelscoretotal" ref="-defaults">
+            <param name="font"><font>scoretotal12</font></param>
+            <param name="textAlignment"><enum type="alignment">LEFT</enum></param>
+        </theme>
+        <theme name="labelscoretotalright" ref="-defaults">
+            <param name="font"><font>scoretotal12</font></param>
+            <param name="textAlignment"><enum type="alignment">RIGHT</enum></param>
+        </theme>
     </theme>
 
     <theme name="normal-panel" ref="-defaults" allowWildcard="true">

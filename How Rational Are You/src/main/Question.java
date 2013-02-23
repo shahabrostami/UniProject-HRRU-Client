@@ -50,7 +50,6 @@ public class Question {
 	public int getDescriptionLines() {
 		return descriptionLines;
 	}
-
 	
 	public int getDifficulty() {
 		return difficulty;

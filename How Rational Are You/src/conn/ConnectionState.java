@@ -15,6 +15,7 @@ public class ConnectionState {
 	private int sessionID;
 	private String password;
 	private int[] board;
+	private boolean sync;
 	
 	
 	public ConnectionState(){
@@ -101,6 +102,14 @@ public class ConnectionState {
 
 	public void setActivity_id(int activity_id) {
 		this.activity_id = activity_id;
+	}
+
+	public boolean isSync() {
+		return sync;
+	}
+
+	public void setSync(boolean sync) {
+		this.sync = sync;
 	}
 	
 }

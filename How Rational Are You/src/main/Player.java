@@ -9,6 +9,8 @@ public class Player {
 	private String name;
 	private int score;
 	private int position;
+	private int ready;
+	private ActivityScore activityScore;
 	private int playerCharacterID;
 	private Character playerCharacter;
 	CharacterSheet characterSheet = new CharacterSheet();
@@ -18,7 +20,9 @@ public class Player {
 	{
 		this.setName(name);
 		this.setScore(0);
+		this.setReady(0);
 		this.setPosition(0);
+		this.activityScore = new ActivityScore(0,0,0,0,0, false);
 	}
 
 	public String getName() {
@@ -72,4 +76,20 @@ public class Player {
 		this.score += i;
 	}
 
+	public int getReady() {
+		return ready;
+	}
+
+	public void setReady(int ready) {
+		this.ready = ready;
+	}
+
+	public ActivityScore getActivityScore(){
+		return activityScore;
+	}
+	
+	public void setActivityScore(ActivityScore activityScore){
+		this.activityScore = activityScore;
+	}
+	
 }

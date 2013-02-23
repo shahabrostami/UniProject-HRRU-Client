@@ -33,6 +33,7 @@ public class Connection {
 	
 	private void register(){
 		Kryo kryo = client.getKryo();
+		kryo.register(Packet00SyncMessage.class);
 		kryo.register(Packet0CreateRequest.class);
 		kryo.register(Packet1CreateAnswer.class);
 		kryo.register(Packet2JoinRequest.class);
@@ -47,6 +48,7 @@ public class Connection {
 		kryo.register(Packet11TurnMessage.class);
 		kryo.register(Packet12PlayReady.class);
 		kryo.register(Packet13Play.class);
+		kryo.register(Packet14QuestionComplete.class);
 		kryo.register(int[].class);
 	}
 	

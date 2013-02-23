@@ -1,6 +1,7 @@
 package main;
 
 import java.awt.Font;
+import java.awt.FontFormatException;
 import java.io.IOException;
 
 import conn.Packet.*;
@@ -38,6 +39,10 @@ public class Play extends BasicTWLGameState {
 	private Player player;
 	private Player player1;
 	private Player player2;
+	
+	private Font loadFont, loadMainFont;
+	private BasicFont mainFont;
+	private int mainFontSize = 24;
 	
 	private final int cancelled = -2;
 	private final int p1_turn = 7;
@@ -168,6 +173,18 @@ public class Play extends BasicTWLGameState {
 		background = new Image("res/simple/background.png");
 		
 		header = new BasicFont("Atari Font Full Version", Font.PLAIN, 12);
+		// Create custom font for question
+		try {
+			loadFont = java.awt.Font.createFont(java.awt.Font.TRUETYPE_FONT,
+			        org.newdawn.slick.util.ResourceLoader.getResourceAsStream("res/font/visitor2.ttf"));
+		} catch (FontFormatException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+				}
+		
+		loadMainFont = loadFont.deriveFont(Font.BOLD,mainFontSize);
+		mainFont = new BasicFont(loadMainFont);
 		
 		try {
 			question_list = new QuestionList("Question.txt");
@@ -215,15 +232,14 @@ public class Play extends BasicTWLGameState {
 			g.drawImage(board.gridSquares[j].gridSquare.getImage(), board.gridSquares[j].getx(), board.gridSquares[j].gety());
 		
 		g.drawImage(scorebackground, 0,0);
-		
+		g.setFont(mainFont.get());
 		g.drawImage(player1.getPlayerCharacter().getCharacterImage(), 13,13);
 		g.drawImage(player2.getPlayerCharacter().getCharacterImage(), 13,55);
-		g.setFont(header.get());
-		g.drawString("" + player1.getName(), 70, 30);
-		g.drawString("" + player2.getName(), 70, 70);
-		g.drawString("" + player1.getScore(), 200, 30);
-		g.drawString("" + player2.getScore(), 200, 70);
-
+		g.drawString("" + player1.getName(), 65, 22);
+		g.drawString("" + player2.getName(), 65, 64);
+		g.drawString("" + player1.getScore(), 204, 22);
+		g.drawString("" + player2.getScore(), 204, 64);
+		
 		g.drawImage(player1.getPlayerCharacter().getCharacterImage(), board.gridSquares[player1.getPosition()].getx(), board.gridSquares[player1.getPosition()].gety());
 		g.drawImage(player2.getPlayerCharacter().getCharacterImage(), board.gridSquares[player2.getPosition()].getx(), board.gridSquares[player2.getPosition()].gety());
 		
@@ -293,10 +309,10 @@ public class Play extends BasicTWLGameState {
 			if(state==1)
 			{
 				clock += delta;
-				if(clock>=60)
+				if(clock>=6) // should be 60
 				{
 					dice.rollDice();
-					clock-=60;
+					clock-=6; // should be 60
 					if(dice.getPosition()==0)
 					{
 						dice_counter = dice.getCurrentNumber();
@@ -310,7 +326,7 @@ public class Play extends BasicTWLGameState {
 			if(state == 2)
 			{
 				clock += delta;
-				if(clock>=200)
+				if(clock>=20) // should be 200
 				{
 					if(player.getPosition() >= board.getSize()-1)
 						player.setPosition(0);
@@ -341,7 +357,7 @@ public class Play extends BasicTWLGameState {
 					btnRoll.setText("WAITING FOR " + player1.getName());
 				btnRoll.setEnabled(false);
 				state = 4;
-				clock = 200;
+				clock = 50; // should be 200
 			}
 		}
 	
