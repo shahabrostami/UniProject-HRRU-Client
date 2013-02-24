@@ -196,11 +196,42 @@ public class NetworkListener extends Listener{
 				HRRUClient.cs.getP2().setActivityScore(otherPlayerResult);
 			}
 		}
+		if(o instanceof Packet15PuzzleComplete)
+		{
+			int player = ((Packet15PuzzleComplete)o).player;
+			int question_difficulty = ((Packet15PuzzleComplete)o).difficulty;
+			int elapsedtime = ((Packet15PuzzleComplete)o).elapsedtime;
+			int points = ((Packet15PuzzleComplete)o).points;
+			int overall = ((Packet15PuzzleComplete)o).overall;
+			boolean correct = ((Packet15PuzzleComplete)o).correct;
+			ActivityScore otherPlayerResult = new ActivityScore(0,0,0,0,0, false);
+			
+			otherPlayerResult.setActivity(2);
+			otherPlayerResult.setDifficulty(question_difficulty);
+			otherPlayerResult.setElapsedtime(elapsedtime);
+			otherPlayerResult.setPoints(points);
+			otherPlayerResult.setOverall(overall);
+			otherPlayerResult.setCorrect(correct);
+			
+			if(player == 1)
+			{
+				HRRUClient.cs.getP1().setReady(1);
+				HRRUClient.cs.getP1().setActivityScore(otherPlayerResult);
+			}
+			else
+			{
+				HRRUClient.cs.getP2().setReady(1);
+				HRRUClient.cs.getP2().setActivityScore(otherPlayerResult);
+			}
+		}
 		if(o instanceof Packet00SyncMessage)
 		{
 			HRRUClient.cs.setSync(true);
 		}
-		
+		if(o instanceof Packet00SyncMessage)
+		{
+			HRRUClient.cs.setSync(true);
+		}
 	}
 
 }

@@ -49,6 +49,7 @@ public class Connection {
 		kryo.register(Packet12PlayReady.class);
 		kryo.register(Packet13Play.class);
 		kryo.register(Packet14QuestionComplete.class);
+		kryo.register(Packet15PuzzleComplete.class);
 		kryo.register(int[].class);
 	}
 	

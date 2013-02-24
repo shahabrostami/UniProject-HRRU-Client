@@ -1,4 +1,5 @@
 package main;
+ 
 
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.*;
@@ -46,7 +47,7 @@ public class PlayQuestion extends BasicTWLGameState{
 	private int answer_x = 180;	
 	private int answer_y = 300;
 	
-	private String[] full_question_description;
+	private String full_question_description;
 	private String start_message = "";
 	private String full_start_message = "";
 	private int full_start_counter = 0;
@@ -120,7 +121,7 @@ public class PlayQuestion extends BasicTWLGameState{
 		current_question = questions[current_question_id];
 
 		current_choices = current_question.getChoices();
-		full_question_description = current_question.getDescription();
+		full_question_description = current_question.getFile();
 		noOfAnswers = current_question.getAmountOfAnswers();
 		correctAnswer = current_question.getAnswer();
 		question_difficulty = current_question.getDifficulty();
@@ -139,9 +140,7 @@ public class PlayQuestion extends BasicTWLGameState{
 		g.drawString("> " + start_message + "" + ticker, header_x, header_y);
 		
 		g.setFont(questionFont.get());
-		for(int i = 0; i < current_question.getDescriptionLines(); i++)
-			g.drawString(full_question_description[i], description_x, description_y+(i*30));
-		
+
 
 		for(int i = 0; i < current_question.getAmountOfAnswers(); i++)
 		{
@@ -361,7 +360,7 @@ public class PlayQuestion extends BasicTWLGameState{
 		}
 
 		current_choices = current_question.getChoices();
-		full_question_description = current_question.getDescription();
+		full_question_description = current_question.getFile();
 		noOfAnswers = current_question.getAmountOfAnswers();
 		correctAnswer = current_question.getAnswer();
 		question_difficulty = current_question.getDifficulty();

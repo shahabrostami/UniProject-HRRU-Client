@@ -5,6 +5,8 @@ import java.awt.Font;
 import java.awt.FontFormatException;
 import java.io.IOException;
 
+import main.textpage.TextPage.TextPageFrame;
+
 import org.lwjgl.input.Mouse;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -22,6 +24,7 @@ import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.DialogLayout;
 import de.matthiasmann.twl.Label;
 import de.matthiasmann.twl.TextArea;
+import de.matthiasmann.twl.ResizableFrame.ResizableAxis;
 import de.matthiasmann.twl.textarea.SimpleTextAreaModel;
 
 public class PlayQuestionTest extends BasicTWLGameState {
@@ -78,7 +81,8 @@ public class PlayQuestionTest extends BasicTWLGameState {
 	private String[] current_choices;
 	private int correctAnswer;
 	private int question_difficulty;
-	private String[] full_question_description;
+	private int amountOfAnswers;
+	private String FILE_NAME;
 	private String start_message = "";
 	private String full_start_message = "Here's your question...";
 	private int full_start_counter = 0;
@@ -88,6 +92,7 @@ public class PlayQuestionTest extends BasicTWLGameState {
 	private int clock2,clock3,timer,timer2 = 0;
 	private boolean end, win, time_out, finished, resume = false;
 	
+	TextPageFrame textpageframe;
 	DialogLayout p1ResultPanel, p2ResultPanel;
 	
 	Label lActivity, lTitle, lPoints, lDifficulty, lTime, lOverall, lNew;
@@ -99,7 +104,7 @@ public class PlayQuestionTest extends BasicTWLGameState {
 	Button choices[];
 	Button btnYes, btnNo;
 	SimpleTextAreaModel model;
-	TextArea question;
+	
 	DialogLayout.Group hBtn[], hBtnYes, hBtnNo, hQuestion, hLblConfirmation;
 	String description;
 	
@@ -113,7 +118,7 @@ public class PlayQuestionTest extends BasicTWLGameState {
 	
 	void disableChoices()
 	{
-		for(int i = 0; i < 5; i++)
+		for(int i = 0; i < amountOfAnswers; i++)
 		{
 			choices[i].setVisible(false);
 			choices[i].setEnabled(false);
@@ -125,7 +130,7 @@ public class PlayQuestionTest extends BasicTWLGameState {
 	
 	void enableChoices()
 	{
-		for(int i = 0; i < 5; i++)
+		for(int i = 0; i < amountOfAnswers; i++)
 		{
 			choices[i].setVisible(true);
 			choices[i].setEnabled(true);
@@ -144,7 +149,7 @@ public class PlayQuestionTest extends BasicTWLGameState {
 	void emulateChoice(int choice)
 	{
 		disableChoices();
-		lblConfirmation.setText("Is " + choices[choice].getText() + " your answer?");
+		lblConfirmation.setText("Is your answer: \n'" + choices[choice].getText() + "' ?");
 		currentAnswer = choice;
 	}
 	
@@ -165,6 +170,7 @@ public class PlayQuestionTest extends BasicTWLGameState {
 		end = true;
 		if(currentAnswer == correctAnswer)
 		{
+			System.out.println(currentAnswer + "---" + correctAnswer);
 			completeMessage.elapsedtime = timer;
 			elapsedTime = timer; 
 			pointsAvailable = question_points_amount;
@@ -179,7 +185,10 @@ public class PlayQuestionTest extends BasicTWLGameState {
 			win = true;
 		}
 		else
+		{
 			win = false;
+		}
+		
 		client.sendTCP(completeMessage);
 	}
 
@@ -187,6 +196,8 @@ public class PlayQuestionTest extends BasicTWLGameState {
 	public void enter(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		super.enter(gc, sbg);
 		rootPane.removeAllChildren();
+		choicePanel.removeAllChildren();
+		questionPanel.removeAllChildren();
 		
 		// Set up question variables
 		questions = question_list.getQuestion_list();
@@ -196,8 +207,8 @@ public class PlayQuestionTest extends BasicTWLGameState {
 		current_question = questions[current_question_id];
 
 		current_choices = current_question.getChoices();
-		full_question_description = current_question.getDescription();
-		current_question.getAmountOfAnswers();
+		FILE_NAME = current_question.getFile();
+		amountOfAnswers = current_question.getAmountOfAnswers();
 		correctAnswer = current_question.getAnswer();
 		question_difficulty = current_question.getDifficulty();
 		
@@ -206,7 +217,7 @@ public class PlayQuestionTest extends BasicTWLGameState {
 		win = false; end = false; time_out = false; finished = false; resume = false;
 		currentAnswer = 0;
 		clock2 = 0; clock3 = 0;
-		timer = 50*question_difficulty;
+		timer = 25*question_difficulty;
 		timer2 = 999;
 		elapsedTime = 0;
 		pointsAvailable = 0;
@@ -240,13 +251,51 @@ public class PlayQuestionTest extends BasicTWLGameState {
 		playerScore = player.getScore();
 		playerScore2 = otherPlayer.getScore();
 		
-		model.setText("Question: \n" + full_question_description[0]);
+		choicePanel.setTheme("choices-panel");   
+		
+		textpageframe = new TextPageFrame(FILE_NAME);
+		textpageframe.setSize(700, 300);
+		textpageframe.setDraggable(false);
+		textpageframe.setResizableAxis(ResizableAxis.NONE);
+		textpageframe.setTheme("textpageframe");
+		
+		hQuestion = questionPanel.createSequentialGroup().addWidget(textpageframe);
+		
+		questionPanel.setHorizontalGroup(questionPanel.createParallelGroup()
+				.addGroup(hQuestion));	
+		questionPanel.setVerticalGroup(questionPanel.createSequentialGroup()
+				.addWidgets(textpageframe));
+		
+		hBtn = new DialogLayout.Group[amountOfAnswers];
+		choices = new Button[amountOfAnswers];
+		
+		for(int i = 0; i < amountOfAnswers; i++)
+		{
+			choices[i] = new Button();
+			choices[i].setSize(500, 30);
+			choices[i].setTheme("choicebutton");
+			hBtn[i] =  choicePanel.createSequentialGroup().addWidget(choices[i]);
+		}
+		// Re-add previous widgets
+		hLblConfirmation = choicePanel.createSequentialGroup().addWidget(lblConfirmation);
+		hBtnYes = choicePanel.createSequentialGroup().addWidget(btnYes);
+		hBtnNo = choicePanel.createSequentialGroup().addWidget(btnNo);
+		// Create Dialog Layout
+		choicePanel.setHorizontalGroup(choicePanel.createParallelGroup()
+				.addGroups(hBtn)
+				.addGroup(hLblConfirmation)
+				.addGroup(hBtnYes)
+				.addGroup(hBtnNo));
+		
+		choicePanel.setVerticalGroup(choicePanel.createSequentialGroup()
+				.addWidgets(choices)
+				.addWidget(lblConfirmation)
+				.addWidget(btnYes)
+				.addWidget(btnNo));
 		
 		// Set up buttons for choices
-		for(int i = 0; i < 5; i++)
-		{
+		for(int i = 0; i < amountOfAnswers; i++)
 			choices[i].setText(current_choices[i]);
-		}
 		
 		// Set up callbacks for buttons
 		choices[0].addCallback(new Runnable() {
@@ -259,24 +308,44 @@ public class PlayQuestionTest extends BasicTWLGameState {
                 emulateChoice(1);
             }
         });
-		choices[2].addCallback(new Runnable() {
-            public void run() {
-                emulateChoice(2);
-            }
-        });
-		choices[3].addCallback(new Runnable() {
-            public void run() {
-                emulateChoice(3);
-            }
-        });
-		choices[4].addCallback(new Runnable() {
-            public void run() {
-                emulateChoice(4);
-            }
-        });
+		if(amountOfAnswers>2)
+			{
+			choices[2].addCallback(new Runnable() {
+				public void run() {
+					emulateChoice(2);
+				}
+			});
+		}
+		if(amountOfAnswers>3)
+		{
+			choices[3].addCallback(new Runnable() {
+				public void run() {
+					emulateChoice(3);
+				}
+			});
+			}
+		if(amountOfAnswers>4)
+		{
+			choices[4].addCallback(new Runnable() {
+				public void run() {
+					emulateChoice(4);
+				}
+			});
+		}
+		if(amountOfAnswers>5)
+		{
+			choices[5].addCallback(new Runnable() {
+				public void run() {
+					emulateChoice(5);
+				}
+			});
+		}
+
 		
 		// Add to root pane
 		enableChoices();
+		p1ResultPanel.setTheme("incorrect-panel");
+		p2ResultPanel.setTheme("incorrect-panel");
 		questionPanel.setVisible(true);
 		choicePanel.setVisible(true);
 		lblWaiting.setVisible(false);
@@ -336,10 +405,10 @@ public class PlayQuestionTest extends BasicTWLGameState {
 		questionPanel = new DialogLayout();
 		questionPanel.setTheme("question-panel");
 		choicePanel.setTheme("choices-panel");				
-		questionPanel.setSize(700, 400);
+		questionPanel.setSize(750, 300);
 		questionPanel.setPosition(
-				(gcw/2 - questionPanel.getWidth()/2),
-				(gch/2 - questionPanel.getHeight()/2) + 50);
+				(25),
+				(gch/2 - questionPanel.getHeight()/2) - 50);
 		        
 		choicePanel.setSize(500, 150);
 		choicePanel.setPosition(
@@ -347,38 +416,17 @@ public class PlayQuestionTest extends BasicTWLGameState {
 		        (gch/2 - choicePanel.getHeight()/2) + 150);
 				
 		lblConfirmation = new Label("");
-		choices = new Button[5];
 		btnYes = new Button("Yes");
 		btnNo = new Button("No");
-		hBtn = new DialogLayout.Group[5];
 		
-		lblConfirmation.setTheme("atarigreen16");
+		lblConfirmation.setTheme("labelscoretotal");
 		btnYes.setTheme("choicebutton");
 		btnNo.setTheme("choicebutton");
-				
-		model = new SimpleTextAreaModel("");
-		question = new TextArea(model);
-		question.setTheme("questiontextarea");
-		
-		for(int i = 0; i < 5; i++)
-		{
-			choices[i] = new Button();
-			choices[i].setSize(500, 30);
-			choices[i].setTheme("choicebutton");
-			hBtn[i] =  choicePanel.createSequentialGroup().addWidget(choices[i]);
-		}
-		
-		hQuestion = questionPanel.createSequentialGroup().addWidget(question);
-		
-		questionPanel.setHorizontalGroup(questionPanel.createParallelGroup()
-				.addGroup(hQuestion));	
-		questionPanel.setVerticalGroup(questionPanel.createSequentialGroup()
-				.addWidgets(question));
 				
 		hLblConfirmation = choicePanel.createSequentialGroup().addWidget(lblConfirmation);
 		hBtnYes = choicePanel.createSequentialGroup().addWidget(btnYes);
 		hBtnNo = choicePanel.createSequentialGroup().addWidget(btnNo);
-				
+		
 		btnYes.addCallback(new Runnable() {
             public void run() {
                 emulateYes();
@@ -390,19 +438,6 @@ public class PlayQuestionTest extends BasicTWLGameState {
             	enableChoices();
             }
         });
-		
-		// Create Dialog Layout
-		choicePanel.setHorizontalGroup(choicePanel.createParallelGroup()
-				.addGroups(hBtn)
-				.addGroup(hLblConfirmation)
-				.addGroup(hBtnYes)
-				.addGroup(hBtnNo));
-		
-		choicePanel.setVerticalGroup(choicePanel.createSequentialGroup()
-				.addWidgets(choices)
-				.addWidget(lblConfirmation)
-				.addWidget(btnYes)
-				.addWidget(btnNo));
 		
 		choicePanel.setIncludeInvisibleWidgets(false);
 		
@@ -640,7 +675,7 @@ public class PlayQuestionTest extends BasicTWLGameState {
 			if(otherPlayerReady == 1)
 			{
 				// Setup new UI
-				timer = 7; // should be 10
+				timer = 3; // should be 10
 				timer2 = 999;
 				clock2 = 0;
 				clock3 = 0;
@@ -656,7 +691,7 @@ public class PlayQuestionTest extends BasicTWLGameState {
 				// Setup players results
 				if(playerID == 1)
 				{
-					lblPoints1.setText("" + question_points_amount);
+					lblPoints1.setText("" + pointsAvailable);
 					
 					if(question_difficulty==1)
 						lblDifficulty1.setText("Easy X" + question_difficulty);
@@ -665,7 +700,7 @@ public class PlayQuestionTest extends BasicTWLGameState {
 					else if(question_difficulty==3)
 						lblDifficulty1.setText("Hard X" + question_difficulty);
 					
-					lblOverall1.setText("" + playerScore);
+					lblOverall1.setText("" + pointsGained);
 					lblTime1.setText("" + elapsedTime);	
 					lblNew1.setText("" + HRRUClient.cs.getP1().getScore());
 					lActivity.setText("Answered a question...");
@@ -718,7 +753,7 @@ public class PlayQuestionTest extends BasicTWLGameState {
 					
 					lblOverall1.setText("" +  otherPlayerResult.getOverall());
 					lblTime1.setText("" +  otherPlayerResult.getElapsedtime());
-					lblNew1.setText("" + HRRUClient.cs.getP1().getScore());
+					lblNew1.setText("" + (playerScore2 + otherPlayerResult.getOverall()));
 					
 					lActivity.setText("Answered a question...");
 					
@@ -728,16 +763,17 @@ public class PlayQuestionTest extends BasicTWLGameState {
 						p1ResultPanel.reapplyTheme();
 					}
 					
-					lblPoints2.setText("" + question_points_amount);
+					lblPoints2.setText("" + pointsAvailable);
 					if(question_difficulty==1)
 						lblDifficulty2.setText("Easy X" + question_difficulty);
 					else if(question_difficulty==2)
 						lblDifficulty2.setText("Medium X" + question_difficulty);
 					else if(question_difficulty==3)
 						lblDifficulty2.setText("Hard X" + question_difficulty);
-					lblOverall2.setText("" + playerScore);
+					lblOverall2.setText("" + pointsGained);
 					lblTime2.setText("" + elapsedTime);
-					lblNew2.setText("" + (playerScore2 + otherPlayerResult.getOverall()));
+				
+					lblNew2.setText("" + HRRUClient.cs.getP2().getScore());
 					
 					int activity = otherPlayerResult.getActivity();
 					if(activity== 1)

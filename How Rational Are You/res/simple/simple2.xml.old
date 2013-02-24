@@ -753,7 +753,7 @@
     </theme>
     
     <theme name="rollbutton" ref="-defaults" allowWildcard="true">
-        <param name="background"><image>tooltip.background</image></param>
+        <param name="background"><image>choice.button</image></param>
         <param name="border"><border>background.border</border></param>
         <param name="font"><font>whiteatari14</font></param>
         <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
@@ -1488,15 +1488,18 @@
             </theme>
             <param name="background"><image>none</image></param>
         </theme>
+        <param name="font"><font>questionatari16</font></param>
+        <param name="maxWidth"><int>730</int></param>
+        <param name="maxHeight"><int>200</int></param>
     </theme>
 	
 	<theme name="textarea" ref="-defaults">
                     <param name="fonts"><map>
-                        <param name="default"><fontDef filename="Font/font.fnt"/></param>
+                        <param name="default"><fontDef filename="bigfont.fnt" color="#FFFFFF"/></param>
                         <param name="link"><fontDef filename="Font/font.fnt" underlineOffset="1">
                             <fontParam if="hover" underline="true"/>
                         </fontDef></param>
-                        <param name="big"><fontDef filename="bigfont.fnt"/></param>
+                        <param name="big"><fontDef filename="questionatari12.fnt" color="#FFFFFF"/></param>
                         <param name="code"><fontDef filename="code.fnt"/></param>
                         <param name="codeBold"><fontDef filename="codeBold.fnt"/></param>
                     </map></param>
@@ -1509,43 +1512,9 @@
                     <param name="mouseCursor.link"><cursor>cursor.finger</cursor></param>
                     <theme name="" ref="*"/>
                     <param name="background"><image>none</image></param>
-    </theme>
-
-    <theme name="textarea" ref="-defaults">
-        <param name="background"><image>none</image></param>
-
-        <theme name="fpscounter" ref="-defaults">
-            <param name="tooltip"><string>Current FPS</string></param>
-        </theme>
-
-        <theme name="textframe" ref="resizableframe">
-            <theme name="scrollpane" ref="scrollpane">
-
-                <theme name="textarea" ref="-defaults">
-                    <param name="fonts"><map>
-                        <param name="default"><fontDef filename="Font/font.fnt"/></param>
-                        <param name="link"><fontDef filename="Font/font.fnt" underlineOffset="1">
-                            <fontParam if="hover" underline="true"/>
-                        </fontDef></param>
-                        <param name="big"><fontDef filename="bigfont.fnt"/></param>
-                        <param name="code"><fontDef filename="code.fnt"/></param>
-                        <param name="codeBold"><fontDef filename="codeBold.fnt"/></param>
-                    </map></param>
-                    <param name="images"><map>
-                        <param name="frame"><image>evilframe.background</image></param>
-                        <param name="smiley"><image>smiley</image></param>
-                        <param name="ul-bullet"><image>textarea.ul-bullet</image></param>
-                        <param name="image.png"><image>image.png</image></param>
-                    </map></param>
-                    <param name="mouseCursor.link"><cursor>cursor.finger</cursor></param>
-                    <theme name="" ref="*"/>
-                    <param name="background"><image>none</image></param>
-                </theme>
-                <param name="border"><border>background.border</border></param>
-                <param name="background"><image>none</image></param>
-            </theme>
-            <param name="background"><image>none</image></param>
-        </theme>
+        <param name="font"><font>questionatari16</font></param>
+        <param name="maxWidth"><int>730</int></param>
+        <param name="maxHeight"><int>200</int></param>
     </theme>
 
     <theme name="questiontextarea" ref="-defaults">

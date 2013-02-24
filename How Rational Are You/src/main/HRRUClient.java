@@ -39,7 +39,7 @@ public class HRRUClient extends TWLStateBasedGame {
 		this.addState(new Test(tutorial));
 		this.addState(new CharacterSelect(characterselect));
 		this.addState(new Play(play));
-		this.enterState(tutorial);
+		this.enterState(main);
 	}
 
 	public static void main(String[] args) {

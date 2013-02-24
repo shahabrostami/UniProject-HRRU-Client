@@ -34,6 +34,7 @@ public class Play extends BasicTWLGameState {
 	private Board board;
 	private Dice dice;
 	private QuestionList question_list;
+	private PuzzleList puzzle_list;
 	private int playerID;
 	private boolean currentPlayer;
 	private Player player;
@@ -51,6 +52,7 @@ public class Play extends BasicTWLGameState {
 	private final int play = 10;
 	
 	private final int play_question = 6;
+	private final int play_puzzle = 7;
 	
 	// states: 0 = idle, 1 = rolling, 2 = navigate board
 	private int state, gameState;
@@ -94,12 +96,12 @@ public class Play extends BasicTWLGameState {
 		
 		if(HRRUClient.cs.getPlayer() == 1)
 		{
-			btnRoll.setEnabled(true);
+			btnRoll.setVisible(true);
 			currentPlayer = true;
 			player = HRRUClient.cs.getP1();
 		}
 		else {
-			btnRoll.setEnabled(false);
+			btnRoll.setVisible(true);
 			currentPlayer = false;
 			player = HRRUClient.cs.getP2();
 		}
@@ -147,7 +149,7 @@ public class Play extends BasicTWLGameState {
 
 	void emulateRoll() {
 		state = 1;
-		btnRoll.setEnabled(false);
+		btnRoll.setVisible(false);
 	}
 	
 	@Override
@@ -188,6 +190,7 @@ public class Play extends BasicTWLGameState {
 		
 		try {
 			question_list = new QuestionList("Question.txt");
+			puzzle_list = new PuzzleList("Puzzle.txt");
 		} catch (NumberFormatException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -217,9 +220,12 @@ public class Play extends BasicTWLGameState {
         		.addGap(180).addWidget(btnRoll));
 		
 		sbg.addState(new PlayQuestionTest(play_question, question_list));
+		sbg.addState(new PlayPuzzle(play_puzzle, puzzle_list));
 		//sbg.addState(new PlayPuzzle(9));
 		//sbg.addState(new PlayGame(10));
+
 		sbg.getState(play_question).init(gc, sbg);
+		sbg.getState(play_puzzle).init(gc, sbg);
 	}
 
 	@Override
@@ -274,14 +280,14 @@ public class Play extends BasicTWLGameState {
 					lStatus.setText(player1.getName() + ", it's your turn!");
 					currentPlayer = true;
 					btnRoll.setText("ROLL");
-					btnRoll.setEnabled(true);
+					btnRoll.setVisible(true);
 				}
 				else
 				{
 					lStatus.setText("It's " + player2.getName() + "'s turn.");
 					currentPlayer = false;
 					btnRoll.setText("WAITING FOR " + player2.getName());
-					btnRoll.setEnabled(false);
+					btnRoll.setVisible(false);
 				}
 			}
 			else if(playerID == 2)
@@ -291,14 +297,14 @@ public class Play extends BasicTWLGameState {
 					btnRoll.setText("ROLL");
 					lStatus.setText(player2.getName() + ", it's your turn!");
 					currentPlayer = true;
-					btnRoll.setEnabled(true);
+					btnRoll.setVisible(true);
 				}
 				else
 				{
 					lStatus.setText("It's " + player1.getName() + "'s turn.");
 					currentPlayer = false;
 					btnRoll.setText("WAITING FOR " + player1.getName());
-					btnRoll.setEnabled(false);
+					btnRoll.setVisible(false);
 				}
 			}
 		}
@@ -355,7 +361,7 @@ public class Play extends BasicTWLGameState {
 				}
 				else
 					btnRoll.setText("WAITING FOR " + player1.getName());
-				btnRoll.setEnabled(false);
+				btnRoll.setVisible(false);
 				state = 4;
 				clock = 50; // should be 200
 			}
@@ -383,7 +389,17 @@ public class Play extends BasicTWLGameState {
 		if(state == 6)
 		{
 			if(gameState == play)
-				sbg.enterState(play_question);
+			{
+				int currentTile = board.gridSquares[player.getPosition()].getTileType();
+				if(currentTile == 1)	
+				{
+					sbg.enterState(play_question);
+				}
+				else if(currentTile == 2)
+				{
+					sbg.enterState(play_puzzle);
+				}
+			}
 		}
 	}
 
