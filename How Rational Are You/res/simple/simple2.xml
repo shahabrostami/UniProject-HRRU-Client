@@ -69,6 +69,7 @@
         </select>
         <select name="choice.button">
             <area if="pressed" xywh="17,32,7,7" splitx="L3,R3" splity="T3,B3"/>
+            <area if="selected" xywh="17,32,7,7" splitx="L3,R3" splity="T3,B3"/>
             <area if="hover" xywh="9,32,7,7" tint="#FFFFFF" splitx="L3,R3" splity="T3,B3"/>
             <area xywh="1,32,7,7" splitx="L3,R3" splity="T3,B3"/>
         </select>
@@ -396,6 +397,22 @@
     <images file="incorrectbg.png">
         <area name="incorrect-background" xywh="*" border="20"/>
     </images>
+    <images file="questionstatbg.png">
+        <area name="questionstat.background" xywh="*" border="35,10,10,10"/>
+    </images>
+    <images file="puzzlestatbg.png">
+        <area name="puzzlestat.background" xywh="*" border="35,10,10,10"/>
+    </images>
+    <images file="gamestatbg.png">
+        <area name="gamestat.background" xywh="*" border="35,10,10,10"/>
+    </images>
+    <images file="itembg.png">
+        <area name="item.background" xywh="*" border="50,300,30,0"/>
+    </images>
+
+
+
+
     <images file="q7.png">
         <area name="q7.png" xywh="*"/>
     </images>
@@ -499,6 +516,10 @@
         <fontParam if="hover"/>
     
     </fontDef>
+    <fontDef name="questionatari12" filename="questionatari12.fnt" color="white"/>
+    <fontDef name="questionatari8" filename="questionatari8.fnt" color="white"/>
+    <fontDef name="questionatari9y" filename="questionatari9y.fnt" color="white"/>
+
 
     <fontDef name="whiteatari30" filename="whiteatari30.fnt" color="white">
         <fontParam if="disabled" color="gray"/>
@@ -723,6 +744,56 @@
         <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
     </theme>
 
+    <theme name="questionatari8" ref="-defaults" allowWildcard="true">
+        <param name="font"><font>questionatari8</font></param>
+        <param name="minWidth"><int>0</int></param>
+        <param name="maxWidth"><int>0</int></param>
+        <param name="minHeight"><int>0</int></param>
+        <param name="maxHeight"><int>0</int></param>
+        <param name="background"><image>none</image></param>
+        <param name="textAlignment"><enum type="alignment">LEFT</enum></param>
+    </theme>
+
+    <theme name="questionatari9y" ref="-defaults" allowWildcard="true">
+        <param name="font"><font>questionatari9y</font></param>
+        <param name="minWidth"><int>0</int></param>
+        <param name="maxWidth"><int>0</int></param>
+        <param name="minHeight"><int>0</int></param>
+        <param name="maxHeight"><int>0</int></param>
+        <param name="background"><image>none</image></param>
+        <param name="textAlignment"><enum type="alignment">LEFT</enum></param>
+    </theme>
+
+    <theme name="questionatari8i" ref="-defaults" allowWildcard="true">
+        <param name="font"><font>questionatari8</font></param>
+        <param name="minWidth"><int>0</int></param>
+        <param name="maxWidth"><int>0</int></param>
+        <param name="minHeight"><int>0</int></param>
+        <param name="maxHeight"><int>0</int></param>
+        <param name="background"><image>none</image></param>
+        <param name="textAlignment"><enum type="alignment">RIGHT</enum></param>
+    </theme>
+
+    <theme name="questionatari12" ref="-defaults" allowWildcard="true">
+        <param name="font"><font>questionatari12</font></param>
+        <param name="minWidth"><int>0</int></param>
+        <param name="maxWidth"><int>0</int></param>
+        <param name="minHeight"><int>0</int></param>
+        <param name="maxHeight"><int>0</int></param>
+        <param name="background"><image>none</image></param>
+        <param name="textAlignment"><enum type="alignment">LEFT</enum></param>
+    </theme>
+
+    <theme name="questionatari8r" ref="-defaults" allowWildcard="true">
+        <param name="font"><font>questionatari8</font></param>
+        <param name="minWidth"><int>0</int></param>
+        <param name="maxWidth"><int>100</int></param>
+        <param name="minHeight"><int>0</int></param>
+        <param name="maxHeight"><int>0</int></param>
+        <param name="background"><image>none</image></param>
+        <param name="textAlignment"><enum type="alignment">RIGHT</enum></param>
+    </theme>
+
     <theme name="player1atari" ref="-defaults" allowWildcard="true">
         <param name="font"><font>button_font</font></param>
         <param name="minWidth"><int>0</int></param>
@@ -764,6 +835,17 @@
         <param name="minWidth"><int>0</int></param>
         <param name="maxWidth"><int>0</int></param>
         <param name="minHeight"><int>0</int></param>
+        <param name="maxHeight"><int>91</int></param>
+    </theme>
+	
+    <theme name="togglebutton" ref="button" allowWildcard="true">
+        <param name=""><image>togglebutton.*</image></param>
+        <param name="border"><border>background.border</border></param>
+        <param name="background"><image>choice.button</image></param>
+        <param name="font"><font>whiteatari14</font></param>
+        <param name="minWidth"><int>0</int></param>
+        <param name="minHeight"><int>0</int></param>
+        <param name="maxWidth"><int>0</int></param>
         <param name="maxHeight"><int>91</int></param>
     </theme>
     
@@ -942,13 +1024,67 @@
         <param name="font"><font>questionatari26</font></param>
     </theme>
 
+    <theme name="item-panel" ref="-defaults" allowWildcard="true">
+                    <param name="background"><image>item.background</image></param>
+                    <param name="border"><border>background.border</border></param>
+        <param name="defaultGap"><dimension>5,5</dimension></param>
+        <param name="smallGap"><dimension>8,8</dimension></param>
+        <param name="mediumGap"><dimension>10,10</dimension></param>
+        <param name="largeGap"><dimension>15,15</dimension></param>
+        <param name="namedGaps"><map/></param>
+        <param name="minWidth"><int>0</int></param>
+        <param name="maxWidth"><int>700</int></param>
+        <param name="minHeight"><int>0</int></param>
+        <param name="maxHeight"><int>300</int></param>
+        <param name="font"><font>questionatari26</font></param>
+    </theme>
+
+    <theme name="questionstat-panel" ref="-defaults" allowWildcard="true">
+                    <param name="background"><image>questionstat.background</image></param>
+                    <param name="border"><border>background.border</border></param>
+        <param name="defaultGap"><dimension>5,5</dimension></param>
+        <param name="smallGap"><dimension>8,8</dimension></param>
+        <param name="mediumGap"><dimension>10,10</dimension></param>
+        <param name="largeGap"><dimension>15,15</dimension></param>
+        <param name="namedGaps"><map/></param>
+        <param name="minWidth"><int>0</int></param>
+        <param name="maxWidth"><int>220</int></param>
+        <param name="minHeight"><int>0</int></param>
+        <param name="maxHeight"><int>435</int></param>
+    </theme>
+
+    <theme name="puzzlestat-panel" ref="-defaults" allowWildcard="true">
+                    <param name="background"><image>puzzlestat.background</image></param>
+                    <param name="border"><border>background.border</border></param>
+        <param name="defaultGap"><dimension>5,5</dimension></param>
+        <param name="smallGap"><dimension>8,8</dimension></param>
+        <param name="mediumGap"><dimension>10,10</dimension></param>
+        <param name="largeGap"><dimension>15,15</dimension></param>
+        <param name="namedGaps"><map/></param>
+        <param name="minWidth"><int>0</int></param>
+        <param name="maxWidth"><int>220</int></param>
+        <param name="minHeight"><int>0</int></param>
+        <param name="maxHeight"><int>435</int></param>
+        <param name="font"><font>questionatari12</font></param>
+    </theme>
+
+    <theme name="gamestat-panel" ref="-defaults" allowWildcard="true">
+                    <param name="background"><image>gamestat.background</image></param>
+                    <param name="border"><border>background.border</border></param>
+        <param name="defaultGap"><dimension>5,5</dimension></param>
+        <param name="smallGap"><dimension>8,8</dimension></param>
+        <param name="mediumGap"><dimension>10,10</dimension></param>
+        <param name="largeGap"><dimension>15,15</dimension></param>
+        <param name="namedGaps"><map/></param>
+        <param name="minWidth"><int>0</int></param>
+        <param name="maxWidth"><int>220</int></param>
+        <param name="minHeight"><int>0</int></param>
+        <param name="maxHeight"><int>435</int></param>
+        <param name="font"><font>questionatari12</font></param>
+    </theme>
+
     <!-- the fallback theme is used when the requested theme can't be found -->
     <theme name="*" ref="-defaults"/>
-	
-    <theme name="togglebutton" ref="button" allowWildcard="true">
-        <param name=""><image>togglebutton.*</image></param>
-        <param name="border"><border>background.border</border></param>
-    </theme>
 
     <theme name="radiobutton" ref="button" allowWildcard="true">
         <param name=""><image>radiobutton.*</image></param>

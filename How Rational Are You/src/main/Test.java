@@ -1,9 +1,10 @@
 package main;
 
-
-
 import java.io.IOException;
+import java.util.Random;
 
+import main.item.Item;
+import main.item.ItemList;
 import main.textpage.TextPage;
 import main.textpage.TextPage.TextPageFrame;
 
@@ -19,10 +20,15 @@ import com.esotericsoftware.kryonet.Client;
 import TWLSlick.BasicTWLGameState;
 import TWLSlick.RootPane;
 import de.matthiasmann.twl.ResizableFrame.ResizableAxis;
+import de.matthiasmann.twl.textarea.SimpleTextAreaModel;
 import de.matthiasmann.twl.utils.PNGDecoder;
+import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.DialogLayout;
 import de.matthiasmann.twl.Label;
 import de.matthiasmann.twl.TextArea;
+import de.matthiasmann.twl.ValueAdjuster;
+import de.matthiasmann.twl.ValueAdjusterFloat;
+import de.matthiasmann.twl.ValueAdjusterInt;
 
 public class Test extends BasicTWLGameState {
 
@@ -32,58 +38,57 @@ public class Test extends BasicTWLGameState {
 	int gcw;
 	int gch;
 	
-	private int current_puzzle_id;
-	private PuzzleList puzzle_list;
-	private Puzzle[] puzzles;
-	private Puzzle current_puzzle;
-	private String[] current_choices;
-	private String puzzle_file;
-	private int noOfAnswers;
-	private int correctAnswer;
-	private int puzzle_difficulty;
-	private int no_of_puzzles;
+	DialogLayout itemPanel;
+	Label itemName, itemValue;
+	TextArea itemDescription;
+	SimpleTextAreaModel itemDescriptionModel;
+	
+	ItemList itemList;
+	Item items[];
+	Item currentItem;
+	
+	ValueAdjusterInt vaBid;
+
+	
+	Button btnSubmit;
+	
+	private boolean playedBefore = false;
+	private Random rand = new Random();
 	
 	public Test(int main) {
 		client = HRRUClient.conn.getClient();
-		try {
-			puzzle_list = new PuzzleList("Puzzle.txt");
-		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SlickException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 	}
 
 	@Override
 	public void enter(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		super.enter(gc, sbg);
-		TextPageFrame textpageframe = new TextPageFrame("demo.html");
-		textpageframe.setSize(600, 200);
-		textpageframe.setDraggable(false);
-		textpageframe.setResizableAxis(ResizableAxis.NONE);
-		textpageframe.setTheme("textpageframe");
-        rootPane.add(textpageframe);
-        
-		// Set up puzzle variables
-		puzzles = puzzle_list.getPuzzle_list();
-		puzzle_list.getNumberOfPuzzles();
+		playedBefore = true;
 		
-		current_puzzle_id = HRRUClient.cs.getActivity_id();
-		current_puzzle = puzzles[1];
-
-		current_choices = current_puzzle.getChoices();
-		puzzle_file = current_puzzle.getFile();
-		current_puzzle.getAmountOfAnswers();
-		correctAnswer = current_puzzle.getAnswer();
-		puzzle_difficulty = current_puzzle.getDifficulty();
-		
-		System.out.println(puzzle_file);
+		int item_id = rand.nextInt(itemList.getSize());
+        currentItem = items[item_id];
         
+        itemName = new Label("Name: " + currentItem.getName());
+        int value = rand.nextInt(currentItem.getMaxValue() - currentItem.getMinValue() + 1) + currentItem.getMinValue();
+        itemValue = new Label("Value: " + value);
+        System.out.println(itemValue.getText());
+        itemDescriptionModel.setText("Description: /n" + currentItem.getDescription());
+       
+        vaBid = new ValueAdjusterInt();
+		vaBid.setMinMaxValue(0, 400);
+		vaBid.setSize(200, 30);
+		vaBid.setPosition((gcw/2) - vaBid.getWidth()/2, 450);
+		
+		btnSubmit = new Button("Submit Bid");
+		btnSubmit.setSize(200, 30);
+		btnSubmit.setPosition((gcw/2) - btnSubmit.getWidth()/2 - 2,490);
+		btnSubmit.setTheme("choicebutton");
+		
+		
+		rootPane.add(btnSubmit);
+		rootPane.add(vaBid);
+		rootPane.add(itemPanel);
+		
 	}
 
 	@Override
@@ -100,11 +105,23 @@ public class Test extends BasicTWLGameState {
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		gcw = gc.getWidth();
 		gch = gc.getHeight();
+		
+		itemList = new ItemList();
+		items = itemList.getItems();
+		
+		itemPanel = new DialogLayout();
+		itemPanel.setTheme("item-panel");
+		itemPanel.setSize(400, 220);
+		itemPanel.setPosition(50, 100);
+		
+		itemDescriptionModel = new SimpleTextAreaModel();
+		itemDescription = new TextArea(itemDescriptionModel);
+		
 	}
 
 	@Override
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
-
+		g.drawImage(currentItem.getItemImage(), 75, 125);
 	}
 
 	@Override

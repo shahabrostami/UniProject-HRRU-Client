@@ -55,8 +55,10 @@ public class PlayQuestionTest extends BasicTWLGameState {
 	private String playerName;
 	private int currentAnswer;
 	private int otherPlayerReady;
-	ActivityScore otherPlayerResult;
+	private ActivityScore playerResult;
+	private ActivityScore otherPlayerResult;
 	private int elapsedTime = 0;
+	private int elapsedTimeFixed = 0;
 	private int pointsAvailable = 0;
 	private int pointsGained = 0;
 	
@@ -89,7 +91,7 @@ public class PlayQuestionTest extends BasicTWLGameState {
 	private String ticker = "";
 	private boolean tickerBoolean = true;
 	
-	private int clock2,clock3,timer,timer2 = 0;
+	private int clock2,clock3,timer,timer2,overallTimer = 0;
 	private boolean end, win, time_out, finished, resume = false;
 	
 	TextPageFrame textpageframe;
@@ -167,6 +169,7 @@ public class PlayQuestionTest extends BasicTWLGameState {
 		pointsAvailable = 0;
 		pointsGained = 0;
 		elapsedTime = 0;
+		elapsedTimeFixed = (25*question_difficulty) - timer;
 		end = true;
 		if(currentAnswer == correctAnswer)
 		{
@@ -222,6 +225,8 @@ public class PlayQuestionTest extends BasicTWLGameState {
 		elapsedTime = 0;
 		pointsAvailable = 0;
 		pointsGained = 0;
+		elapsedTimeFixed = 0;
+		overallTimer = 0;
 		
 		start_message = "";
 		full_start_message = "Here's your question...";
@@ -614,6 +619,7 @@ public class PlayQuestionTest extends BasicTWLGameState {
 		clock2 += delta;
 		clock3 += delta;
 		timer2 -= delta;
+		overallTimer += delta;
 		gameState = HRRUClient.cs.getState();
 		if(gameState == cancelled) {
 			if(playerID == 1)
@@ -794,7 +800,7 @@ public class PlayQuestionTest extends BasicTWLGameState {
 			else if(otherPlayerReady == 0)
 			{
 				questionPanel.setVisible(true);
-				lblWaiting.setText( "You answered " + choices[currentAnswer].getText() + "\n" +"Waiting for " + otherPlayer.getName());
+				lblWaiting.setText( "You answered '" + choices[currentAnswer].getText() + "'\n" +"Waiting for " + otherPlayer.getName());
 				lblWaiting.setVisible(true);
 			}
 		}
@@ -807,10 +813,19 @@ public class PlayQuestionTest extends BasicTWLGameState {
 				clock2-=1000;
 				if(timer<=0)
 				{
+					playerResult = new ActivityScore(1, pointsAvailable, question_difficulty, elapsedTime, pointsGained, win);
+					playerResult.setActivity_id(current_question_id);
+					// If Player1, update Player2's new score and add own result to list of results.
 					if(playerID == 1)
+					{
 						HRRUClient.cs.getP2().addScore(otherPlayerResult.getOverall());
+						HRRUClient.cs.getP1().addActivityScore(playerResult);
+					}
 					else
+					{
 						HRRUClient.cs.getP1().addScore(otherPlayerResult.getOverall());
+						HRRUClient.cs.getP2().addActivityScore(playerResult);
+					}
 					syncMessage = new Packet00SyncMessage();
 					syncMessage.player = playerID;
 					syncMessage.sessionID = HRRUClient.cs.getSessionID();
@@ -824,6 +839,8 @@ public class PlayQuestionTest extends BasicTWLGameState {
 		{
 			if(HRRUClient.cs.isSync())
 			{
+				HRRUClient.cs.updateTimer(overallTimer);
+				System.out.println("Time Subtract" + (overallTimer));
 				HRRUClient.cs.setState(p1_turn);
 				HRRUClient.cs.setSync(false);
 				sbg.enterState(play);

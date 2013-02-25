@@ -5,7 +5,7 @@ import main.Player;
 public class ConnectionState {
 	
 	private final int initial = -1;
-	private int timer = 120000;	
+	private int timer = 50000;	
 	private int player;
 	private Player p1;
 	private Player p2;
@@ -86,6 +86,10 @@ public class ConnectionState {
 	
 	public void setTimer(int timer) {
 		this.timer = timer;
+	}
+	
+	public void updateTimer(int timer) {
+		this.timer -= timer;
 	}
 	
 	public int getActivity() {

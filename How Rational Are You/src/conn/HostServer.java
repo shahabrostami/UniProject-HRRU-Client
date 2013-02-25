@@ -356,5 +356,4 @@ public class HostServer extends BasicTWLGameState {
 	public int getID() {
 		return 1;
 	}
-
 }

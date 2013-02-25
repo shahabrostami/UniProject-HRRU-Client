@@ -20,6 +20,7 @@ import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.ResizableFrame.ResizableAxis;
 import de.matthiasmann.twl.DialogLayout;
 import de.matthiasmann.twl.Label;
+import de.matthiasmann.twl.ToggleButton;
 import main.Chat.ChatFrame;
 import main.board.*;
 
@@ -65,7 +66,7 @@ public class Play extends BasicTWLGameState {
 	Label lStatus, lPlayer1, lPlayer2, lPlayer1Score, lPlayer2Score;
 	Label player1turn;
 	Label lImgPlayer1, lImgPlayer2; 
-	Button btnRoll;
+	ToggleButton btnRoll;
 	DialogLayout rollPanel;
 	BasicFont header; 
 	
@@ -93,18 +94,37 @@ public class Play extends BasicTWLGameState {
 		player2 = HRRUClient.cs.getP2();
 		
 		board = new Board(10);
+		System.out.println("Time After: " + timer);
 		
 		if(HRRUClient.cs.getPlayer() == 1)
 		{
 			btnRoll.setVisible(true);
 			currentPlayer = true;
 			player = HRRUClient.cs.getP1();
+			/*
+			ActivityScore list;
+			if(!(player.getActivityScores().isEmpty()))
+			{
+				for(int i = 0; i < player.getActivityScores().size(); i++)
+				{
+					list = player.getActivityScores().get(i);
+					System.out.println(list.getActivity());
+					System.out.println(list.getActivity_id());
+					System.out.println(list.getCorrect());
+					System.out.println(list.getDifficulty());
+					System.out.println(list.getElapsedtime());
+					System.out.println(list.getOverall());
+					System.out.println(list.getPoints());
+				}
+			}
+			*/
 		}
 		else {
 			btnRoll.setVisible(true);
 			currentPlayer = false;
 			player = HRRUClient.cs.getP2();
 		}
+		btnRoll.setActive(false);
 		
 		chatFrame = new ChatFrame();
         chatFrame.setSize(296, 200);
@@ -149,7 +169,6 @@ public class Play extends BasicTWLGameState {
 
 	void emulateRoll() {
 		state = 1;
-		btnRoll.setVisible(false);
 	}
 	
 	@Override
@@ -203,7 +222,7 @@ public class Play extends BasicTWLGameState {
 		
 		rollPanel = new DialogLayout();
 		lStatus = new Label("");
-		btnRoll = new Button("ROLL");
+		btnRoll = new ToggleButton("ROLL");
 		btnRoll.addCallback(new Runnable() {
             public void run() {
                 emulateRoll();
@@ -261,15 +280,18 @@ public class Play extends BasicTWLGameState {
 		gc.getInput();
 		int xpos = Mouse.getX();
 		int ypos= Mouse.getY();
-		mouse = "timer:" + ((timer/100)+1) + "\nxpos: " + xpos + "\nypos: " + ypos;
+		mouse = "timer:" + ((timer/1000)+1) + "\nxpos: " + xpos + "\nypos: " + ypos;
 		gameState = HRRUClient.cs.getState();
-		timer--;
+		timer -= delta;
 		
 		if(gameState == cancelled) {
 			if(playerID == 1)
 				sbg.enterState(1);
 			else sbg.enterState(2);
 		}
+		
+		if(timer <0)
+			sbg.enterState(3);
 		
 		if(state == 0)
 		{
@@ -324,6 +346,7 @@ public class Play extends BasicTWLGameState {
 						dice_counter = dice.getCurrentNumber();
 						dice_counter_copy = dice.getCurrentNumber();
 						state = 2;
+						btnRoll.setVisible(false);
 					}
 				}
 			}
@@ -390,6 +413,7 @@ public class Play extends BasicTWLGameState {
 		{
 			if(gameState == play)
 			{
+				HRRUClient.cs.setTimer(timer);
 				int currentTile = board.gridSquares[player.getPosition()].getTileType();
 				if(currentTile == 1)	
 				{

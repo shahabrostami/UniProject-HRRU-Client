@@ -3,6 +3,7 @@ package main;
 public class ActivityScore {
 
 	private int activity;
+	private int activity_id;
 	private int points;
 	private int difficulty;
 	private int elapsedtime;
@@ -65,6 +66,14 @@ public class ActivityScore {
 
 	public void setOverall(int overall) {
 		this.overall = overall;
+	}
+
+	public int getActivity_id() {
+		return activity_id;
+	}
+
+	public void setActivity_id(int activity_id) {
+		this.activity_id = activity_id;
 	}
 
 

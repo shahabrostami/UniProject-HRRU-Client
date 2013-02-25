@@ -1,5 +1,7 @@
 package main;
 
+import java.util.ArrayList;
+
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
 
@@ -10,7 +12,8 @@ public class Player {
 	private int score;
 	private int position;
 	private int ready;
-	private ActivityScore activityScore;
+	private ActivityScore currentActivityScore;
+	private ArrayList<ActivityScore> activityScores;
 	private int playerCharacterID;
 	private Character playerCharacter;
 	CharacterSheet characterSheet = new CharacterSheet();
@@ -22,7 +25,8 @@ public class Player {
 		this.setScore(0);
 		this.setReady(0);
 		this.setPosition(0);
-		this.activityScore = new ActivityScore(0,0,0,0,0, false);
+		this.currentActivityScore = new ActivityScore(0,0,0,0,0, false);
+		this.activityScores = new ArrayList<ActivityScore>();
 	}
 
 	public String getName() {
@@ -85,11 +89,21 @@ public class Player {
 	}
 
 	public ActivityScore getActivityScore(){
-		return activityScore;
+		return currentActivityScore;
 	}
 	
 	public void setActivityScore(ActivityScore activityScore){
-		this.activityScore = activityScore;
+		this.currentActivityScore = activityScore;
 	}
-	
+
+	public ArrayList<ActivityScore> getActivityScores() {
+		return activityScores;
+	}
+
+	public void setActivityScores(ArrayList<ActivityScore> activityScores) {
+		this.activityScores = activityScores;
+	}
+	public void addActivityScore(ActivityScore activityScore) {
+		this.activityScores.add(activityScore);
+	}
 }
