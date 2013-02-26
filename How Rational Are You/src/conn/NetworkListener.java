@@ -4,6 +4,7 @@ import org.newdawn.slick.SlickException;
 
 import conn.Packet.*;
 import main.ActivityScore;
+import main.BiddingScore;
 import main.HRRUClient;
 import main.Play;
 import main.Player;
@@ -15,6 +16,7 @@ import com.esotericsoftware.minlog.Log;
 
 public class NetworkListener extends Listener{
 	
+	private final int serverlost = -4;
 	private final int failed = -3;
 	private final int cancelled = -2;
 	private final int waiting = 0; 
@@ -34,12 +36,15 @@ public class NetworkListener extends Listener{
 	}
 
 	public void disconnected(Connection c) {
-		Log.info("[SERVER] Someone has disconnected.");		
+		Log.info("[SERVER] Connection lost!");
+		HRRUClient.ConnectionSuccessful = false;
+		HRRUClient.cs.setState(serverlost);
 	}
 	
 	public void received(Connection c, Object o){
 		if(o instanceof Packet1CreateAnswer)
 		{
+			System.out.println("hey");
 			boolean answer = ((Packet1CreateAnswer)o).accepted;
 			if(answer)
 			{
@@ -143,13 +148,14 @@ public class NetworkListener extends Listener{
 			int moves = ((Packet11TurnMessage)o).moves;
 			if(player == 1)
 			{
-				HRRUClient.cs.getP1().setPosition(moves);
+				for(int i = 0; i < moves; i++)
+					HRRUClient.cs.getP1().updatePosition();
 				HRRUClient.cs.setState(p2_turn);
 			}
 			else if(player == 2)
 			{
-				if(moves > 0)
-					HRRUClient.cs.getP2().setPosition(moves);	
+				for(int i = 0; i < moves; i++)
+					HRRUClient.cs.getP2().updatePosition();
 				System.out.println("receive");
 				HRRUClient.cs.setState(start_play);
 			}
@@ -157,12 +163,18 @@ public class NetworkListener extends Listener{
 		}
 		if(o instanceof Packet13Play)
 		{
+			System.out.println("playready");
 			HRRUClient.cs.getP1().setReady(0);
 			HRRUClient.cs.getP2().setReady(0);
 			int activity = ((Packet13Play)o).activity;
 			int activity_id = ((Packet13Play)o).activity_id;
 			HRRUClient.cs.setActivity(activity);
 			HRRUClient.cs.setActivity_id(activity_id);
+			if(activity == 3 && activity_id == 1)
+			{
+				HRRUClient.cs.setSecondary_id(((Packet13Play)o).secondary_id);
+				HRRUClient.cs.setSecondary_value(((Packet13Play)o).secondary_value);
+			}
 			HRRUClient.cs.setState(play);
 			System.out.println(activity);
 			System.out.println(activity_id);
@@ -224,9 +236,49 @@ public class NetworkListener extends Listener{
 				HRRUClient.cs.getP2().setActivityScore(otherPlayerResult);
 			}
 		}
-		if(o instanceof Packet00SyncMessage)
+		if(o instanceof Packet16SendBid)
 		{
-			HRRUClient.cs.setSync(true);
+			int player = ((Packet16SendBid)o).player;
+			if(player == 1)
+				HRRUClient.cs.getP1().setReady(1);
+			else
+				HRRUClient.cs.getP2().setReady(1);
+		}
+		if(o instanceof Packet17EndBid)
+		{
+			HRRUClient.cs.getP1().setReady(2);
+			HRRUClient.cs.getP2().setReady(2);
+			int player = HRRUClient.cs.getPlayer();
+			int itemValue = ((Packet17EndBid)o).itemValue;
+			int otherPlayerBid = ((Packet17EndBid)o).otherPlayerBid;
+			int playerWon = ((Packet17EndBid)o).playerWon;
+			int amountWon = ((Packet17EndBid)o).amountWon;
+			boolean win = ((Packet17EndBid)o).win;
+			
+			BiddingScore biddingScore;
+			
+			if(player == 1)
+			{
+				System.out.println(win);
+				biddingScore = HRRUClient.cs.getP1().getCurrentBiddingScore();
+				biddingScore.setAmountWon(amountWon);
+				biddingScore.setItemValue(itemValue);
+				biddingScore.setOtherPlayerBid(otherPlayerBid);
+				biddingScore.setPlayerWon(playerWon);
+				biddingScore.setWin(win);
+				HRRUClient.cs.getP1().setCurrentBiddingScore(biddingScore);
+			}
+			else
+			{
+				System.out.println(win);
+				biddingScore = HRRUClient.cs.getP2().getCurrentBiddingScore();
+				biddingScore.setAmountWon(amountWon);
+				biddingScore.setItemValue(itemValue);
+				biddingScore.setOtherPlayerBid(otherPlayerBid);
+				biddingScore.setPlayerWon(playerWon);
+				biddingScore.setWin(win);
+				HRRUClient.cs.getP2().setCurrentBiddingScore(biddingScore);
+			}
 		}
 		if(o instanceof Packet00SyncMessage)
 		{

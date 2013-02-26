@@ -5,13 +5,15 @@ import main.Player;
 public class ConnectionState {
 	
 	private final int initial = -1;
-	private int timer = 50000;	
+	private int timer = 500000;	
 	private int player;
 	private Player p1;
 	private Player p2;
 	private int state = initial;
 	private int activity;
 	private int activity_id;
+	private int secondary_id;
+	private int secondary_value;
 	private int sessionID;
 	private String password;
 	private int[] board;
@@ -114,6 +116,22 @@ public class ConnectionState {
 
 	public void setSync(boolean sync) {
 		this.sync = sync;
+	}
+
+	public int getSecondary_id() {
+		return secondary_id;
+	}
+
+	public void setSecondary_id(int secondary_id) {
+		this.secondary_id = secondary_id;
+	}
+
+	public int getSecondary_value() {
+		return secondary_value;
+	}
+
+	public void setSecondary_value(int secondary_value) {
+		this.secondary_value = secondary_value;
 	}
 	
 }

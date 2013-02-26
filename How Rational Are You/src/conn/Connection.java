@@ -6,23 +6,25 @@ import main.HRRUClient;
 import java.io.IOException;
 
 import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.serializers.BeanSerializer;
 import com.esotericsoftware.kryonet.Client;
+import com.esotericsoftware.minlog.Log;
 
 public class Connection {
 	
 	private Client client;
 	
 	public Connection() {
-		client = new Client();
+		client = new Client(65536, 16384);
 		
 		NetworkListener n1 = new NetworkListener();
 		n1.init(client);
 		client.addListener(n1);
 		client.start();
 		register();
-		
+
 		try{
-			client.connect(5000, "localhost", 9991, 9992);
+			client.connect(5000, "2.27.42.249", 9991);
 			HRRUClient.ConnectionSuccessful = true;
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -50,6 +52,8 @@ public class Connection {
 		kryo.register(Packet13Play.class);
 		kryo.register(Packet14QuestionComplete.class);
 		kryo.register(Packet15PuzzleComplete.class);
+		kryo.register(Packet16SendBid.class);
+		kryo.register(Packet17EndBid.class);
 		kryo.register(int[].class);
 	}
 	

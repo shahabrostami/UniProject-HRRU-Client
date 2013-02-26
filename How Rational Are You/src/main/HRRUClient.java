@@ -1,5 +1,6 @@
 package main;
 
+import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
 
@@ -29,9 +30,10 @@ public class HRRUClient extends TWLStateBasedGame {
 	public static final int resX = 800;
 	public static final int resY = 600;
 	
-	protected HRRUClient() {
+ public HRRUClient() {
 		super("How Rational Are You");
 		cs = new ConnectionState();
+		System.out.println("client");
 		conn = new Connection();
 		this.addState(new Main(main));
 		this.addState(new HostServer(host));
@@ -39,7 +41,7 @@ public class HRRUClient extends TWLStateBasedGame {
 		this.addState(new Test(tutorial));
 		this.addState(new CharacterSelect(characterselect));
 		this.addState(new Play(play));
-		this.enterState(tutorial);
+		this.enterState(main);
 	}
 
 	public static void main(String[] args) {
@@ -57,17 +59,9 @@ public class HRRUClient extends TWLStateBasedGame {
 	}
 
 	@Override
-	protected URL getThemeURL() {
-		String fileName = "../../res/simple/simple2.xml";
+	public URL getThemeURL() {
+		String fileName = "/simple/simple2.xml";
 		System.out.println("Loading file: " + fileName);
-
-		System.out.println("Class path set to: ");
-		ClassLoader cl = ClassLoader.getSystemClassLoader();
-		URL[] urls = ((URLClassLoader) cl).getURLs();
-		for (URL url : urls) {
-			System.out.println("\t" + url.getFile());
-		}
-
 		return HRRUClient.class.getResource(fileName);
 	}
 

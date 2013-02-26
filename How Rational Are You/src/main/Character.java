@@ -9,7 +9,7 @@ public class Character  {
 	private int id, positionx, positiony;
 	private String name;
 	private Image characterImage;
-	private SpriteSheet characterSheet = new SpriteSheet("res/simple/characters.png", 36,36);
+	private SpriteSheet characterSheet = new SpriteSheet("simple/characters.png", 36,36);
 	
 	public Character(int id, int positionx, int positiony, String name) throws SlickException {
 		this.setId(id);

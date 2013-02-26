@@ -21,6 +21,7 @@ public class JoinServer extends BasicTWLGameState {
 	public static boolean p1ready = false;
 	public static boolean p2ready = false;
 	
+	private final int serverlost = -4;
 	private final int failed = -3;
 	private final int cancelled = -2;
 	private final int initial = -1;
@@ -155,18 +156,23 @@ public class JoinServer extends BasicTWLGameState {
 	
 	void emulateLogin() {
 		try {
-	        String.valueOf(joinSessionID);
-	        joinSessionID = Integer.parseInt(efSessionID.getText());
-	        joinPassword = efPassword.getText();
-	        p2name = efName.getText();
-	        attempts++;
-			joinRequest = new Packet2JoinRequest();
-			joinRequest.sessionID = joinSessionID;
-			joinRequest.password = joinPassword;
-			joinRequest.player2Name = p2name;
-			client.sendTCP(joinRequest);
-		
-	    	disableGUI();
+			if(efName.getText().isEmpty())
+				lStatus.setText("Please enter a name.");
+			else
+			{
+				disableGUI();
+				String.valueOf(joinSessionID);
+				joinSessionID = Integer.parseInt(efSessionID.getText());
+				joinPassword = efPassword.getText();
+				p2name = efName.getText();
+				attempts++;
+				joinRequest = new Packet2JoinRequest();
+				joinRequest.sessionID = joinSessionID;
+				joinRequest.password = joinPassword;
+				joinRequest.player2Name = p2name;
+				client.sendTCP(joinRequest);
+			}
+	
 		 } catch (NumberFormatException e) {
 			 	HRRUClient.cs.setState(initial);
 		        lStatus.setText("Please enter numbers only for the Session ID.");
@@ -255,6 +261,9 @@ public class JoinServer extends BasicTWLGameState {
             }
         });
 
+        efName.setMaxTextLength(8);
+        efSessionID.setMaxTextLength(5);
+        efPassword.setMaxTextLength(8);
         
         DialogLayout.Group hLabels = joinPanel.createParallelGroup(lName, lSessionID, lPassword);
         DialogLayout.Group hFields = joinPanel.createParallelGroup(efName, efSessionID, efPassword);
@@ -306,6 +315,11 @@ public class JoinServer extends BasicTWLGameState {
 		}
 		
 		state = HRRUClient.cs.getState();
+		
+		// Connection to server lost.
+		if(state == serverlost)
+			sbg.enterState(0);
+		
 		// Connection cancelled.
 		if(state == cancelled) {
 			lStatus.setText("Session cancelled.\nEnter your name and game details.");

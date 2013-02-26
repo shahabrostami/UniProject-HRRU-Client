@@ -46,6 +46,7 @@ public class Play extends BasicTWLGameState {
 	private BasicFont mainFont;
 	private int mainFontSize = 24;
 	
+	private final int serverlost = -4;
 	private final int cancelled = -2;
 	private final int p1_turn = 7;
 	private final int p2_turn = 8;
@@ -190,14 +191,14 @@ public class Play extends BasicTWLGameState {
 		
 		gcw = gc.getWidth();
 		gch = gc.getHeight();
-		scorebackground = new Image("res/simple/playerscorebackground.png");
-		background = new Image("res/simple/background.png");
+		scorebackground = new Image("simple/playerscorebackground.png");
+		background = new Image("simple/background.png");
 		
 		header = new BasicFont("Atari Font Full Version", Font.PLAIN, 12);
 		// Create custom font for question
 		try {
 			loadFont = java.awt.Font.createFont(java.awt.Font.TRUETYPE_FONT,
-			        org.newdawn.slick.util.ResourceLoader.getResourceAsStream("res/font/visitor2.ttf"));
+			        org.newdawn.slick.util.ResourceLoader.getResourceAsStream("font/visitor2.ttf"));
 		} catch (FontFormatException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -284,6 +285,9 @@ public class Play extends BasicTWLGameState {
 		gameState = HRRUClient.cs.getState();
 		timer -= delta;
 		
+		if(gameState == serverlost)
+			sbg.enterState(0);
+		
 		if(gameState == cancelled) {
 			if(playerID == 1)
 				sbg.enterState(1);
@@ -291,7 +295,7 @@ public class Play extends BasicTWLGameState {
 		}
 		
 		if(timer <0)
-			sbg.enterState(3);
+			sbg.enterState(0);
 		
 		if(state == 0)
 		{
@@ -422,6 +426,11 @@ public class Play extends BasicTWLGameState {
 				else if(currentTile == 2)
 				{
 					sbg.enterState(play_puzzle);
+				}
+				else if(currentTile == 3)
+				{
+					System.out.println("WHYYYYYYYYYYYYYYYYY");
+					sbg.enterState(3);
 				}
 			}
 		}

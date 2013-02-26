@@ -6,7 +6,7 @@ public class GameGridSquare implements GridSquare{
 
 	private Image tile_image;
 	
-	SpriteSheet sheet = new SpriteSheet("res/img/tileset/tile2.png", width,height);
+	SpriteSheet sheet = new SpriteSheet("img/tileset/tile2.png", width,height);
 	private Image game_tile_image = sheet.getSprite(2,0);
 	// private Image questionTileImage = new Image("res/img/tileset/DirtBlock.png");
 

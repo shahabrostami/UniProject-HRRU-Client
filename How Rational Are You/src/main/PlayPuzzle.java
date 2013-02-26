@@ -360,12 +360,12 @@ public class PlayPuzzle extends BasicTWLGameState {
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		gcw = gc.getWidth();
 		gch = gc.getHeight();
-		scorebackground = new Image("res/simple/playerscorebackground.png");
+		scorebackground = new Image("simple/playerscorebackground.png");
 		
 		// Create custom font for puzzle
 		try {
 			loadFont = java.awt.Font.createFont(java.awt.Font.TRUETYPE_FONT,
-			        org.newdawn.slick.util.ResourceLoader.getResourceAsStream("res/font/visitor2.ttf"));
+			        org.newdawn.slick.util.ResourceLoader.getResourceAsStream("font/visitor2.ttf"));
 		} catch (FontFormatException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -543,7 +543,7 @@ public class PlayPuzzle extends BasicTWLGameState {
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
 		if(!end)
 		{
-		g.drawImage(new Image("res/simple/questionbg.png"), 0, 0);
+		g.drawImage(new Image("simple/questionbg.png"), 0, 0);
 		g.setFont(titleFont.get());
 		g.drawString("> " + start_message + "" + ticker, header_x, header_y);
 		g.drawImage(scorebackground, 0,0);
@@ -588,14 +588,14 @@ public class PlayPuzzle extends BasicTWLGameState {
 		g.setFont(puzzleFont.get());
 		if(end)
 		{
-			g.drawImage(new Image("res/simple/questionbg.png"), 0, 0);
+			g.drawImage(new Image("simple/questionbg.png"), 0, 0);
 			if(finished)
 			{
 				g.setFont(titleFont.get());
 				g.drawString("> " + start_message + "" + ticker, 50, 50);
 				g.drawString("" + timer, 750, 550);
-				g.drawImage(new Image("/res/simple/playerbg.png"), 124, 175);
-				g.drawImage(new Image("/res/simple/playerbg.png"), 524, 175);
+				g.drawImage(new Image("simple/playerbg.png"), 124, 175);
+				g.drawImage(new Image("simple/playerbg.png"), 524, 175);
 				g.drawImage(player1.getPlayerCharacter().getCharacterImage(), 124, 175);
 				g.drawImage(player2.getPlayerCharacter().getCharacterImage(), 524, 175);
 				g.setFont(mainFont.get());

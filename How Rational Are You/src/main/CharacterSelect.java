@@ -21,6 +21,7 @@ import de.matthiasmann.twl.Label;
 
 public class CharacterSelect extends BasicTWLGameState {
 
+	private final int serverlost = -4;
 	private final int cancelled = -2;
 	private final int p1_charselect = 5;
 	private final int p2_charselect = 6;
@@ -100,6 +101,8 @@ public class CharacterSelect extends BasicTWLGameState {
 			player = 2;
 			lStatus.setText("Waiting for " + p1name);
 		}
+		HRRUClient.cs.getP1().setScore(1000);
+		HRRUClient.cs.getP2().setScore(1000);
 		
 		lP1Name.setText(p1name);
 		lP2Name.setText(p2name);
@@ -165,9 +168,9 @@ public class CharacterSelect extends BasicTWLGameState {
 		gcw = gc.getWidth();
 		gch = gc.getHeight();
 
-		player_character_bg = new Image("res/simple/player_character_bg.png");
+		player_character_bg = new Image("simple/player_character_bg.png");
 		
-		gridSheet = new SpriteSheet("res/simple/character_select.png", 36,36);
+		gridSheet = new SpriteSheet("simple/character_select.png", 36,36);
 		emptyGrid = gridSheet.getSprite(0,0);
 		hoverGrid = gridSheet.getSprite(1,0);
 		selectGrid = gridSheet.getSprite(2,0);
@@ -255,6 +258,9 @@ public class CharacterSelect extends BasicTWLGameState {
 		int ypos= Mouse.getY();
 		mouse = "xpos: " + xpos + "\nypos: " + ypos;
 		gameState = HRRUClient.cs.getState();
+		
+		if(gameState == serverlost)
+			sbg.enterState(0);
 		
 		if(gameState == cancelled) {
 			if(player == 1)

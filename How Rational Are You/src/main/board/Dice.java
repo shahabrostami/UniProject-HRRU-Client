@@ -6,12 +6,12 @@ import org.newdawn.slick.SlickException;
 
 public class Dice {
 	// images from http://opengameart.org/content/dice
-	Image[] one = {new Image("res/img/dice/front&side-1.png"), new Image("res/img/dice/front&side-1.png"), new Image("res/img/dice/angled-left&right-1.png"), new Image("res/img/dice/angled-left&right-1.png")};
-	Image[] two = {new Image("res/img/dice/front-2.png"), new Image("res/img/dice/side-2.png"), new Image("res/img/dice/angled-right-2.png"), new Image("res/img/dice/angled-left-2.png")};
-	Image[] three = {new Image("res/img/dice/front-3.png"), new Image("res/img/dice/side-3.png"), new Image("res/img/dice/angled-right-3.png"), new Image("res/img/dice/angled-left-3.png")};
-	Image[] four = {new Image("res/img/dice/front&side-4.png"), new Image("res/img/dice/front&side-4.png"), new Image("res/img/dice/angled-left&right-4.png"), new Image("res/img/dice/angled-left&right-4.png")};
-	Image[] five = {new Image("res/img/dice/front-5.png"), new Image("res/img/dice/side-5.png"), new Image("res/img/dice/angled-left&right-5.png"), new Image("res/img/dice/angled-left&right-5.png")};
-	Image[] six = {new Image("res/img/dice/front-6.png"), new Image("res/img/dice/side-6.png"), new Image("res/img/dice/angled-right-6.png"), new Image("res/img/dice/angled-left-6.png")};
+	Image[] one = {new Image("img/dice/front&side-1.png"), new Image("img/dice/front&side-1.png"), new Image("img/dice/angled-left&right-1.png"), new Image("img/dice/angled-left&right-1.png")};
+	Image[] two = {new Image("img/dice/front-2.png"), new Image("img/dice/side-2.png"), new Image("img/dice/angled-right-2.png"), new Image("img/dice/angled-left-2.png")};
+	Image[] three = {new Image("img/dice/front-3.png"), new Image("img/dice/side-3.png"), new Image("img/dice/angled-right-3.png"), new Image("img/dice/angled-left-3.png")};
+	Image[] four = {new Image("img/dice/front&side-4.png"), new Image("img/dice/front&side-4.png"), new Image("img/dice/angled-left&right-4.png"), new Image("img/dice/angled-left&right-4.png")};
+	Image[] five = {new Image("img/dice/front-5.png"), new Image("img/dice/side-5.png"), new Image("img/dice/angled-left&right-5.png"), new Image("img/dice/angled-left&right-5.png")};
+	Image[] six = {new Image("img/dice/front-6.png"), new Image("img/dice/side-6.png"), new Image("img/dice/angled-right-6.png"), new Image("img/dice/angled-left-6.png")};
 	
 	int[] duration = {800,800,800,800};
 	Animation oneRoll = new Animation(one,duration,true);

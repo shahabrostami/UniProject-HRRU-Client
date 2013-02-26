@@ -30,6 +30,7 @@ import de.matthiasmann.twl.textarea.SimpleTextAreaModel;
 public class PlayQuestionTest extends BasicTWLGameState {
 	
 	private int gameState;
+	private final int serverlost = -4;
 	private final int cancelled = -2;
 	private final int play = 5;
 	private final int p1_turn = 7;
@@ -61,20 +62,7 @@ public class PlayQuestionTest extends BasicTWLGameState {
 	private int elapsedTimeFixed = 0;
 	private int pointsAvailable = 0;
 	private int pointsGained = 0;
-	
-	private int header_x = 330;
-	private int header_y = 50;
-	private int timer_x = 600;
-	private int timer_y = 550;
-	
-	private int mainFontSize = 24;
-	private int titleFontSize = 36;
-	private int questionFontSize = 26;
-	private int timerFontSize = 40;
-	private int timerMFontSize = 18;
-	
-	private Font loadFont, loadMainFont, loadTitleFont, loadQuestionFont, loadTimerFont, loadTimerMFont;
-	private BasicFont mainFont, titleFont, readyFont, questionFont, timerFont, timerMFont;;
+	boolean ready = false;
 	
 	private int current_question_id;
 	private QuestionList question_list;
@@ -90,6 +78,20 @@ public class PlayQuestionTest extends BasicTWLGameState {
 	private int full_start_counter = 0;
 	private String ticker = "";
 	private boolean tickerBoolean = true;
+	
+	private int header_x = 330;
+	private int header_y = 50;
+	private int timer_x = 600;
+	private int timer_y = 550;
+	
+	private int mainFontSize = 24;
+	private int titleFontSize = 36;
+	private int questionFontSize = 26;
+	private int timerFontSize = 40;
+	private int timerMFontSize = 18;
+	
+	private Font loadFont, loadMainFont, loadTitleFont, loadQuestionFont, loadTimerFont, loadTimerMFont;
+	private BasicFont mainFont, titleFont, readyFont, questionFont, timerFont, timerMFont;;
 	
 	private int clock2,clock3,timer,timer2,overallTimer = 0;
 	private boolean end, win, time_out, finished, resume = false;
@@ -170,6 +172,7 @@ public class PlayQuestionTest extends BasicTWLGameState {
 		pointsGained = 0;
 		elapsedTime = 0;
 		elapsedTimeFixed = (25*question_difficulty) - timer;
+		ready = true;
 		end = true;
 		if(currentAnswer == correctAnswer)
 		{
@@ -380,12 +383,12 @@ public class PlayQuestionTest extends BasicTWLGameState {
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		gcw = gc.getWidth();
 		gch = gc.getHeight();
-		scorebackground = new Image("res/simple/playerscorebackground.png");
+		scorebackground = new Image("simple/playerscorebackground.png");
 		
 		// Create custom font for question
 		try {
 			loadFont = java.awt.Font.createFont(java.awt.Font.TRUETYPE_FONT,
-			        org.newdawn.slick.util.ResourceLoader.getResourceAsStream("res/font/visitor2.ttf"));
+			        org.newdawn.slick.util.ResourceLoader.getResourceAsStream("font/visitor2.ttf"));
 		} catch (FontFormatException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -549,7 +552,7 @@ public class PlayQuestionTest extends BasicTWLGameState {
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
 		if(!end)
 		{
-		g.drawImage(new Image("res/simple/questionbg.png"), 0, 0);
+		g.drawImage(new Image("simple/questionbg.png"), 0, 0);
 		g.setFont(titleFont.get());
 		g.drawString("> " + start_message + "" + ticker, header_x, header_y);
 		g.drawImage(scorebackground, 0,0);
@@ -589,17 +592,55 @@ public class PlayQuestionTest extends BasicTWLGameState {
 		}
 		}
 		
-		g.setFont(questionFont.get());
 		if(end)
 		{
-			g.drawImage(new Image("res/simple/questionbg.png"), 0, 0);
+			g.drawImage(new Image("simple/questionbg.png"), 0, 0);
+			g.drawImage(scorebackground, 0,0);
+			g.setFont(mainFont.get());
+			g.drawImage(player1.getPlayerCharacter().getCharacterImage(), 13,13);
+			g.drawImage(player2.getPlayerCharacter().getCharacterImage(), 13,55);
+			g.drawString("" + player1.getName(), 65, 22);
+			g.drawString("" + player2.getName(), 65, 64);
+			g.drawString("" + player1.getScore(), 204, 22);
+			g.drawString("" + player2.getScore(), 204, 64);
+			g.setFont(readyFont.get());
+			if(ready)
+			{
+				if(playerID == 1)
+					g.drawString("FINISHED", 92, 19);
+				else
+					g.drawString("FINISHED", 92, 61);
+			}
+			if(otherPlayerReady == 1)
+			{
+				if(otherPlayerID == 1)
+					g.drawString("FINISHED", 92, 19);
+				else
+					g.drawString("FINISHED", 92, 61);
+			}
+			g.setFont(timerFont.get());
+			if(timer<100)
+				g.drawString("TIME: 0" + timer, timer_x, timer_y);
+			else if(timer<10)
+				g.drawString("TIME: 00" + timer, timer_x, timer_y);
+			else
+			    g.drawString("TIME: " + timer, timer_x, timer_y);
+			g.setFont(timerMFont.get());
+			if(timer2<100)
+				g.drawString("0" + timer2, timer_x+145, timer_y-10);
+			else if(timer2<10)
+				g.drawString("00" + timer2, timer_x+145, timer_y-10);
+			else
+				g.drawString("" + timer2, timer_x+145, timer_y-10);
+			
 			if(finished)
 			{
+				g.drawImage(new Image("simple/questionbg.png"), 0, 0);
 				g.setFont(titleFont.get());
 				g.drawString("> " + start_message + "" + ticker, 50, 50);
 				g.drawString("" + timer, 750, 550);
-				g.drawImage(new Image("/res/simple/playerbg.png"), 124, 175);
-				g.drawImage(new Image("/res/simple/playerbg.png"), 524, 175);
+				g.drawImage(new Image("simple/playerbg.png"), 124, 175);
+				g.drawImage(new Image("simple/playerbg.png"), 524, 175);
 				g.drawImage(player1.getPlayerCharacter().getCharacterImage(), 124, 175);
 				g.drawImage(player2.getPlayerCharacter().getCharacterImage(), 524, 175);
 				g.setFont(mainFont.get());
@@ -616,11 +657,19 @@ public class PlayQuestionTest extends BasicTWLGameState {
 		int xpos = Mouse.getX();
 		int ypos= Mouse.getY();
 		mouse = "xpos: " + xpos + "\nypos: " + ypos;
+		
+		// Update variables
 		clock2 += delta;
 		clock3 += delta;
 		timer2 -= delta;
 		overallTimer += delta;
 		gameState = HRRUClient.cs.getState();
+		
+		// Connection to server lost
+		if(gameState == serverlost)
+			sbg.enterState(0);
+		
+		// Connection to other player lost
 		if(gameState == cancelled) {
 			if(playerID == 1)
 				sbg.enterState(1);
@@ -678,6 +727,23 @@ public class PlayQuestionTest extends BasicTWLGameState {
 		}
 		if(end && !finished)
 		{
+			System.out.println("waiting here");
+			if(clock2>999)
+			{
+				timer--;
+				timer2=999;
+				clock2-=1000;
+				if(tickerBoolean) 
+				{
+					ticker = "|";
+					tickerBoolean = false;
+				}
+				else
+				{
+					ticker = "";
+					tickerBoolean = true;
+				}
+			}
 			if(otherPlayerReady == 1)
 			{
 				// Setup new UI
@@ -830,6 +896,7 @@ public class PlayQuestionTest extends BasicTWLGameState {
 					syncMessage.player = playerID;
 					syncMessage.sessionID = HRRUClient.cs.getSessionID();
 					client.sendTCP(syncMessage);
+					System.out.println("syncmessagesent");
 					finished = false;
 					resume = true;
 				}
@@ -841,8 +908,8 @@ public class PlayQuestionTest extends BasicTWLGameState {
 			{
 				HRRUClient.cs.updateTimer(overallTimer);
 				System.out.println("Time Subtract" + (overallTimer));
-				HRRUClient.cs.setState(p1_turn);
 				HRRUClient.cs.setSync(false);
+				HRRUClient.cs.setState(p1_turn);
 				sbg.enterState(play);
 			}
 		}

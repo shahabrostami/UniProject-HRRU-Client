@@ -75,7 +75,7 @@ public class PlayQuestion extends BasicTWLGameState{
 		// Create custom font for question
 		 try {
 			loadFont = java.awt.Font.createFont(java.awt.Font.TRUETYPE_FONT,
-			        org.newdawn.slick.util.ResourceLoader.getResourceAsStream("res/font/visitor2.ttf"));
+			        org.newdawn.slick.util.ResourceLoader.getResourceAsStream("font/visitor2.ttf"));
 		} catch (FontFormatException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -99,14 +99,14 @@ public class PlayQuestion extends BasicTWLGameState{
 		
 		/*
 		// Load all images
-		menubuttona = new Image("res/img/menubuttona.png");
-		menubuttonb = new Image("res/img/menubuttonb.png");
-		menubuttonc = new Image("res/img/menubuttonc.png");
-		menubuttond = new Image("res/img/menubuttond.png");
-		menubuttonah = new Image("res/img/menubuttonahover.png");
-		menubuttonbh = new Image("res/img/menubuttonbhover.png");
-		menubuttonch = new Image("res/img/menubuttonchover.png");
-		menubuttondh = new Image("res/img/menubuttondhover.png");
+		menubuttona = new Image("img/menubuttona.png");
+		menubuttonb = new Image("img/menubuttonb.png");
+		menubuttonc = new Image("img/menubuttonc.png");
+		menubuttond = new Image("img/menubuttond.png");
+		menubuttonah = new Image("img/menubuttonahover.png");
+		menubuttonbh = new Image("img/menubuttonbhover.png");
+		menubuttonch = new Image("img/menubuttonchover.png");
+		menubuttondh = new Image("img/menubuttondhover.png");
 		*/
 		
 	} 
@@ -133,7 +133,7 @@ public class PlayQuestion extends BasicTWLGameState{
 	}
 	
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException{
-		g.drawImage(new Image("res/img/questionbg.png"), 0, 0);
+		g.drawImage(new Image("img/questionbg.png"), 0, 0);
 		g.drawString(mouse, 650, 50);
 		
 		g.setFont(mainFont.get());
@@ -157,7 +157,7 @@ public class PlayQuestion extends BasicTWLGameState{
 		g.setFont(questionFont.get());
 		if(confirmation==true)
 		{
-			g.drawImage(new Image("res/img/answerbox.png"), answer_x, answer_y);
+			g.drawImage(new Image("img/answerbox.png"), answer_x, answer_y);
 			g.drawString("Is your answer: " + (currentAnswer+1) + "?", answer_x+15, answer_y+15);
 			
 			if(confirmation_selected==1)
@@ -191,7 +191,7 @@ public class PlayQuestion extends BasicTWLGameState{
 		g.setFont(questionFont.get());
 		if(end)
 		{
-			g.drawImage(new Image("res/img/questionui.png"), 0, 0);
+			g.drawImage(new Image("img/questionui.png"), 0, 0);
 			if(win)
 			{
 				g.drawString("CORRECT!", 100, 100);

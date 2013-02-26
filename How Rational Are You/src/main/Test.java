@@ -1,6 +1,11 @@
 package main;
 
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontFormatException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.ByteBuffer;
 import java.util.Random;
 
 import main.item.Item;
@@ -13,15 +18,22 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.util.ResourceLoader;
 
 
 import com.esotericsoftware.kryonet.Client;
+
+import conn.Packet.Packet00SyncMessage;
+import conn.Packet.Packet14QuestionComplete;
+import conn.Packet.Packet16SendBid;
 
 import TWLSlick.BasicTWLGameState;
 import TWLSlick.RootPane;
 import de.matthiasmann.twl.ResizableFrame.ResizableAxis;
 import de.matthiasmann.twl.textarea.SimpleTextAreaModel;
 import de.matthiasmann.twl.utils.PNGDecoder;
+import de.matthiasmann.twl.utils.PNGDecoder.Format;
+import de.matthiasmann.twl.Alignment;
 import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.DialogLayout;
 import de.matthiasmann.twl.Label;
@@ -31,64 +43,257 @@ import de.matthiasmann.twl.ValueAdjusterFloat;
 import de.matthiasmann.twl.ValueAdjusterInt;
 
 public class Test extends BasicTWLGameState {
-
+	
+	private int gameState;
+	private final int serverlost = -4;
+	private final int cancelled = -2;
+	private final int play = 5;
+	private final int p1_turn = 7;
+	public final int question_points_amount = 100;
+	
 	public Client client;
 	DialogLayout p1ResultPanel, p2ResultPanel;
+	Label lBid, lBid2, lblBid, lblBid2;
+	Label lAmountWon, lAmountWon2, lblAmountWon, lblAmountWon2;
 	
 	int gcw;
 	int gch;
 	
+	// Player variables
+	BiddingScore biddingResult;
+	Player player1, player2, player, otherPlayer;
+	int otherPlayerReady;
+	int currentBid, amountWon;
+	int playerID, otherPlayerID;
+	int maximumBid;
+	int otherPlayerBid, otherPlayerWon;
+	boolean winCheck;
+	int playerWon;
+	String winString = "The highest bidder wins the value\n of the item in points!";
+	
+	// Item Panel & Variables
 	DialogLayout itemPanel;
-	Label itemName, itemValue;
+	Label lblItemName, lblItemValue;
+	Label lItemName, lItemValue, lDescription;
 	TextArea itemDescription;
 	SimpleTextAreaModel itemDescriptionModel;
 	
 	ItemList itemList;
 	Item items[];
 	Item currentItem;
+	int itemValue, item_id;
 	
 	ValueAdjusterInt vaBid;
-
-	
 	Button btnSubmit;
+	
+	// Confirmation Panel & Variables
+	Label lblConfirmation;
+	Button btnYes, btnNo;
+	
+	Image scorebackground, background;
+	private int header_x = 330;
+	private int header_y = 25;
+	private int timer_x = 600;
+	private int timer_y = 550;
+	private int fixed_y = 150;
+	
+	private String start_message = "";
+	private String full_start_message = "MAKE YOUR BID...";
+	private int full_start_counter = 0;
+	private String ticker = "";
+	private boolean tickerBoolean = true;
+	
+	private int mainFontSize = 24;
+	private int titleFontSize = 36;
+	private int questionFontSize = 26;
+	private int timerFontSize = 40;
+	private int timerMFontSize = 18;
+	
+	private Font loadFont, loadMainFont, loadTitleFont, loadQuestionFont, loadTimerFont, loadTimerMFont;
+	private BasicFont mainFont, titleFont, readyFont, questionFont, timerFont, timerMFont;;
+	
+	private int clock2,clock3,timer,timer2,overallTimer = 0;
+	private boolean end, ready, win, time_out, finished, resume = false;
 	
 	private boolean playedBefore = false;
 	private Random rand = new Random();
+	
+	Packet16SendBid playerBid;
+	Packet00SyncMessage syncMessage;
 	
 	public Test(int main) {
 		client = HRRUClient.conn.getClient();
 		
 	}
 
+	void disableGUI()
+	{
+		btnSubmit.setVisible(false);
+		vaBid.setVisible(false);
+		btnYes.setVisible(false);
+		btnNo.setVisible(false);
+		lblConfirmation.setPosition((gcw/2) - lblConfirmation.getWidth()/2, fixed_y + 350);
+		lblConfirmation.setText("You bid " + currentBid + ".\nWaiting for " + otherPlayer.getName());
+	}
+	
+	void disableChoices()
+	{
+		btnSubmit.setVisible(false);
+		vaBid.setVisible(false);
+		lblConfirmation.setVisible(true);
+		btnYes.setVisible(true);
+		btnNo.setVisible(true);
+	}
+	
+	void enableChoices()
+	{
+		btnSubmit.setVisible(true);
+		vaBid.setVisible(true);
+		lblConfirmation.setVisible(false);
+		btnYes.setVisible(false);
+		btnNo.setVisible(false);
+	}
+	
+	void emulateChoice()
+	{
+		disableChoices();
+		lblConfirmation.setText("Is your bid: '" + vaBid.getValue() + "' ?");
+		currentBid = vaBid.getValue();
+	}
+	
+	void emulateYes()
+	{
+		disableGUI();
+		playerBid = new Packet16SendBid();
+		playerBid.player = playerID;
+		playerBid.bid = currentBid;
+		playerBid.itemValue = itemValue;
+		playerBid.sessionID = HRRUClient.cs.getSessionID();
+		client.sendTCP(playerBid);
+		ready = true;
+		end = true;
+	}
+
 	@Override
 	public void enter(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		super.enter(gc, sbg);
+		
+		rootPane.removeAllChildren();
+		itemPanel.removeAllChildren();
+		
+		// Reset variables
 		playedBefore = true;
+		win = false; end = false; time_out = false; finished = false; resume = false; ready = false;
+		otherPlayerReady = 0;
+		currentBid = 0;
+		amountWon = 0;
+		maximumBid = 0;
+		clock2 = 0; clock3 = 0;
+		timer = 30;
+		timer2 = 999;
+		overallTimer = 0;
+		otherPlayerBid = 0;
+		otherPlayerWon = 0;
+		winCheck = false;
 		
-		int item_id = rand.nextInt(itemList.getSize());
-        currentItem = items[item_id];
+		start_message = "";
+		full_start_message = "MAKE YOUR BID...";
+		full_start_counter = 0;
+		ticker = "";
+		tickerBoolean = true;
+		winString = "The highest bidder wins the value\n of the item in points!";
+				
+		// Testing
+		/*
+		Character characters[] = (new CharacterSheet()).getCharacters();
+		player1 = new Player("player1");
+		player2 = new Player("player2");
+		player1.setPlayerCharacterID(2);
+		player1.setPlayerCharacter(characters[2]);
+		player2.setPlayerCharacter(characters[4]);
+		player2.setPlayerCharacterID(4);
+		player1.setScore(5000);
+		HRRUClient.cs.setState(6);
+		HRRUClient.cs.setP1(player1);
+		HRRUClient.cs.setP2(player2);
+		HRRUClient.cs.setPlayer(1);
+		*/
+		
+		// Retrieve player information
+		player1 = HRRUClient.cs.getP1();
+		player2 = HRRUClient.cs.getP2();
+		playerID = HRRUClient.cs.getPlayer();
+		System.out.println(playerID +" playerID");
+		if(playerID == 1)
+		{
+			player =  player1;
+			otherPlayer = player2;
+			otherPlayerID = 2;
+			maximumBid = player.getScore();
+		}
+		else 
+		{
+			player =  player2;
+			otherPlayer = player1;
+			otherPlayerID = 1;
+			maximumBid = player.getScore();
+		}
+		
+		// Setup new item variables
+		item_id = HRRUClient.cs.getSecondary_id();
+		currentItem = items[item_id];
+        itemValue = HRRUClient.cs.getSecondary_value();
         
-        itemName = new Label("Name: " + currentItem.getName());
-        int value = rand.nextInt(currentItem.getMaxValue() - currentItem.getMinValue() + 1) + currentItem.getMinValue();
-        itemValue = new Label("Value: " + value);
-        System.out.println(itemValue.getText());
-        itemDescriptionModel.setText("Description: /n" + currentItem.getDescription());
-       
-        vaBid = new ValueAdjusterInt();
-		vaBid.setMinMaxValue(0, 400);
-		vaBid.setSize(200, 30);
-		vaBid.setPosition((gcw/2) - vaBid.getWidth()/2, 450);
+        itemPanel.setPosition(50, fixed_y);
+        lblItemName = new Label(currentItem.getName());
+        lblItemValue = new Label("" + itemValue);
+        itemDescriptionModel.setText(currentItem.getDescription());
+        lblItemName.setTheme("itematari16");
+        lblItemValue.setTheme("itematari16");
+        itemDescription.setTheme("questiontextarea");
+        
+        DialogLayout.Group hItemLabel = itemPanel.createSequentialGroup(lItemName);
+        DialogLayout.Group hItemResult = itemPanel.createSequentialGroup(lblItemName);
+        DialogLayout.Group hDescriptionLabel = itemPanel.createSequentialGroup(lDescription);
+        DialogLayout.Group hDescriptionResult = itemPanel.createSequentialGroup(itemDescription);
+        DialogLayout.Group hItemValueLabel = itemPanel.createSequentialGroup(lItemValue);
+        DialogLayout.Group hItemValueResult = itemPanel.createSequentialGroup(lblItemValue);
+        
+        itemPanel.setHorizontalGroup(itemPanel.createParallelGroup()
+        		.addGroup(hItemLabel)
+        		.addGroup(hItemResult)
+        		.addGroup(hDescriptionLabel)
+        		.addGroup(hDescriptionResult)
+        		.addGroup(hItemValueLabel)
+        		.addGroup(hItemValueResult));
+        
+        itemPanel.setVerticalGroup(itemPanel.createSequentialGroup()
+        		.addWidget(lItemName)
+        		.addWidget(lblItemName)
+        		.addGap(30).addWidget(lDescription)
+        		.addWidget(itemDescription)
+        		.addGap(60).addWidget(lItemValue)
+        		.addWidget(lblItemValue));
+        
+        // Setup bidding GUI
+		vaBid.setMinMaxValue(0, maximumBid);
+		vaBid.setValue(0);
+		vaBid.setVisible(true);
+		btnSubmit.setVisible(true);
+		btnYes.setVisible(false);
+		btnNo.setVisible(false);
+		lblConfirmation.setVisible(false);
+		p1ResultPanel.setVisible(false);
+		p2ResultPanel.setVisible(false);
 		
-		btnSubmit = new Button("Submit Bid");
-		btnSubmit.setSize(200, 30);
-		btnSubmit.setPosition((gcw/2) - btnSubmit.getWidth()/2 - 2,490);
-		btnSubmit.setTheme("choicebutton");
-		
-		
+		rootPane.add(p1ResultPanel);
+		rootPane.add(p2ResultPanel);
+		rootPane.add(btnYes);
+		rootPane.add(btnNo);
+		rootPane.add(lblConfirmation);
 		rootPane.add(btnSubmit);
 		rootPane.add(vaBid);
 		rootPane.add(itemPanel);
-		
 	}
 
 	@Override
@@ -105,28 +310,494 @@ public class Test extends BasicTWLGameState {
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		gcw = gc.getWidth();
 		gch = gc.getHeight();
+		// Set up images
+		scorebackground = new Image("simple/playerscorebackground.png");
+		background = new Image("simple/questionbg.png");
 		
+		// Set up item lists
 		itemList = new ItemList();
 		items = itemList.getItems();
 		
+		// Set up item panel
 		itemPanel = new DialogLayout();
 		itemPanel.setTheme("item-panel");
 		itemPanel.setSize(400, 220);
-		itemPanel.setPosition(50, 100);
-		
+		itemPanel.setPosition(50, fixed_y);
 		itemDescriptionModel = new SimpleTextAreaModel();
 		itemDescription = new TextArea(itemDescriptionModel);
+		
+		lItemName = new Label("Name: ");
+		lDescription = new Label("Description: ");
+		lItemValue = new Label("Value: ");
+		lItemName.setTheme("questionatari16lbl");
+		lDescription.setTheme("questionatari16lbl");
+		lItemValue.setTheme("questionatari16lbl");
+		
+		// Set up fonts
+		// Create custom font for question
+		try {
+			loadFont = java.awt.Font.createFont(java.awt.Font.TRUETYPE_FONT,
+					      org.newdawn.slick.util.ResourceLoader.getResourceAsStream("font/visitor2.ttf"));
+		} catch (FontFormatException e) {
+				e.printStackTrace();
+		} catch (IOException e) {
+				e.printStackTrace();
+		}
+		loadTitleFont = loadFont.deriveFont(Font.BOLD,titleFontSize);
+		titleFont = new BasicFont(loadTitleFont);
+		
+		loadMainFont = loadFont.deriveFont(Font.BOLD,mainFontSize);
+		mainFont = new BasicFont(loadMainFont);
+		readyFont = new BasicFont(loadTitleFont, Color.red);
+		
+		loadQuestionFont = loadFont.deriveFont(Font.PLAIN, questionFontSize);
+		loadTimerFont = loadFont.deriveFont(Font.BOLD,timerFontSize);
+		loadTimerMFont = loadFont.deriveFont(Font.BOLD,timerMFontSize);
+		timerFont = new BasicFont(loadTimerFont);
+		timerMFont = new BasicFont(loadTimerMFont);
+		questionFont = new BasicFont(loadQuestionFont);
+		
+		// Confirmation GUI
+		lblConfirmation = new Label("");
+		btnYes = new Button("Yes");
+		btnNo = new Button("No");
+		
+		lblConfirmation.setTheme("labelscoretotal");
+		btnYes.setTheme("choicebutton");
+		btnNo.setTheme("choicebutton");
+		
+		lblConfirmation.setPosition((gcw/2) - lblConfirmation.getWidth()/2, fixed_y + 330);
+		btnYes.setPosition((gcw/2) - 152, fixed_y + 360);
+		btnNo.setPosition((gcw/2) - 152, fixed_y + 395);
+		btnYes.setSize(300, 30);
+		btnNo.setSize(300, 30);
+		
+		btnYes.addCallback(new Runnable() {
+            public void run() {
+                emulateYes();
+            }
+        });
+				
+		btnNo.addCallback(new Runnable() {
+            public void run() {
+            	enableChoices();
+            }
+        });
+		
+		// Bid GUI
+		vaBid = new ValueAdjusterInt();
+		vaBid.setSize(200, 30);
+		vaBid.setPosition((gcw/2) - vaBid.getWidth()/2, fixed_y + 320);
+		
+		btnSubmit = new Button("Submit Bid");
+		btnSubmit.setSize(200, 30);
+		btnSubmit.setPosition((gcw/2) - btnSubmit.getWidth()/2 - 2, fixed_y + 360);
+		btnSubmit.setTheme("choicebutton");
+		
+		btnSubmit.addCallback(new Runnable() {
+            public void run() {
+            	emulateChoice();
+            }
+        });
+	
+		// Results GUI
+		p1ResultPanel = new DialogLayout();
+        p1ResultPanel.setTheme("incorrectbid-panel");
+		p1ResultPanel.setSize(300, 80);
+		p1ResultPanel.setPosition(
+               (gcw/2 - p1ResultPanel.getWidth()/2 - 200), 420);
+		
+		p2ResultPanel = new DialogLayout();
+        p2ResultPanel.setTheme("incorrectbid-panel");
+		p2ResultPanel.setSize(300, 80);
+		p2ResultPanel.setPosition(
+               (gcw/2 - p2ResultPanel.getWidth()/2 + 160), 420);
+		
+		lBid = new Label("Bid:");
+		lBid2 = new Label("Bid: ");
+		lAmountWon = new Label("Amount Won: ");
+		lblAmountWon = new Label("");
+		
+		lblBid = new Label("");
+		lblBid2 = new Label("");
+		lAmountWon2 = new Label("Amount Won: ");
+		lblAmountWon2 = new Label("");
+		
+		DialogLayout.Group hLeftLabel1 = p1ResultPanel.createParallelGroup(lBid, lAmountWon);
+		DialogLayout.Group hRightResult1 = p1ResultPanel.createParallelGroup(lblBid, lblAmountWon);
+		
+		p1ResultPanel.setHorizontalGroup(p1ResultPanel.createParallelGroup()
+				.addGap(120).addGroup(p1ResultPanel.createSequentialGroup(hLeftLabel1, hRightResult1)));
+		
+		p1ResultPanel.setVerticalGroup(p1ResultPanel.createSequentialGroup()
+				.addGap(30).addGroup(p1ResultPanel.createParallelGroup(lBid, lblBid))
+				.addGroup(p1ResultPanel.createParallelGroup(lAmountWon, lblAmountWon)));
+		
+		
+		DialogLayout.Group hLeftLabel2 = p2ResultPanel.createParallelGroup(lBid2, lAmountWon2);
+		DialogLayout.Group hRightResult2 = p2ResultPanel.createParallelGroup(lblBid2, lblAmountWon2);
+		
+		p2ResultPanel.setHorizontalGroup(p2ResultPanel.createParallelGroup()
+				.addGroup(p2ResultPanel.createSequentialGroup(hLeftLabel2, hRightResult2)));
+		
+		p2ResultPanel.setVerticalGroup(p2ResultPanel.createSequentialGroup()
+				.addGap(30).addGroup(p2ResultPanel.createParallelGroup(lBid2, lblBid2))
+				.addGroup(p2ResultPanel.createParallelGroup(lAmountWon2, lblAmountWon2)));
+		
 		
 	}
 
 	@Override
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
-		g.drawImage(currentItem.getItemImage(), 75, 125);
+			if(!end)
+			{
+				g.drawImage(background, 0, 0);
+				g.drawImage(currentItem.getItemImage(), 75, fixed_y + 25);
+				g.setFont(titleFont.get());
+				g.drawString("> " + start_message + "" + ticker, header_x, header_y);
+				g.drawImage(scorebackground, 0,0);
+				g.setFont(mainFont.get());
+				g.drawString("" + winString, header_x, header_y+30);
+				g.drawImage(player1.getPlayerCharacter().getCharacterImage(), 13,13);
+				g.drawImage(player2.getPlayerCharacter().getCharacterImage(), 13,55);
+				g.drawString("" + player1.getName(), 65, 22);
+				g.drawString("" + player2.getName(), 65, 64);
+				g.drawString("" + player1.getScore(), 204, 22);
+				g.drawString("" + player2.getScore(), 204, 64);
+				
+				g.setFont(timerFont.get());
+				if(timer<100)
+					g.drawString("TIME: 0" + timer, timer_x, timer_y);
+				else if(timer<10)
+					g.drawString("TIME: 00" + timer, timer_x, timer_y);
+				else
+					g.drawString("TIME: " + timer, timer_x, timer_y);
+				g.setFont(timerMFont.get());
+				if(timer2<100)
+					g.drawString("0" + timer2, timer_x+145, timer_y-10);
+				else if(timer2<10)
+					g.drawString("00" + timer2, timer_x+145, timer_y-10);
+				else
+					g.drawString("" + timer2, timer_x+145, timer_y-10);
+				
+				g.setFont(readyFont.get());
+				if(ready)
+				{
+					if(playerID == 1)
+						g.drawString("FINISHED", 92, 19);
+					else
+						g.drawString("FINISHED", 92, 61);
+				}
+				if(otherPlayerReady == 1)
+				{
+					if(otherPlayerID == 1)
+						g.drawString("FINISHED", 92, 19);
+					else
+						g.drawString("FINISHED", 92, 61);
+				}
+			}
+			else if(end)
+			{
+				g.drawImage(background, 0, 0);
+				g.setFont(titleFont.get());
+				g.drawString("> " + start_message + "" + ticker, header_x, header_y);
+				g.setFont(mainFont.get());
+				g.drawString("" + winString, header_x, header_y+30);
+				g.drawImage(currentItem.getItemImage(), 75, fixed_y + 25);
+				g.drawImage(scorebackground, 0,0);
+				g.setFont(mainFont.get());
+				g.drawImage(player1.getPlayerCharacter().getCharacterImage(), 13,13);
+				g.drawImage(player2.getPlayerCharacter().getCharacterImage(), 13,55);
+				g.drawString("" + player1.getName(), 65, 22);
+				g.drawString("" + player2.getName(), 65, 64);
+				g.drawString("" + player1.getScore(), 204, 22);
+				g.drawString("" + player2.getScore(), 204, 64);
+				g.setFont(readyFont.get());
+				if(ready)
+				{
+					if(playerID == 1)
+						g.drawString("FINISHED", 92, 19);
+					else
+						g.drawString("FINISHED", 92, 61);
+				}
+				if(otherPlayerReady == 1)
+				{
+					if(otherPlayerID == 1)
+						g.drawString("FINISHED", 92, 19);
+					else
+						g.drawString("FINISHED", 92, 61);
+				}
+				g.setFont(timerFont.get());
+				if(timer<100)
+					g.drawString("TIME: 0" + timer, timer_x, timer_y);
+				else if(timer<10)
+					g.drawString("TIME: 00" + timer, timer_x, timer_y);
+				else
+				    g.drawString("TIME: " + timer, timer_x, timer_y);
+				g.setFont(timerMFont.get());
+				if(timer2<100)
+					g.drawString("0" + timer2, timer_x+145, timer_y-10);
+				else if(timer2<10)
+					g.drawString("00" + timer2, timer_x+145, timer_y-10);
+				else
+					g.drawString("" + timer2, timer_x+145, timer_y-10);
+				
+				if(finished)
+				{
+					g.drawImage(background, 0, 0);
+					g.setFont(titleFont.get());
+					g.drawString("> " + start_message + "" + ticker, 25, 25);
+					g.drawString("" + timer, 750, 50);
+					g.drawImage(currentItem.getItemImage(), 75, 125);
+					g.drawImage(new Image("simple/playerbg.png"), 146, 435);
+					g.drawImage(new Image("simple/playerbg.png"), 506, 435);
+					g.drawImage(player1.getPlayerCharacter().getCharacterImage(), 146, 435);
+					g.drawImage(player2.getPlayerCharacter().getCharacterImage(), 506, 435);
+					g.setFont(mainFont.get());
+					g.drawString(winString, 50, 60);
+					g.drawString("" + player1.getName(), 198, 444);
+					g.drawString("" + player2.getName(), 558, 444);
+					
+					
+				}
+			}
 	}
 
 	@Override
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
-	
+		clock2 += delta;
+		clock3 += delta;
+		timer2 -= delta;
+		overallTimer += delta;
+		gameState = HRRUClient.cs.getState();
+		
+		// Connection to server lost
+		if(gameState == serverlost)
+			sbg.enterState(0);
+		
+		// Connection to other player lost
+		if(gameState == cancelled) {
+			if(playerID == 1)
+				sbg.enterState(1);
+			else sbg.enterState(2);
+		}
+		
+		// Check if other player is finished
+		if(otherPlayerID == 1)
+			otherPlayerReady = HRRUClient.cs.getP1().getReady();
+		else
+			otherPlayerReady = HRRUClient.cs.getP2().getReady();
+					
+		if(clock3 > 100){
+			if(full_start_counter < full_start_message.length())
+			{
+				start_message += full_start_message.substring(full_start_counter, full_start_counter+1);
+				full_start_counter++;
+				clock3-=100;
+			}
+		}
+		if(end==false)
+		{
+			if(clock2>999)
+			{
+				timer--;
+				timer2=999;
+				if(timer<=0)
+				{
+					disableGUI();
+					System.out.println("timed out");
+					end = true;
+					time_out = true;
+					playerBid = new Packet16SendBid();
+					playerBid.player = playerID;
+					playerBid.bid = currentBid;
+					playerBid.itemValue = itemValue;
+					playerBid.sessionID = HRRUClient.cs.getSessionID();
+					client.sendTCP(playerBid);
+				}
+				clock2-=1000;
+				if(tickerBoolean) 
+				{
+					ticker = "|";
+					tickerBoolean = false;
+				}
+				else
+				{
+					ticker = "";
+					tickerBoolean = true;
+				}
+			}
+		}
+		if(end && !finished)
+		{
+			if(clock2>999)
+			{
+				timer--;
+				timer2=999;
+				clock2-=1000;
+				if(tickerBoolean) 
+				{
+					ticker = "|";
+					tickerBoolean = false;
+				}
+				else
+				{
+					ticker = "";
+					tickerBoolean = true;
+				}
+			}
+			if(otherPlayerReady == 2)
+			{
+				// Setup new UI
+				timer = 5; // should be 10
+				timer2 = 999;
+				clock2 = 0;
+				clock3 = 0;
+				lblConfirmation.setVisible(false);
+				full_start_message = "The results are in...";
+				full_start_counter = 0;
+				ticker = "";
+				start_message = "";
+				tickerBoolean = true;
+				itemPanel.setPosition(50, 100);
+				p1ResultPanel.setVisible(true);
+				p2ResultPanel.setVisible(true);
+
+				lblBid.setText("0");
+				lblBid2.setText("0");
+				lblAmountWon.setText("0");
+				lblAmountWon2.setText("0");
+				p1ResultPanel.setTheme("incorrectbid-panel");
+				p2ResultPanel.setTheme("incorrectbid-panel");
+				p1ResultPanel.reapplyTheme();
+				p2ResultPanel.reapplyTheme();
+				// Setup players results
+				if(playerID == 1)
+				{
+					// results view when player 1
+					BiddingScore biddingScore = HRRUClient.cs.getP1().getCurrentBiddingScore();
+					otherPlayerBid = biddingScore.getOtherPlayerBid();
+					winCheck = biddingScore.isWin();
+					playerWon = biddingScore.getPlayerWon();
+					amountWon = biddingScore.getAmountWon();
+					if(winCheck)
+					{
+						winString = "You won " + amountWon + "!";
+						p1ResultPanel.setTheme("correctbid-panel");
+						p2ResultPanel.setTheme("incorrectbid-panel");
+						lblBid.setText("" + currentBid);
+						lblBid2.setText("" + otherPlayerBid);
+						lblAmountWon.setText("" + amountWon);
+						lblAmountWon2.setText("0");
+						p1ResultPanel.reapplyTheme();
+						p2ResultPanel.reapplyTheme();
+					}
+					else if(!winCheck && otherPlayerBid != 0)
+					{
+						winString = otherPlayer.getName() + " wins " + amountWon + "!";
+						p1ResultPanel.setTheme("incorrectbid-panel");
+						p2ResultPanel.setTheme("correctbid-panel");
+						lblBid.setText("" + currentBid);
+						lblBid2.setText("" + otherPlayerBid);
+						lblAmountWon.setText("0");
+						lblAmountWon2.setText("" + amountWon);
+						p1ResultPanel.reapplyTheme();
+						p2ResultPanel.reapplyTheme();
+
+					}
+					finished = true;
+				}
+				else
+				{
+					// results view when player 2
+					BiddingScore biddingScore = HRRUClient.cs.getP2().getCurrentBiddingScore();
+					otherPlayerBid = biddingScore.getOtherPlayerBid();
+					winCheck = biddingScore.isWin();
+					playerWon = biddingScore.getPlayerWon();
+					amountWon = biddingScore.getAmountWon();
+					if(winCheck)
+					{
+						winString = "You won " + amountWon + "!";
+						p1ResultPanel.setTheme("incorrectbid-panel");
+						p2ResultPanel.setTheme("correctbid-panel");
+						lblBid2.setText("" + currentBid);
+						lblBid.setText("" + otherPlayerBid);
+						lblAmountWon2.setText("" + amountWon);
+						lblAmountWon.setText("0");
+						p1ResultPanel.reapplyTheme();
+						p2ResultPanel.reapplyTheme();
+					}
+					else if(!winCheck && otherPlayerBid != 0)
+					{
+						winString = otherPlayer.getName() + " wins " + amountWon + "!";
+						p1ResultPanel.setTheme("correctbid-panel");
+						p2ResultPanel.setTheme("incorrectbid-panel");
+						lblBid2.setText("" + currentBid);
+						lblBid.setText("" + otherPlayerBid);
+						lblAmountWon2.setText("0");
+						lblAmountWon.setText("" + amountWon);
+						p1ResultPanel.reapplyTheme();
+						p2ResultPanel.reapplyTheme();
+
+					}
+					finished = true;
+				}
+			}
+			else if(otherPlayerReady == 0)
+			{
+				lblConfirmation.setText("You bid " + currentBid + ".\nWaiting for " + otherPlayer.getName());
+			}
+		}
+		else if(finished)
+		{
+			if(clock2>999)
+			{
+				timer--;
+				timer2=999;
+				clock2-=1000;
+				if(timer<=0)
+				{
+					if(winCheck)
+					{
+						if(playerID == 1)
+							HRRUClient.cs.getP1().addScore(amountWon);
+						else
+							HRRUClient.cs.getP2().addScore(amountWon);
+						biddingResult = new BiddingScore(item_id, itemValue, currentBid, otherPlayerBid, playerWon, amountWon, winCheck);	
+					}
+					else
+					{
+						if(playerID == 1)
+							HRRUClient.cs.getP2().addScore(amountWon);
+						else
+							HRRUClient.cs.getP1().addScore(amountWon);
+						biddingResult = new BiddingScore(item_id, itemValue, currentBid, otherPlayerBid, playerWon, 0, winCheck);
+					}
+					if(playerID == 1)
+						HRRUClient.cs.getP2().addBiddingScore(biddingResult);
+					else
+						HRRUClient.cs.getP1().addBiddingScore(biddingResult);
+			
+					syncMessage = new Packet00SyncMessage();
+					syncMessage.player = playerID;
+					syncMessage.sessionID = HRRUClient.cs.getSessionID();
+					client.sendTCP(syncMessage);
+					finished = false;
+					resume = true;
+				}
+			}
+		}
+		if(resume)
+		{
+			if(HRRUClient.cs.isSync())
+			{
+				HRRUClient.cs.updateTimer(overallTimer);
+				System.out.println("Time Subtract" + (overallTimer));
+				HRRUClient.cs.setState(p1_turn);
+				HRRUClient.cs.setSync(false);
+				sbg.enterState(play);
+			}
+		}
 	}
 
 	@Override

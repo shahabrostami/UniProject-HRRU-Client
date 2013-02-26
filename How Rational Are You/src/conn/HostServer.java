@@ -21,6 +21,7 @@ public class HostServer extends BasicTWLGameState {
 	public static boolean p1ready = false;
 	public static boolean p2ready = false;
 	
+	private final int serverlost = -4;
 	private final int cancelled = -2;
 	private final int waiting = 0; 
 	private final int established = 2;
@@ -152,17 +153,19 @@ public class HostServer extends BasicTWLGameState {
 	}
 	
 	void emulateLogin() {
-	    disableGUI();
-	    
-		p1name = efName.getText();
-		password = efPassword.getText();
-		
-		createRequest = new Packet0CreateRequest();
-		createRequest.password = password;
-		createRequest.player1Name = p1name;
-		client.sendTCP(createRequest);
-		
-	    disableGUI();
+		if(efName.getText().isEmpty())
+			lStatus.setText("Please enter a name.");
+		else
+		{
+			disableGUI();
+			p1name = efName.getText();
+			password = efPassword.getText();
+			createRequest = new Packet0CreateRequest();
+			createRequest.password = password;
+			createRequest.player1Name = p1name;
+			client.sendTCP(createRequest);
+		}
+
 	}
 	
 	void resetPosition() {
@@ -203,6 +206,9 @@ public class HostServer extends BasicTWLGameState {
         btnJoin = new Button("Host");
         btnBack = new Button("Back");
         btnCancel= new Button("Cancel");
+        
+        efName.setMaxTextLength(8);
+        efPassword.setMaxTextLength(8);
         
         efName.addCallback(new Callback() {
             public void callback(int key) {
@@ -298,8 +304,12 @@ public class HostServer extends BasicTWLGameState {
 		
 		state = HRRUClient.cs.getState();
 		
+		// Connection to server lost.
+		if(state == serverlost)
+			sbg.enterState(0);
+		
 		// Connection cancelled.
-		if(HRRUClient.cs.getState() == cancelled) {
+		if(state == cancelled) {
 			lStatus.setText("Session cancelled.\nEnter your name and a password for your game.");
 			enableGUI();
 		}

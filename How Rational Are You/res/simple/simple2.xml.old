@@ -95,10 +95,6 @@
             <alias ref="innerframe.background"/>
         </composed>
     </images>
-
-    <images file="chaos_sphere_blue_800x600.png" format="RGB" filter="linear">
-        <area name="background-image" xywh="0,0,800,600"/>
-    </images>
 	
     <images file="simple.png" format="COLOR">
         <area name="-borderA" border="3" xywh="0,0,9,9" splitx="L3,R3" splity="T3,B3"/>
@@ -359,31 +355,8 @@
 
         <alias name="colorselector.cursor" ref="-selH"/>
     </images>
-
-    <images file="image.png">
-        <area name="image.png" xywh="*"/>
-    </images>
-    <images file="characters.png">
-        <area name="grin" xywh="0,0,36,36"/>
-        <area name="princess" xywh="0,36,36,36"/>
-        <area name="batman" xywh="0,72,36,36"/>
-        <area name="powerranger" xywh="0,108,36,36"/>
-        <area name="snowman" xywh="0,144,36,36"/>
-    </images>
-    <images file="playerselect.png">
-		<area name="select_grin" xywh="0,0,36,36"/>
-        <area name="select_princess" xywh="0,36,36,36"/>
-        <area name="select_batman" xywh="0,72,36,36"/>
-        <area name="select_powerranger" xywh="0,108,36,36"/>
-        <area name="select_snowman" xywh="0,144,36,36"/>
-	</images>
     <images file="rollpanelbg.png">
         <area name="rollpanel.background" xywh="*"/>
-    </images>
-
-
-    <images file="player1startbg.png">
-        <area name="player1bg" xywh="*"/>
     </images>
     <images file="playerscorebackground.png">
         <area name="score-background" xywh="*"/>
@@ -407,8 +380,17 @@
         <area name="gamestat.background" xywh="*" border="35,10,10,10"/>
     </images>
     <images file="itembg.png">
-        <area name="item-background" xywh="*" border="50,300,30,0"/>
+        <area name="item.background" xywh="*" border="50,300,30,0"/>
     </images>
+    <images file="correctbidbg.png">
+        <area name="correctbid-background" xywh="*" border="60,20,20,20"/>
+    </images>
+
+    <images file="incorrectbidbg.png">
+        <area name="incorrectbid-background" xywh="*" border="60,20,20,20"/>
+    </images>
+
+
 
 
 
@@ -416,16 +398,6 @@
     <images file="q7.png">
         <area name="q7.png" xywh="*"/>
     </images>
-
-
-
-
-
-    <fontDef name="normal" filename="Font/font.fnt" color="white">
-        <fontParam if="error" color="red"/>
-        <fontParam if="disabled" color="gray"/>
-        <fontParam if="textSelection" color="blue"/>
-    </fontDef>
     
 	<fontDef name="black" filename="Font/font.fnt" color="black"/>
     
@@ -455,27 +427,8 @@
         <fontParam if="hover"/>
     
     </fontDef>
+    <fontDef name="atarititle" filename="atarititle.fnt" color="white"/>
 
-    <fontDef name="atarititle" filename="atarititle.fnt" color="white">
-        <fontParam if="disabled" color="gray"/>
-        <fontParam if="pressed" offsetX="1" offsetY="1"/>
-        <fontParam if="hover"/>
-    
-    </fontDef>
-
-    <fontDef name="subtitletwo" filename="subtitletwo.fnt" color="white">
-        <fontParam if="disabled" color="gray"/>
-        <fontParam if="pressed" offsetX="1" offsetY="1"/>
-        <fontParam if="hover"/>
-    
-    </fontDef>
-
-    <fontDef name="subtitle" filename="subtitle.fnt" color="white">
-        <fontParam if="disabled" color="gray"/>
-        <fontParam if="pressed" offsetX="1" offsetY="1"/>
-        <fontParam if="hover"/>
-    
-    </fontDef>
 
     <fontDef name="atarisubtitle" filename="atarisubtitle.fnt" color="white">
         <fontParam if="disabled" color="gray"/>
@@ -516,52 +469,23 @@
         <fontParam if="hover"/>
     
     </fontDef>
+
+    <fontDef name="itematari16" filename="itematari16.fnt">
+        <fontParam if="disabled" color="gray"/>
+        <fontParam if="pressed" offsetX="1" offsetY="1"/>
+        <fontParam if="hover"/>
+    
+    </fontDef>
+
+    <fontDef name="questionatari16bl" filename="questionatari16lbl.fnt">
+        <fontParam if="disabled" color="gray"/>
+        <fontParam if="pressed" offsetX="1" offsetY="1"/>
+        <fontParam if="hover"/>
+    
+    </fontDef>
     <fontDef name="questionatari12" filename="questionatari12.fnt" color="white"/>
     <fontDef name="questionatari8" filename="questionatari8.fnt" color="white"/>
     <fontDef name="questionatari9y" filename="questionatari9y.fnt" color="white"/>
-
-
-    <fontDef name="whiteatari30" filename="whiteatari30.fnt" color="white">
-        <fontParam if="disabled" color="gray"/>
-        <fontParam if="pressed" offsetX="1" offsetY="1"/>
-        <fontParam if="hover"/>
-    
-    </fontDef>
-
-    <fontDef name="whiteatari40" filename="whiteatari40.fnt" color="white">
-        <fontParam if="disabled" color="gray"/>
-        <fontParam if="pressed" offsetX="1" offsetY="1"/>
-        <fontParam if="hover"/>
-    
-    </fontDef>
-
-    <fontDef name="whiteatari50" filename="whiteatari50.fnt" color="white">
-        <fontParam if="disabled" color="gray"/>
-        <fontParam if="pressed" offsetX="1" offsetY="1"/>
-        <fontParam if="hover"/>
-    
-    </fontDef>
-
-    <fontDef name="player1atari" filename="player1.fnt" color="white">
-        <fontParam if="disabled" color="gray"/>
-        <fontParam if="pressed" offsetX="1" offsetY="1"/>
-        <fontParam if="hover"/>
-    
-    </fontDef>
-
-    <fontDef name="playerheader" filename="playerheader.fnt" color="white">
-        <fontParam if="disabled" color="gray"/>
-        <fontParam if="pressed" offsetX="1" offsetY="1"/>
-        <fontParam if="hover"/>
-    
-    </fontDef>
-
-    <fontDef name="turnheader" filename="turnheader.fnt" color="white">
-        <fontParam if="disabled" color="gray"/>
-        <fontParam if="pressed" offsetX="1" offsetY="1"/>
-        <fontParam if="hover"/>
-    
-    </fontDef>
     
 	<fontDef name="combobox" filename="Font/font.fnt" color="black">
         <fontParam if="comboboxKeyboardFocus" color="white"/>
@@ -574,62 +498,6 @@
     <fontDef name="listbox-display" filename="Font/font.fnt" color="black">
         <fontParam if="selected" color="white"/>
     </fontDef>
-	
-	 <fontDef name="normal2" filename="ptsans.fnt" default="true" color="#C32B2B2B">
-        <fontParam if="error" color="red"/>
-        <fontParam if="warning" color="orange"/>
-        <fontParam if="disabled" color="#B0B0B0"/>
-        <fontParam if="readonly" color="#9A9A9A"/>
-        <fontParam if="textSelection|selected" color="#C26824"/>
-    </fontDef>
-    <fontDef name="link" filename="ptsans.fnt" color="#4C93D6">
-        <fontParam if="error" color="red"/>
-        <fontParam if="warning" color="orange"/>
-        <fontParam if="disabled" color="#B0B0B0"/>
-        <fontParam if="hover" color="#2A74BB"/>
-    </fontDef>
-    <fontDef name="titlebar_font" filename="ptsans.fnt">
-        <fontParam if="error" color="red"/>
-        <fontParam if="warning" color="orange"/>
-        <fontParam if="disabled" color="#E1FFFFFF"/>
-    </fontDef>
-    <fontDef name="italic" filename="ptsans_italic.fnt" color="#C32B2B2B">
-        <fontParam if="error" color="red"/>
-        <fontParam if="warning" color="orange"/>
-        <fontParam if="disabled" color="#B0B0B0"/>
-        <fontParam if="readonly" color="#9A9A9A"/>
-        <fontParam if="textSelection|selected" color="#C26824"/>
-    </fontDef>
-    <fontDef name="button_font" filename="ptsans.fnt" color="#C32B2B2B">
-        <fontParam if="error" color="red"/>
-        <fontParam if="warning" color="orange"/>
-        <fontParam if="disabled" color="gray"/>
-        <fontParam if="textSelection" color="#C16723"/>
-        <fontParam if="pressed" color="#C3313131" offsetX="1" offsetY="1"/>
-        <fontParam if="hover" color="#C3313131"/>
-    </fontDef>
-    <fontDef name="italic_button_font" filename="ptsans_italic.fnt" color="#C32B2B2B">
-        <fontParam if="error" color="red"/>
-        <fontParam if="warning" color="orange"/>
-        <fontParam if="disabled" color="gray"/>
-        <fontParam if="textSelection" color="#C26824"/>
-        <fontParam if="pressed" color="#C3313131" offsetX="1" offsetY="1"/>
-        <fontParam if="hover" color="#C3313131"/>
-    </fontDef>
-    <fontDef name="togglebutton_font" filename="ptsans.fnt" color="#C32B2B2B">
-        <fontParam if="error" color="red"/>
-        <fontParam if="warning" color="orange"/>
-        <fontParam if="disabled" color="gray"/>
-        <fontParam if="pressed|selected" color="#C26824" offsetX="1" offsetY="1"/>
-        <fontParam if="hover" color="#C3313131"/>
-    </fontDef>
-    <fontDef name="italic_togglebutton_font" filename="ptsans_italic.fnt" color="#C32B2B2B">
-        <fontParam if="error" color="red"/>
-        <fontParam if="warning" color="orange"/>
-        <fontParam if="disabled" color="gray"/>
-        <fontParam if="pressed|selected" color="#C26824" offsetX="1" offsetY="1"/>
-        <fontParam if="hover" color="#C3313131"/>
-    </fontDef>
     
     <inputMapDef name="-defaultInputMap">
         <action name="selectAll">ctrl A</action>
@@ -641,7 +509,7 @@
     <theme name="-defaults">
         <param name="background"><image>none</image></param>
         <param name="overlay"><image>none</image></param>
-        <param name="font"><font>normal</font></param>
+        <param name="font"><font>questionatari8</font></param>
         <param name="inputMap"><inputMap>-defaultInputMap</inputMap></param>
         <!-- a wildcard in the base theme allows to make a flat theme -->
         <theme name="" ref="*"/>
@@ -672,14 +540,6 @@
         <param name="maxHeight"><int>0</int></param>
     </theme>
 
-    <theme name="atarititle" ref="-defaults" allowWildcard="true">
-        <param name="font"><font>atarititle</font></param>
-        <param name="minWidth"><int>0</int></param>
-        <param name="maxWidth"><int>0</int></param>
-        <param name="minHeight"><int>0</int></param>
-        <param name="maxHeight"><int>0</int></param>
-    </theme>
-
     <theme name="scoreatarititle" ref="-defaults" allowWildcard="true">
         <param name="font"><font>whiteatari14</font></param>
         <param name="minWidth"><int>0</int></param>
@@ -690,21 +550,14 @@
         <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
     </theme>
 
-    <theme name="mainheader" ref="-defaults" allowWildcard="true">
-        <param name="font"><font>playerheader</font></param>
+    <theme name="atarititle" ref="-defaults" allowWildcard="true">
+        <param name="font"><font>atarititle</font></param>
         <param name="minWidth"><int>0</int></param>
         <param name="maxWidth"><int>0</int></param>
         <param name="minHeight"><int>0</int></param>
         <param name="maxHeight"><int>0</int></param>
-    </theme>
-
-
-    <theme name="subtitle" ref="-defaults" allowWildcard="true">
-        <param name="font"><font>subtitle</font></param>
-        <param name="minWidth"><int>0</int></param>
-        <param name="maxWidth"><int>0</int></param>
-        <param name="minHeight"><int>0</int></param>
-        <param name="maxHeight"><int>0</int></param>
+        <param name="background"><image>tooltip.background</image></param>
+        <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
     </theme>
 
     <theme name="atarisubtitle" ref="-defaults" allowWildcard="true">
@@ -713,15 +566,6 @@
         <param name="maxWidth"><int>0</int></param>
         <param name="minHeight"><int>0</int></param>
         <param name="maxHeight"><int>0</int></param>
-    </theme>
-
-    <theme name="subtitle2" ref="-defaults" allowWildcard="true">
-        <param name="font"><font>subtitletwo</font></param>
-        <param name="minWidth"><int>0</int></param>
-        <param name="maxWidth"><int>0</int></param>
-        <param name="minHeight"><int>0</int></param>
-        <param name="maxHeight"><int>0</int></param>
-        <param name="background"><image>none</image></param>
     </theme>
 
     <theme name="atarigreen16" ref="-defaults" allowWildcard="true">
@@ -784,6 +628,46 @@
         <param name="textAlignment"><enum type="alignment">LEFT</enum></param>
     </theme>
 
+    <theme name="questionatari16" ref="-defaults" allowWildcard="true">
+        <param name="font"><font>questionatari16</font></param>
+        <param name="minWidth"><int>0</int></param>
+        <param name="maxWidth"><int>0</int></param>
+        <param name="minHeight"><int>0</int></param>
+        <param name="maxHeight"><int>0</int></param>
+        <param name="background"><image>none</image></param>
+        <param name="textAlignment"><enum type="alignment">LEFT</enum></param>
+    </theme>
+
+    <theme name="itematari16" ref="-defaults" allowWildcard="true">
+        <param name="font"><font>itematari16</font></param>
+        <param name="minWidth"><int>400</int></param>
+        <param name="maxWidth"><int>0</int></param>
+        <param name="minHeight"><int>0</int></param>
+        <param name="maxHeight"><int>0</int></param>
+        <param name="background"><image>none</image></param>
+        <param name="textAlignment"><enum type="alignment">LEFT</enum></param>
+    </theme>
+
+    <theme name="questionatari16r" ref="-defaults" allowWildcard="true">
+        <param name="font"><font>questionatari16</font></param>
+        <param name="minWidth"><int>0</int></param>
+        <param name="maxWidth"><int>0</int></param>
+        <param name="minHeight"><int>0</int></param>
+        <param name="maxHeight"><int>0</int></param>
+        <param name="background"><image>none</image></param>
+        <param name="textAlignment"><enum type="alignment">RIGHT</enum></param>
+    </theme>
+
+    <theme name="questionatari16lbl" ref="-defaults" allowWildcard="true">
+        <param name="font"><font>questionatari16bl</font></param>
+        <param name="minWidth"><int>0</int></param>
+        <param name="maxWidth"><int>0</int></param>
+        <param name="minHeight"><int>0</int></param>
+        <param name="maxHeight"><int>0</int></param>
+        <param name="background"><image>none</image></param>
+        <param name="textAlignment"><enum type="alignment">LEFT</enum></param>
+    </theme>
+
     <theme name="questionatari8r" ref="-defaults" allowWildcard="true">
         <param name="font"><font>questionatari8</font></param>
         <param name="minWidth"><int>0</int></param>
@@ -792,16 +676,6 @@
         <param name="maxHeight"><int>0</int></param>
         <param name="background"><image>none</image></param>
         <param name="textAlignment"><enum type="alignment">RIGHT</enum></param>
-    </theme>
-
-    <theme name="player1atari" ref="-defaults" allowWildcard="true">
-        <param name="font"><font>button_font</font></param>
-        <param name="minWidth"><int>0</int></param>
-        <param name="maxWidth"><int>0</int></param>
-        <param name="minHeight"><int>0</int></param>
-        <param name="maxHeight"><int>0</int></param>
-        <param name="background"><image>player1bg</image></param>
-        <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
     </theme>
     
     <theme name="button" ref="-defaults" allowWildcard="true">
@@ -867,20 +741,12 @@
         <param name="background"><image>innerframe.background</image></param>
         <param name="border"><border>background.border</border></param>
         <param name="passwordChar"><int>0x25CF</int></param>
-        <param name="columns"><int>20</int></param>
+        <param name="columns"><int>8</int></param>
         <param name="mouseCursor"><cursor>cursor.text</cursor></param>
         <theme name="renderer" ref="-defaults">
         </theme>
         <param name="autocompletion-height"><int>150</int></param>
         <param name="minWidth"><int>0</int></param>
-        <param name="minHeight"><int>0</int></param>
-        <param name="maxHeight"><int>0</int></param>
-    </theme>
-
-    <theme name="logindemo" ref="-defaults">
-        <param name="background"><image>background-image</image></param>
-        <param name="minWidth"><int>0</int></param>
-        <param name="maxWidth"><int>0</int></param>
         <param name="minHeight"><int>0</int></param>
         <param name="maxHeight"><int>0</int></param>
     </theme>
@@ -1025,7 +891,7 @@
     </theme>
 
     <theme name="item-panel" ref="-defaults" allowWildcard="true">
-                    <param name="background"><image>none</image></param>
+                    <param name="background"><image>item.background</image></param>
                     <param name="border"><border>background.border</border></param>
         <param name="defaultGap"><dimension>5,5</dimension></param>
         <param name="smallGap"><dimension>8,8</dimension></param>
@@ -1217,18 +1083,6 @@
         <param name="mediumGap"><dimension>10,10</dimension></param>
         <param name="largeGap"><dimension>15,15</dimension></param>
         <param name="namedGaps"><map/></param>
-    </theme>
-
-    <theme name="textarea2" ref="-defaults" allowWildcard="true">
-        <param name="background"><image>-borderC</image></param>
-        <param name="border"><border>background.border</border></param>
-        <param name="fonts"><map>
-            <param name="default"><font>normal</font></param>
-        </map></param>
-        <param name="images"><map>
-        </map></param>
-        <param name="classes"><map>
-        </map></param>
     </theme>
 
     <theme name="-treecellrenderer" ref="-defaults">
@@ -1635,19 +1489,18 @@
 	
 	<theme name="textarea" ref="-defaults">
                     <param name="fonts"><map>
-                        <param name="default"><fontDef filename="bigfont.fnt" color="#FFFFFF"/></param>
+                        <param name="default"><fontDef filename="questionatari12.fnt" color="#FFFFFF"/></param>
                         <param name="link"><fontDef filename="Font/font.fnt" underlineOffset="1">
                             <fontParam if="hover" underline="true"/>
                         </fontDef></param>
                         <param name="big"><fontDef filename="questionatari12.fnt" color="#FFFFFF"/></param>
-                        <param name="code"><fontDef filename="code.fnt"/></param>
-                        <param name="codeBold"><fontDef filename="codeBold.fnt"/></param>
+                        <param name="code"><fontDef filename="questionatari12.fnt"/></param>
+                        <param name="codeBold"><fontDef filename="questionatari12.fnt"/></param>
                     </map></param>
                     <param name="images"><map>
                         <param name="frame"><image>evilframe.background</image></param>
                         <param name="smiley"><image>smiley</image></param>
                         <param name="ul-bullet"><image>textarea.ul-bullet</image></param>
-                        <param name="image.png"><image>image.png</image></param>
                         <param name="q7.png"><image>q7.png</image></param>
                     </map></param>
     

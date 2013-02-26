@@ -14,6 +14,8 @@ public class Player {
 	private int ready;
 	private ActivityScore currentActivityScore;
 	private ArrayList<ActivityScore> activityScores;
+	private BiddingScore currentBiddingScore;
+	private ArrayList<BiddingScore> biddingScores;
 	private int playerCharacterID;
 	private Character playerCharacter;
 	CharacterSheet characterSheet = new CharacterSheet();
@@ -27,6 +29,8 @@ public class Player {
 		this.setPosition(0);
 		this.currentActivityScore = new ActivityScore(0,0,0,0,0, false);
 		this.activityScores = new ArrayList<ActivityScore>();
+		this.currentBiddingScore = new BiddingScore(0,0,0, false);
+		this.biddingScores = new ArrayList<BiddingScore>();
 	}
 
 	public String getName() {
@@ -51,7 +55,7 @@ public class Player {
 	
 	public void updatePosition(){
 		this.position++;
-		if(this.position == 35)
+		if(this.position == 36)
 			this.position = 0;
 	}
 
@@ -103,7 +107,28 @@ public class Player {
 	public void setActivityScores(ArrayList<ActivityScore> activityScores) {
 		this.activityScores = activityScores;
 	}
+	
 	public void addActivityScore(ActivityScore activityScore) {
 		this.activityScores.add(activityScore);
+	}
+
+	public BiddingScore getCurrentBiddingScore() {
+		return currentBiddingScore;
+	}
+
+	public void setCurrentBiddingScore(BiddingScore currentBiddingScore) {
+		this.currentBiddingScore = currentBiddingScore;
+	}
+
+	public ArrayList<BiddingScore> getBiddingScores() {
+		return biddingScores;
+	}
+
+	public void setBiddingScores(ArrayList<BiddingScore> biddingScores) {
+		this.biddingScores = biddingScores;
+	}
+
+	public void addBiddingScore(BiddingScore biddingScore) {
+		this.biddingScores.add(biddingScore);
 	}
 }

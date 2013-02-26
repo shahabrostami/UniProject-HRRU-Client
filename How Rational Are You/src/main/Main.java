@@ -1,5 +1,7 @@
 package main;
 
+import java.io.IOException;
+
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
@@ -7,6 +9,7 @@ import org.newdawn.slick.state.StateBasedGame;
 
 import com.esotericsoftware.kryonet.Client;
 
+import conn.Connection;
 import conn.Packet.Packet0CreateRequest;
 import conn.Packet.Packet2JoinRequest;
 import conn.Packet.Packet8Start;
@@ -26,21 +29,75 @@ public class Main extends BasicTWLGameState {
 
 	Client client;
 	
+	boolean connectionSuccessful;
 	int enterState = 0;
+	int attempts = 0;
 	Label lConnection;
 	Button btnHost, btnJoin;
 	Button btnHT1, btnHT2, btnHT3;
 	Button btnTestStart;
 	EditField efSessionID;
 	Button btnJT1, btnJT2;
+	Button btnRetry;
 	
 	@Override
 	public void enter(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		super.enter(gc, sbg);
 		client = HRRUClient.conn.getClient();
+		attempts = 0;
+		enterState = 0;
+		rootPane.removeAllChildren();
 		
-		lConnection = new Label("Connection Successful");
-		lConnection.setPosition(gc.getWidth()/2-100, gc.getHeight()/2-85);
+		btnRetry.setEnabled(false);
+		btnHT2.setEnabled(false);
+		btnHT3.setEnabled(false);
+		btnJT2.setEnabled(false);
+		btnTestStart.setEnabled(false);
+		
+		rootPane.add(lConnection);
+		rootPane.add(btnRetry);
+		rootPane.add(btnHT1);
+		rootPane.add(efSessionID);
+		rootPane.add(btnJT1);
+		rootPane.add(btnHT2);
+		rootPane.add(btnJT2);
+		rootPane.add(btnHT3);
+		rootPane.add(btnTestStart);
+		rootPane.add(btnJoin);
+		rootPane.add(btnHost);
+		rootPane.setTheme("");
+	}
+
+	@Override
+	protected RootPane createRootPane() {
+		assert rootPane == null : "RootPane already created";
+
+		RootPane rp = new RootPane(this);
+		rp.setTheme("");
+		rp.getOrCreateActionMap().addMapping(this);
+		return rp;
+	}
+
+	void emulateRetry() {
+		Connection conn = new Connection();
+		HRRUClient.conn = conn;
+		attempts++;
+	}
+	
+	@Override
+	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
+		lConnection = new Label("");
+		lConnection.setPosition(gc.getWidth()/2-100, gc.getHeight()/2-125);
+		
+		btnRetry = new Button("Retry Server");
+		btnRetry.setSize(100, 20);
+		btnRetry.setPosition(gc.getWidth()/2-50, gc.getHeight()/2-85);
+		btnRetry.addCallback(new Runnable() {
+			@Override
+			public void run() {
+				emulateRetry();
+			}
+		});
 		
 		btnHost = new Button("Host Server");
 		btnHost.setSize(100, 20);
@@ -61,6 +118,8 @@ public class Main extends BasicTWLGameState {
 				enterState = 2;
 			}
 		});
+		
+		
 		
 		btnHT1 = new Button("1) Host Server Create");
 		btnHT1.setSize(200, 20);
@@ -175,51 +234,32 @@ public class Main extends BasicTWLGameState {
 				enterState = 4;
 			}
 		});
-		
-		btnHT2.setEnabled(false);
-		btnHT3.setEnabled(false);
-		btnJT2.setEnabled(false);
-		btnTestStart.setEnabled(false);
-		
-		rootPane.add(lConnection);
-		rootPane.add(btnHT1);
-		rootPane.add(efSessionID);
-		rootPane.add(btnJT1);
-		rootPane.add(btnHT2);
-		rootPane.add(btnJT2);
-		rootPane.add(btnHT3);
-		rootPane.add(btnTestStart);
-		rootPane.add(btnJoin);
-		rootPane.add(btnHost);
-		rootPane.setTheme("");
-	}
-
-	@Override
-	protected RootPane createRootPane() {
-		assert rootPane == null : "RootPane already created";
-
-		RootPane rp = new RootPane(this);
-		rp.setTheme("");
-		rp.getOrCreateActionMap().addMapping(this);
-		return rp;
-	}
-
-	@Override
-	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 	}
 
 	@Override
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
-		if(!HRRUClient.ConnectionSuccessful)
-		{
-			btnJoin.setEnabled(false);
-			btnHost.setEnabled(false);
-			lConnection.setText("Connection Failed...\nPlease restart the application.");
-		}
 	}
 
 	@Override
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
+		// Is connection successful?
+		connectionSuccessful = HRRUClient.ConnectionSuccessful;
+		if(connectionSuccessful)
+		{
+			btnJoin.setEnabled(true);
+			btnHost.setEnabled(true);
+			btnRetry.setVisible(false);
+			lConnection.setText("Connection Successful");
+		}
+		else
+		{
+			btnJoin.setEnabled(false);
+			btnHost.setEnabled(false);
+			btnRetry.setVisible(true);
+			btnRetry.setEnabled(true);
+			lConnection.setText("Connection Failed...\nPlease contact administrator.\nAttemtps: " + attempts);
+		}
+		
 		if(enterState == 1)
 		{
 			sbg.enterState(1);
@@ -236,6 +276,8 @@ public class Main extends BasicTWLGameState {
 		}
 		else if(enterState == 4)
 		{
+			HRRUClient.cs.getP1().setScore(1000);
+			HRRUClient.cs.getP2().setScore(1000);
 			HRRUClient.cs.setState(7);
 			sbg.enterState(5);
 			enterState = 0;

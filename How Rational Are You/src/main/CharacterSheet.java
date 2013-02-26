@@ -12,7 +12,7 @@ public class CharacterSheet  {
 	
 	public CharacterSheet() throws SlickException {
 		size = scale*scale;
-		this.characterSheet = new SpriteSheet("res/simple/characters.png", 36,36);
+		this.characterSheet = new SpriteSheet("simple/characters.png", 36,36);
 		characters = new Character[size];
 		
 		characters[0] = new Character(0, 0, 0, "Sir Clown");
