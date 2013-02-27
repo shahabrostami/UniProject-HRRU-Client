@@ -423,6 +423,11 @@ public class Test extends BasicTWLGameState {
 		lAmountWon2 = new Label("Amount Won: ");
 		lblAmountWon2 = new Label("");
 		
+		lblBid.setTheme("labelscoretotalright");
+		lblBid2.setTheme("labelscoretotalright");
+		lblAmountWon.setTheme("labelscoretotalright");
+		lblAmountWon2.setTheme("labelscoretotalright");
+		
 		DialogLayout.Group hLeftLabel1 = p1ResultPanel.createParallelGroup(lBid, lAmountWon);
 		DialogLayout.Group hRightResult1 = p1ResultPanel.createParallelGroup(lblBid, lblAmountWon);
 		

@@ -556,8 +556,8 @@
         <param name="maxWidth"><int>0</int></param>
         <param name="minHeight"><int>0</int></param>
         <param name="maxHeight"><int>0</int></param>
-        <param name="background"><image>tooltip.background</image></param>
-        <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
+        <param name="textAlignment"><enum type="alignment">LEFT</enum></param>
+        <param name="background"><image>none</image></param>
     </theme>
 
     <theme name="atarisubtitle" ref="-defaults" allowWildcard="true">
@@ -800,8 +800,76 @@
         </theme>
     </theme>
 
+    <theme name="correctbid-panel" ref="-defaults" allowWildcard="true">
+                    <param name="background"><image>correctbid-background</image></param>
+                    <param name="border"><border>background.border</border></param>
+        <param name="defaultGap"><dimension>5,5</dimension></param>
+        <param name="smallGap"><dimension>8,8</dimension></param>
+        <param name="mediumGap"><dimension>10,10</dimension></param>
+        <param name="largeGap"><dimension>15,15</dimension></param>
+        <param name="namedGaps"><map/></param>
+        <param name="minWidth"><int>340</int></param>
+        <param name="maxWidth"><int>340</int></param>
+        <param name="minHeight"><int>160</int></param>
+        <param name="maxHeight"><int>160</int></param>
+        <param name="textAlignment"><enum type="alignment">FILL</enum></param>
+        <param name="font"><font>whiteatari14</font></param>
+        <theme name="label" ref="-defaults">
+            <param name="font"><font>scoreatari12</font></param>
+        </theme>
+        <theme name="labelright" ref="-defaults">
+            <param name="font"><font>whiteatari14</font></param>
+            <param name="textAlignment"><enum type="alignment">RIGHT</enum></param>
+        </theme>
+        <theme name="labelmiddle" ref="-defaults">
+            <param name="font"><font>whiteatari14</font></param>
+            <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
+        </theme>
+        <theme name="labelscoretotal" ref="-defaults">
+            <param name="font"><font>scoretotal12</font></param>
+            <param name="textAlignment"><enum type="alignment">LEFT</enum></param>
+        </theme>
+        <theme name="labelscoretotalright" ref="-defaults">
+            <param name="font"><font>scoretotal12</font></param>
+            <param name="textAlignment"><enum type="alignment">RIGHT</enum></param>
+        </theme>
+    </theme>
+
     <theme name="incorrect-panel" ref="-defaults" allowWildcard="true">
                     <param name="background"><image>incorrect-background</image></param>
+                    <param name="border"><border>background.border</border></param>
+        <param name="defaultGap"><dimension>5,5</dimension></param>
+        <param name="smallGap"><dimension>8,8</dimension></param>
+        <param name="mediumGap"><dimension>10,10</dimension></param>
+        <param name="largeGap"><dimension>15,15</dimension></param>
+        <param name="namedGaps"><map/></param>
+        <param name="minWidth"><int>350</int></param>
+        <param name="maxWidth"><int>350</int></param>
+        <param name="minHeight"><int>350</int></param>
+        <param name="maxHeight"><int>350</int></param>
+        <theme name="label" ref="-defaults">
+            <param name="font"><font>scoreatari12r</font></param>
+        </theme>
+        <theme name="labelright" ref="-defaults">
+            <param name="font"><font>whiteatari14</font></param>
+            <param name="textAlignment"><enum type="alignment">RIGHT</enum></param>
+        </theme>
+        <theme name="labelmiddle" ref="-defaults">
+            <param name="font"><font>whiteatari14</font></param>
+            <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
+        </theme>
+        <theme name="labelscoretotal" ref="-defaults">
+            <param name="font"><font>scoretotal12</font></param>
+            <param name="textAlignment"><enum type="alignment">LEFT</enum></param>
+        </theme>
+        <theme name="labelscoretotalright" ref="-defaults">
+            <param name="font"><font>scoretotal12</font></param>
+            <param name="textAlignment"><enum type="alignment">RIGHT</enum></param>
+        </theme>
+    </theme>
+
+    <theme name="incorrectbid-panel" ref="-defaults" allowWildcard="true">
+                    <param name="background"><image>incorrectbid-background</image></param>
                     <param name="border"><border>background.border</border></param>
         <param name="defaultGap"><dimension>5,5</dimension></param>
         <param name="smallGap"><dimension>8,8</dimension></param>
@@ -903,36 +971,6 @@
         <param name="minHeight"><int>0</int></param>
         <param name="maxHeight"><int>300</int></param>
         <param name="font"><font>questionatari26</font></param>
-    </theme>
-
-    <theme name="correctbid-panel" ref="-defaults" allowWildcard="true">
-                    <param name="background"><image>correctbid-background</image></param>
-                    <param name="border"><border>background.border</border></param>
-        <param name="defaultGap"><dimension>5,5</dimension></param>
-        <param name="smallGap"><dimension>8,8</dimension></param>
-        <param name="mediumGap"><dimension>10,10</dimension></param>
-        <param name="largeGap"><dimension>15,15</dimension></param>
-        <param name="namedGaps"><map/></param>
-        <param name="minWidth"><int>340</int></param>
-        <param name="maxWidth"><int>340</int></param>
-        <param name="minHeight"><int>160</int></param>
-        <param name="maxHeight"><int>160</int></param>
-        <param name="font"><font>whiteatari14</font></param>
-    </theme>
-
-    <theme name="incorrectbid-panel" ref="-defaults" allowWildcard="true">
-                    <param name="background"><image>incorrectbid-background</image></param>
-                    <param name="border"><border>background.border</border></param>
-        <param name="defaultGap"><dimension>5,5</dimension></param>
-        <param name="smallGap"><dimension>8,8</dimension></param>
-        <param name="mediumGap"><dimension>10,10</dimension></param>
-        <param name="largeGap"><dimension>15,15</dimension></param>
-        <param name="namedGaps"><map/></param>
-        <param name="minWidth"><int>340</int></param>
-        <param name="maxWidth"><int>340</int></param>
-        <param name="minHeight"><int>160</int></param>
-        <param name="maxHeight"><int>160</int></param>
-        <param name="font"><font>whiteatari14</font></param>
     </theme>
 
     <theme name="questionstat-panel" ref="-defaults" allowWildcard="true">

@@ -37,6 +37,7 @@ public class Play extends BasicTWLGameState {
 	private QuestionList question_list;
 	private PuzzleList puzzle_list;
 	private int playerID;
+	private int sessionID;
 	private boolean currentPlayer;
 	private Player player;
 	private Player player1;
@@ -75,6 +76,7 @@ public class Play extends BasicTWLGameState {
 	
 	Image scorebackground, background;
 	
+	Packet00SyncMessage syncMessage;
 	Packet11TurnMessage turnMessage;
 	Packet12PlayReady readyMessage;
 	
@@ -90,14 +92,19 @@ public class Play extends BasicTWLGameState {
 		clock = 0;
 		timer = HRRUClient.cs.getTimer();
 		
+		sessionID = HRRUClient.cs.getSessionID();
 		playerID = HRRUClient.cs.getPlayer();
 		player1 = HRRUClient.cs.getP1();
 		player2 = HRRUClient.cs.getP2();
+				
+		syncMessage = new Packet00SyncMessage(); 
+		syncMessage.sessionID = sessionID;
+		syncMessage.player = playerID;
 		
 		board = new Board(10);
 		System.out.println("Time After: " + timer);
 		
-		if(HRRUClient.cs.getPlayer() == 1)
+		if(playerID == 1)
 		{
 			btnRoll.setVisible(true);
 			currentPlayer = true;
@@ -341,10 +348,10 @@ public class Play extends BasicTWLGameState {
 			if(state==1)
 			{
 				clock += delta;
-				if(clock>=6) // should be 60
+				if(clock>=60) // should be 60
 				{
 					dice.rollDice();
-					clock-=6; // should be 60
+					clock-=60; // should be 60
 					if(dice.getPosition()==0)
 					{
 						dice_counter = dice.getCurrentNumber();
@@ -359,11 +366,9 @@ public class Play extends BasicTWLGameState {
 			if(state == 2)
 			{
 				clock += delta;
-				if(clock>=20) // should be 200
+				if(clock>=200) // should be 200
 				{
-					if(player.getPosition() >= board.getSize()-1)
-						player.setPosition(0);
-					else player.updatePosition();
+					player.updatePosition();
 					clock-=200;
 					dice_counter--;
 					if(dice_counter==0)
@@ -390,7 +395,7 @@ public class Play extends BasicTWLGameState {
 					btnRoll.setText("WAITING FOR " + player1.getName());
 				btnRoll.setVisible(false);
 				state = 4;
-				clock = 50; // should be 200
+				clock = 200; // should be 200
 			}
 		}
 	
@@ -417,21 +422,27 @@ public class Play extends BasicTWLGameState {
 		{
 			if(gameState == play)
 			{
-				HRRUClient.cs.setTimer(timer);
+				client.sendTCP(syncMessage);
+				System.out.println(timer + "timer");
 				int currentTile = board.gridSquares[player.getPosition()].getTileType();
-				if(currentTile == 1)	
-				{
-					sbg.enterState(play_question);
-				}
-				else if(currentTile == 2)
-				{
-					sbg.enterState(play_puzzle);
-				}
-				else if(currentTile == 3)
-				{
-					System.out.println("WHYYYYYYYYYYYYYYYYY");
-					sbg.enterState(3);
-				}
+				int otherPlayerTile;
+					HRRUClient.cs.setTimer(timer);
+					if(HRRUClient.cs.getPlayer() == 1)
+						otherPlayerTile = board.gridSquares[HRRUClient.cs.getP2().getPosition()].getTileType();
+					else
+						otherPlayerTile = board.gridSquares[HRRUClient.cs.getP1().getPosition()].getTileType();
+					System.out.println(otherPlayerTile + "the tile");
+					
+					if(otherPlayerTile == 3 || currentTile == 3)
+						sbg.enterState(3);
+					else if(currentTile == 1)	
+					{
+						sbg.enterState(play_question);
+					}
+					else if(currentTile == 2)
+					{
+						sbg.enterState(play_puzzle);
+					}
 			}
 		}
 	}
