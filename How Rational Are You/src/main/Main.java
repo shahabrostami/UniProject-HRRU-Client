@@ -39,6 +39,7 @@ public class Main extends BasicTWLGameState {
 	EditField efSessionID;
 	Button btnJT1, btnJT2;
 	Button btnRetry;
+	private StateBasedGame sbg;
 	
 	@Override
 	public void enter(GameContainer gc, StateBasedGame sbg) throws SlickException {
@@ -83,6 +84,7 @@ public class Main extends BasicTWLGameState {
 		HRRUClient.conn = conn;
 		attempts++;
 	}
+	
 	
 	@Override
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
@@ -257,15 +259,14 @@ public class Main extends BasicTWLGameState {
 			btnHost.setEnabled(false);
 			btnRetry.setVisible(true);
 			btnRetry.setEnabled(true);
-			lConnection.setText("Connection Failed...\nPlease contact administrator.\nAttemtps: " + attempts);
+			lConnection.setText("Connection Failed...\nPlease restart application.\nAttemtps: " + attempts);
 		}
-		
-		if(enterState == 1)
+		if (enterState == 1)
 		{
 			sbg.enterState(1);
 			enterState = 0;
 		}
-		else if(enterState == 2)
+		else if (enterState == 2)
 		{
 			sbg.enterState(2);
 			enterState = 0;

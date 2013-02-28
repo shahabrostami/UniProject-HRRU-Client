@@ -55,7 +55,9 @@ public class Play extends BasicTWLGameState {
 	private final int play = 10;
 	
 	private final int play_question = 6;
-	private final int play_puzzle = 7;
+	private final int play_bidgame = 7;
+    private final int play_trustgame = 8;
+	private final int statistics = 15;
 	
 	// states: 0 = idle, 1 = rolling, 2 = navigate board
 	private int state, gameState;
@@ -87,7 +89,6 @@ public class Play extends BasicTWLGameState {
 	@Override
 	public void enter(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		super.enter(gc, sbg);
-		
 		state = 0;
 		clock = 0;
 		timer = HRRUClient.cs.getTimer();
@@ -126,6 +127,23 @@ public class Play extends BasicTWLGameState {
 				}
 			}
 			*/
+			
+			TrustScore list;
+			if(!(player.getTrustScores().isEmpty()))
+			{
+				for(int i = 0; i < player.getTrustScores().size(); i++)
+				{
+					list = player.getTrustScores().get(i);
+					System.out.println(list.getMaxToGive());
+					System.out.println(list.getMaxToReturn());
+					System.out.println(list.getMultiplier());
+					System.out.println(list.getPlayerGive());
+					System.out.println(list.getPlayerReturn());
+					System.out.println(list.getPlayerReturnProfit());
+					System.out.println(list.getPlayerReturnValue());
+				}
+			}
+			
 		}
 		else {
 			btnRoll.setVisible(true);
@@ -247,12 +265,18 @@ public class Play extends BasicTWLGameState {
         		.addGap(180).addWidget(btnRoll));
 		
 		sbg.addState(new PlayQuestionTest(play_question, question_list));
-		sbg.addState(new PlayPuzzle(play_puzzle, puzzle_list));
+		sbg.addState(new PlayGame_Bid(play_bidgame));
+		sbg.addState(new PlayGame_Trust(play_trustgame));
+		sbg.addState(new Statistics(statistics));
+		//sbg.addState(new PlayPuzzle(play_puzzle, puzzle_list));
 		//sbg.addState(new PlayPuzzle(9));
 		//sbg.addState(new PlayGame(10));
 
 		sbg.getState(play_question).init(gc, sbg);
-		sbg.getState(play_puzzle).init(gc, sbg);
+		sbg.getState(play_bidgame).init(gc, sbg);
+		sbg.getState(play_trustgame).init(gc, sbg);
+		sbg.getState(statistics).init(gc, sbg);
+		//sbg.getState(play_puzzle).init(gc, sbg);
 	}
 
 	@Override
@@ -302,7 +326,7 @@ public class Play extends BasicTWLGameState {
 		}
 		
 		if(timer <0)
-			sbg.enterState(0);
+			sbg.enterState(10);
 		
 		if(state == 0)
 		{
@@ -348,10 +372,10 @@ public class Play extends BasicTWLGameState {
 			if(state==1)
 			{
 				clock += delta;
-				if(clock>=60) // should be 60
+				if(clock>=6) // should be 60
 				{
 					dice.rollDice();
-					clock-=60; // should be 60
+					clock-=6; // should be 60
 					if(dice.getPosition()==0)
 					{
 						dice_counter = dice.getCurrentNumber();
@@ -366,10 +390,10 @@ public class Play extends BasicTWLGameState {
 			if(state == 2)
 			{
 				clock += delta;
-				if(clock>=200) // should be 200
+				if(clock>=20) // should be 200
 				{
 					player.updatePosition();
-					clock-=200;
+					clock-=20;
 					dice_counter--;
 					if(dice_counter==0)
 					{
@@ -395,7 +419,7 @@ public class Play extends BasicTWLGameState {
 					btnRoll.setText("WAITING FOR " + player1.getName());
 				btnRoll.setVisible(false);
 				state = 4;
-				clock = 200; // should be 200
+				clock = 20; // should be 200
 			}
 		}
 	
@@ -431,17 +455,24 @@ public class Play extends BasicTWLGameState {
 						otherPlayerTile = board.gridSquares[HRRUClient.cs.getP2().getPosition()].getTileType();
 					else
 						otherPlayerTile = board.gridSquares[HRRUClient.cs.getP1().getPosition()].getTileType();
+					
+					int activity_id = HRRUClient.cs.getActivity_id();
 					System.out.println(otherPlayerTile + "the tile");
 					
 					if(otherPlayerTile == 3 || currentTile == 3)
-						sbg.enterState(3);
+					{
+						if(activity_id == 1)
+							sbg.enterState(play_bidgame);
+						else if(activity_id == 2)
+							sbg.enterState(play_trustgame);
+					}
 					else if(currentTile == 1)	
 					{
 						sbg.enterState(play_question);
 					}
 					else if(currentTile == 2)
 					{
-						sbg.enterState(play_puzzle);
+						// sbg.enterState(play_puzzle);
 					}
 			}
 		}

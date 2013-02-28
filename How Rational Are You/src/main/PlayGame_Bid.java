@@ -42,7 +42,7 @@ import de.matthiasmann.twl.ValueAdjuster;
 import de.matthiasmann.twl.ValueAdjusterFloat;
 import de.matthiasmann.twl.ValueAdjusterInt;
 
-public class Test extends BasicTWLGameState {
+public class PlayGame_Bid extends BasicTWLGameState {
 	
 	private int gameState;
 	private final int serverlost = -4;
@@ -121,9 +121,8 @@ public class Test extends BasicTWLGameState {
 	Packet16SendBid playerBid;
 	Packet00SyncMessage syncMessage;
 	
-	public Test(int main) {
+	public PlayGame_Bid(int main) {
 		client = HRRUClient.conn.getClient();
-		
 	}
 
 	void disableGUI()
@@ -147,6 +146,7 @@ public class Test extends BasicTWLGameState {
 	
 	void enableChoices()
 	{
+		currentBid = 0;
 		btnSubmit.setVisible(true);
 		vaBid.setVisible(true);
 		lblConfirmation.setVisible(false);
@@ -654,7 +654,7 @@ public class Test extends BasicTWLGameState {
 			if(otherPlayerReady == 2)
 			{
 				// Setup new UI
-				timer = 5; // should be 10
+				timer = 10; // should be 10
 				timer2 = 999;
 				clock2 = 0;
 				clock3 = 0;
@@ -807,7 +807,7 @@ public class Test extends BasicTWLGameState {
 
 	@Override
 	public int getID() {
-		return 3;
+		return 7;
 	}
 
 }

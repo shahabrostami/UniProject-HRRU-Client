@@ -5,15 +5,17 @@ import main.Player;
 public class ConnectionState {
 	
 	private final int initial = -1;
-	private int timer = 500000;	
+	private int timer = 200000;	
 	private int player;
 	private Player p1;
 	private Player p2;
 	private int state = initial;
+	private int gameState = 0;
 	private int activity;
 	private int activity_id;
 	private int secondary_id;
 	private int secondary_value;
+	private int third_value;
 	private int sessionID;
 	private String password;
 	private int[] board;
@@ -132,6 +134,22 @@ public class ConnectionState {
 
 	public void setSecondary_value(int secondary_value) {
 		this.secondary_value = secondary_value;
+	}
+
+	public int getThird_value() {
+		return third_value;
+	}
+
+	public void setThird_value(int third_value) {
+		this.third_value = third_value;
+	}
+
+	public int getGameState() {
+		return gameState;
+	}
+
+	public void setGameState(int gameState) {
+		this.gameState = gameState;
 	}
 	
 }

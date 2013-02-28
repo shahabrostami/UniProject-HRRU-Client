@@ -460,7 +460,7 @@ public class Statistics extends BasicTWLGameState {
 
 	@Override
 	public int getID() {
-		return 3;
+		return 15;
 	}
 
 }

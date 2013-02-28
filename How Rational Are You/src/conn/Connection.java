@@ -54,6 +54,8 @@ public class Connection {
 		kryo.register(Packet15PuzzleComplete.class);
 		kryo.register(Packet16SendBid.class);
 		kryo.register(Packet17EndBid.class);
+		kryo.register(Packet18TrustFirst.class);
+		kryo.register(Packet19TrustSecond.class);
 		kryo.register(int[].class);
 	}
 	

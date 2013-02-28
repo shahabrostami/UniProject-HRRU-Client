@@ -2,12 +2,14 @@ package conn;
 
 import org.newdawn.slick.SlickException;
 
+import conn.Packet.Packet19TrustSecond;
 import conn.Packet.*;
 import main.ActivityScore;
 import main.BiddingScore;
 import main.HRRUClient;
 import main.Play;
 import main.Player;
+import main.TrustScore;
 
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
@@ -175,6 +177,16 @@ public class NetworkListener extends Listener{
 				HRRUClient.cs.setSecondary_id(((Packet13Play)o).secondary_id);
 				HRRUClient.cs.setSecondary_value(((Packet13Play)o).secondary_value);
 			}
+			else if(activity == 3 && activity_id == 2)
+			{
+				int secondary_id = ((Packet13Play)o).secondary_id;
+				int secondary_value = ((Packet13Play)o).secondary_value;
+				int third_value = ((Packet13Play)o).third_value;
+				System.out.println(secondary_id + "-" + secondary_value + "-" + third_value);
+				HRRUClient.cs.setSecondary_id(((Packet13Play)o).secondary_id);
+				HRRUClient.cs.setSecondary_value(((Packet13Play)o).secondary_value);
+				HRRUClient.cs.setThird_value(((Packet13Play)o).third_value);
+			}
 			HRRUClient.cs.setState(play);
 			System.out.println(activity);
 			System.out.println(activity_id);
@@ -279,6 +291,36 @@ public class NetworkListener extends Listener{
 				biddingScore.setWin(win);
 				HRRUClient.cs.getP2().setCurrentBiddingScore(biddingScore);
 			}
+		}
+		if(o instanceof Packet18TrustFirst)
+		{
+			int player = HRRUClient.cs.getPlayer();
+			int playerGiveValue = ((Packet18TrustFirst)o).playerGiveValue;
+			if(player==1)
+			{
+				HRRUClient.cs.getP1().getCurrentTrustScore().setPlayerGiveValue(playerGiveValue);
+			}
+			if(player==2)
+			{
+				HRRUClient.cs.getP2().getCurrentTrustScore().setPlayerGiveValue(playerGiveValue);
+			}
+			HRRUClient.cs.setGameState(1);
+			
+		}
+		if(o instanceof Packet19TrustSecond)
+		{
+			int player = HRRUClient.cs.getPlayer();
+			int playerReturnValue = ((Packet19TrustSecond)o).playerReturnValue;
+			if(player==1)
+			{
+				HRRUClient.cs.getP1().getCurrentTrustScore().setPlayerReturnValue(playerReturnValue);
+			}
+			if(player==2)
+			{
+				HRRUClient.cs.getP2().getCurrentTrustScore().setPlayerReturnValue(playerReturnValue);
+			}
+			HRRUClient.cs.setGameState(3);
+			
 		}
 		if(o instanceof Packet00SyncMessage)
 		{

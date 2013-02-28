@@ -26,6 +26,8 @@ public class HRRUClient extends TWLStateBasedGame {
 	public static final int characterselect  = 4;
 	public static final int play = 5;
 	public static final int play_question = 6;
+	public static final int play_bidgame = 7;
+	public static final int statistics = 10;
 	
 	public static final int resX = 800;
 	public static final int resY = 600;
@@ -38,7 +40,6 @@ public class HRRUClient extends TWLStateBasedGame {
 		this.addState(new Main(main));
 		this.addState(new HostServer(host));
 		this.addState(new JoinServer(join));
-		this.addState(new Test(tutorial));
 		this.addState(new CharacterSelect(characterselect));
 		this.addState(new Play(play));
 		this.enterState(main);

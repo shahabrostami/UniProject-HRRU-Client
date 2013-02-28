@@ -389,6 +389,22 @@
     <images file="incorrectbidbg.png">
         <area name="incorrectbid-background" xywh="*" border="60,20,20,20"/>
     </images>
+    <images file="firsttrustpanel.png">
+        <area name="firsttrust.background" xywh="*" border="20,210,10,10"/>
+    </images>
+    <images file="secondtrustpanel.png">
+        <area name="secondtrust.background" xywh="*" border="20,210,10,10"/>
+    </images>
+    <images file="incorrectturst-background.png">
+        <area name="incorrecttrust-background" xywh="0,0,1,1" border="20"/>
+    </images>
+    <images file="correcttrustbackground.png">
+        <area name="correcttrust-background" xywh="0,0,1,1" border="20"/>
+    </images>
+
+
+
+
 
 
 
@@ -436,6 +452,8 @@
         <fontParam if="hover"/>
     
     </fontDef>
+    <fontDef name="atariblue10" filename="atariblue10.fnt" color="white"/>
+
     <fontDef name="scoreatari12" filename="scoreatari12.fnt" color="white"/>
     <fontDef name="scoreatari12r" filename="scoreatari12r.fnt" color="white"/>
     <fontDef name="scoretotal12" filename="scoretotal12.fnt" color="white"/>
@@ -800,6 +818,41 @@
         </theme>
     </theme>
 
+    <theme name="correcttrust-panel" ref="-defaults" allowWildcard="true">
+                    <param name="background"><image>correcttrust-background</image></param>
+                    <param name="border"><border>background.border</border></param>
+        <param name="defaultGap"><dimension>5,5</dimension></param>
+        <param name="smallGap"><dimension>8,8</dimension></param>
+        <param name="mediumGap"><dimension>10,10</dimension></param>
+        <param name="largeGap"><dimension>15,15</dimension></param>
+        <param name="namedGaps"><map/></param>
+        <param name="minWidth"><int>350</int></param>
+        <param name="maxWidth"><int>350</int></param>
+        <param name="minHeight"><int>350</int></param>
+        <param name="maxHeight"><int>350</int></param>
+        <param name="textAlignment"><enum type="alignment">FILL</enum></param>
+        <param name="font"><font>whiteatari14</font></param>
+        <theme name="label" ref="-defaults">
+            <param name="font"><font>scoreatari12</font></param>
+        </theme>
+        <theme name="labelright" ref="-defaults">
+            <param name="font"><font>whiteatari14</font></param>
+            <param name="textAlignment"><enum type="alignment">RIGHT</enum></param>
+        </theme>
+        <theme name="labelmiddle" ref="-defaults">
+            <param name="font"><font>whiteatari14</font></param>
+            <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
+        </theme>
+        <theme name="labelscoretotal" ref="-defaults">
+            <param name="font"><font>scoretotal12</font></param>
+            <param name="textAlignment"><enum type="alignment">LEFT</enum></param>
+        </theme>
+        <theme name="labelscoretotalright" ref="-defaults">
+            <param name="font"><font>scoretotal12</font></param>
+            <param name="textAlignment"><enum type="alignment">RIGHT</enum></param>
+        </theme>
+    </theme>
+
     <theme name="correctbid-panel" ref="-defaults" allowWildcard="true">
                     <param name="background"><image>correctbid-background</image></param>
                     <param name="border"><border>background.border</border></param>
@@ -868,8 +921,41 @@
         </theme>
     </theme>
 
-    <theme name="incorrect-panel104697782085684" ref="-defaults" allowWildcard="true">
-                    <param name="background"><image>incorrect-background</image></param>
+    <theme name="incorrecttrust-panel" ref="-defaults" allowWildcard="true">
+                    <param name="background"><image>incorrecttrust-background</image></param>
+                    <param name="border"><border>background.border</border></param>
+        <param name="defaultGap"><dimension>5,5</dimension></param>
+        <param name="smallGap"><dimension>8,8</dimension></param>
+        <param name="mediumGap"><dimension>10,10</dimension></param>
+        <param name="largeGap"><dimension>15,15</dimension></param>
+        <param name="namedGaps"><map/></param>
+        <param name="minWidth"><int>350</int></param>
+        <param name="maxWidth"><int>350</int></param>
+        <param name="minHeight"><int>350</int></param>
+        <param name="maxHeight"><int>350</int></param>
+        <theme name="label" ref="-defaults">
+            <param name="font"><font>scoreatari12r</font></param>
+        </theme>
+        <theme name="labelright" ref="-defaults">
+            <param name="font"><font>whiteatari14</font></param>
+            <param name="textAlignment"><enum type="alignment">RIGHT</enum></param>
+        </theme>
+        <theme name="labelmiddle" ref="-defaults">
+            <param name="font"><font>whiteatari14</font></param>
+            <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
+        </theme>
+        <theme name="labelscoretotal" ref="-defaults">
+            <param name="font"><font>scoretotal12</font></param>
+            <param name="textAlignment"><enum type="alignment">LEFT</enum></param>
+        </theme>
+        <theme name="labelscoretotalright" ref="-defaults">
+            <param name="font"><font>scoretotal12</font></param>
+            <param name="textAlignment"><enum type="alignment">RIGHT</enum></param>
+        </theme>
+    </theme>
+
+    <theme name="incorrectbid-panel" ref="-defaults" allowWildcard="true">
+                    <param name="background"><image>incorrectbid-background</image></param>
                     <param name="border"><border>background.border</border></param>
         <param name="defaultGap"><dimension>5,5</dimension></param>
         <param name="smallGap"><dimension>8,8</dimension></param>
@@ -956,6 +1042,52 @@
         <param name="minHeight"><int>0</int></param>
         <param name="maxHeight"><int>0</int></param>
         <param name="font"><font>questionatari26</font></param>
+    </theme>
+
+    <theme name="firsttrust-panel" ref="-defaults" allowWildcard="true">
+                    <param name="background"><image>firsttrust.background</image></param>
+                    <param name="border"><border>background.border</border></param>
+        <param name="defaultGap"><dimension>5,5</dimension></param>
+        <param name="smallGap"><dimension>8,8</dimension></param>
+        <param name="mediumGap"><dimension>10,10</dimension></param>
+        <param name="largeGap"><dimension>15,15</dimension></param>
+        <param name="namedGaps"><map/></param>
+        <param name="minWidth"><int>0</int></param>
+        <param name="maxWidth"><int>600</int></param>
+        <param name="minHeight"><int>0</int></param>
+        <param name="maxHeight"><int>100</int></param>
+        <param name="font"><font>questionatari16</font></param>
+        <theme name="label" ref="-defaults">
+            <param name="font"><font>atariblue10</font></param>
+            <param name="textAlignment"><enum type="alignment">LEFT</enum></param>
+        </theme>
+        <theme name="labelreceived" ref="-defaults">
+            <param name="font"><font>scoretotal12</font></param>
+            <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
+        </theme>
+    </theme>
+
+    <theme name="secondtrust-panel" ref="-defaults" allowWildcard="true">
+                    <param name="background"><image>secondtrust.background</image></param>
+                    <param name="border"><border>background.border</border></param>
+        <param name="defaultGap"><dimension>5,5</dimension></param>
+        <param name="smallGap"><dimension>8,8</dimension></param>
+        <param name="mediumGap"><dimension>10,10</dimension></param>
+        <param name="largeGap"><dimension>15,15</dimension></param>
+        <param name="namedGaps"><map/></param>
+        <param name="minWidth"><int>0</int></param>
+        <param name="maxWidth"><int>600</int></param>
+        <param name="minHeight"><int>0</int></param>
+        <param name="maxHeight"><int>100</int></param>
+        <param name="font"><font>questionatari16</font></param>
+        <theme name="label" ref="-defaults">
+            <param name="font"><font>atariblue10</font></param>
+            <param name="textAlignment"><enum type="alignment">LEFT</enum></param>
+        </theme>
+        <theme name="labelreceived" ref="-defaults">
+            <param name="font"><font>scoretotal12</font></param>
+            <param name="textAlignment"><enum type="alignment">LEFT</enum></param>
+        </theme>
     </theme>
 
     <theme name="item-panel" ref="-defaults" allowWildcard="true">
@@ -1562,7 +1694,7 @@
                             <fontParam if="hover" underline="true"/>
                         </fontDef></param>
                         <param name="big"><fontDef filename="questionatari12.fnt" color="#FFFFFF"/></param>
-                        <param name="code"><fontDef filename="questionatari12.fnt"/></param>
+                        <param name="code"><fontDef filename="scoretotal12.fnt"/></param>
                         <param name="codeBold"><fontDef filename="questionatari12.fnt"/></param>
                     </map></param>
                     <param name="images"><map>
@@ -1591,6 +1723,26 @@
             </map>
         </param>
         <param name="font"><font>questionatari16</font></param>
+    </theme>
+
+    <theme name="trusttextarea" ref="-defaults">
+        <param name="images">
+            <map>
+            </map>
+        </param>
+        <param name="fonts">
+            <map>
+                <param name="default"><font>whiteatari14</font></param>
+                <param name="big"><font>questionatari16bl</font></param>
+            
+                <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
+                <param name="highlight"><font>scoretotal12</font></param>
+                <param name="name"><font>scoreatari12</font></param>
+            </map>
+        </param>
+        <param name="font"><font>whiteatari14</font></param>
+        <param name="background"><image>none</image></param>
+        <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
     </theme>
 	
 	<fontDef name="playnormal" filename="Font/font.fnt" color="white">

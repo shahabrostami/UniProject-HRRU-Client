@@ -12,14 +12,19 @@ public class Player {
 	private int score;
 	private int position;
 	private int ready;
-	private ActivityScore currentActivityScore;
-	private ArrayList<ActivityScore> activityScores;
-	private BiddingScore currentBiddingScore;
-	private ArrayList<BiddingScore> biddingScores;
 	private int playerCharacterID;
 	private Character playerCharacter;
 	CharacterSheet characterSheet = new CharacterSheet();
 	Character[] characters = characterSheet.getCharacters();
+	
+	private ActivityScore currentActivityScore;
+	private ArrayList<ActivityScore> activityScores;
+	
+	private BiddingScore currentBiddingScore;
+	private ArrayList<BiddingScore> biddingScores;
+	
+	private TrustScore currentTrustScore;
+	private ArrayList<TrustScore> trustScores;
 	
 	public Player(String name) throws SlickException
 	{
@@ -31,6 +36,8 @@ public class Player {
 		this.activityScores = new ArrayList<ActivityScore>();
 		this.currentBiddingScore = new BiddingScore(0,0,0, false);
 		this.biddingScores = new ArrayList<BiddingScore>();
+		this.setCurrentTrustScore(new TrustScore(0,0,0,0,0,0));
+		this.trustScores = new ArrayList<TrustScore>();
 	}
 
 	public String getName() {
@@ -130,5 +137,27 @@ public class Player {
 
 	public void addBiddingScore(BiddingScore biddingScore) {
 		this.biddingScores.add(biddingScore);
+	}
+
+	
+	public ArrayList<TrustScore> getTrustScores() {
+		return trustScores;
+	}
+
+	
+	public void setTrustScores(ArrayList<TrustScore> trustScores) {
+		this.trustScores = trustScores;
+	}
+
+	public void addTrustScore(TrustScore trustScore) {
+		this.trustScores.add(trustScore);
+	}
+
+	public TrustScore getCurrentTrustScore() {
+		return currentTrustScore;
+	}
+
+	public void setCurrentTrustScore(TrustScore currentTrustScore) {
+		this.currentTrustScore = currentTrustScore;
 	}
 }
