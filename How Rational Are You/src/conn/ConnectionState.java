@@ -5,7 +5,7 @@ import main.Player;
 public class ConnectionState {
 	
 	private final int initial = -1;
-	private int timer = 200000;	
+	private int timer = 120000;	
 	private int player;
 	private Player p1;
 	private Player p2;

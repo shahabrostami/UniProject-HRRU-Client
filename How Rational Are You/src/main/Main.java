@@ -1,5 +1,7 @@
 package main;
 
+import java.awt.Font;
+import java.awt.FontFormatException;
 import java.io.IOException;
 
 import org.newdawn.slick.GameContainer;
@@ -11,6 +13,7 @@ import com.esotericsoftware.kryonet.Client;
 
 import conn.Connection;
 import conn.Packet.Packet0CreateRequest;
+import conn.Packet.Packet16SendBid;
 import conn.Packet.Packet2JoinRequest;
 import conn.Packet.Packet8Start;
 import conn.Packet.Packet9CharacterSelect;
@@ -29,6 +32,7 @@ public class Main extends BasicTWLGameState {
 
 	Client client;
 	
+	// GUI variables
 	boolean connectionSuccessful;
 	int enterState = 0;
 	int attempts = 0;
@@ -39,7 +43,17 @@ public class Main extends BasicTWLGameState {
 	EditField efSessionID;
 	Button btnJT1, btnJT2;
 	Button btnRetry;
-	private StateBasedGame sbg;
+	
+	// Ticker variables
+	private int titleFontSize = 60;
+	private Font loadFont, loadTitleFont;
+	private BasicFont titleFont;
+	private String start_message = "";
+	private String full_start_message = "HOW RATIONAL ARE YOU?";
+	private int full_start_counter = 0;
+	private String ticker = "";
+	private boolean tickerBoolean = true;
+	private int clock3, clock2 = 0;
 	
 	@Override
 	public void enter(GameContainer gc, StateBasedGame sbg) throws SlickException {
@@ -49,14 +63,14 @@ public class Main extends BasicTWLGameState {
 		enterState = 0;
 		rootPane.removeAllChildren();
 		
-		btnRetry.setEnabled(false);
+		// btnRetry.setEnabled(false);
 		btnHT2.setEnabled(false);
 		btnHT3.setEnabled(false);
 		btnJT2.setEnabled(false);
 		btnTestStart.setEnabled(false);
 		
 		rootPane.add(lConnection);
-		rootPane.add(btnRetry);
+		//rootPane.add(btnRetry);
 		rootPane.add(btnHT1);
 		rootPane.add(efSessionID);
 		rootPane.add(btnJT1);
@@ -67,6 +81,15 @@ public class Main extends BasicTWLGameState {
 		rootPane.add(btnJoin);
 		rootPane.add(btnHost);
 		rootPane.setTheme("");
+		
+		// RESET VARIABLES
+		start_message = "";
+		full_start_message = "HOW RATIONAL ARE YOU?";
+		full_start_counter = 0;
+		ticker = "";
+		tickerBoolean = true;
+		clock2 = 0;
+		clock3 = 0;
 	}
 
 	@Override
@@ -85,13 +108,26 @@ public class Main extends BasicTWLGameState {
 		attempts++;
 	}
 	
-	
 	@Override
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
+		// setup font variables
+		try {
+			loadFont = java.awt.Font.createFont(java.awt.Font.TRUETYPE_FONT,
+					      org.newdawn.slick.util.ResourceLoader.getResourceAsStream("font/visitor2.ttf"));
+		} catch (FontFormatException e) {
+				e.printStackTrace();
+		} catch (IOException e) {
+				e.printStackTrace();
+		}
+		loadTitleFont = loadFont.deriveFont(Font.BOLD,titleFontSize);
+		titleFont = new BasicFont(loadTitleFont);
+		
 		lConnection = new Label("");
 		lConnection.setPosition(gc.getWidth()/2-100, gc.getHeight()/2-125);
 		
+		/*
 		btnRetry = new Button("Retry Server");
+		
 		btnRetry.setSize(100, 20);
 		btnRetry.setPosition(gc.getWidth()/2-50, gc.getHeight()/2-85);
 		btnRetry.addCallback(new Runnable() {
@@ -100,27 +136,28 @@ public class Main extends BasicTWLGameState {
 				emulateRetry();
 			}
 		});
-		
+		*/
+		// setup gui variables
 		btnHost = new Button("Host Server");
-		btnHost.setSize(100, 20);
-		btnHost.setPosition(gc.getWidth()/2-50, gc.getHeight()/2-55);
+		btnHost.setSize(400, 30);
+		btnHost.setPosition(gc.getWidth()/2-200, gc.getHeight()/2-95);
 		btnHost.addCallback(new Runnable() {
 			@Override
 			public void run() {
 				enterState = 1;
 			}
 		});
-		
+		btnHost.setTheme("choicebutton");
 		btnJoin = new Button("Join Server");
-		btnJoin.setSize(100, 20);
-		btnJoin.setPosition(gc.getWidth()/2-50, gc.getHeight()/2-25);
+		btnJoin.setSize(400, 30);
+		btnJoin.setPosition(gc.getWidth()/2-200, gc.getHeight()/2-60);
 		btnJoin.addCallback(new Runnable() {
 			@Override
 			public void run() {
 				enterState = 2;
 			}
 		});
-		
+		btnJoin.setTheme("choicebutton");
 		
 		
 		btnHT1 = new Button("1) Host Server Create");
@@ -240,25 +277,53 @@ public class Main extends BasicTWLGameState {
 
 	@Override
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
+		g.setFont(titleFont.get());
+		g.drawString("> " + start_message + "" + ticker, 50, 50);
 	}
 
 	@Override
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
+		clock3 += delta;
+		clock2 += delta;
+		// full message ticker
+		if(clock3 > 100){
+			if(full_start_counter < full_start_message.length())
+			{
+				start_message += full_start_message.substring(full_start_counter, full_start_counter+1);
+				full_start_counter++;
+				clock3-=100;
+			}
+		}
+		// ticker symbol
+		if(clock2>999)
+		{
+			clock2-=1000;
+			if(tickerBoolean) 
+			{
+				ticker = "|";
+				tickerBoolean = false;
+			}
+			else
+			{
+				ticker = "";
+				tickerBoolean = true;
+			}
+		}
 		// Is connection successful?
 		connectionSuccessful = HRRUClient.ConnectionSuccessful;
 		if(connectionSuccessful)
 		{
 			btnJoin.setEnabled(true);
 			btnHost.setEnabled(true);
-			btnRetry.setVisible(false);
+			// btnRetry.setVisible(false);
 			lConnection.setText("Connection Successful");
 		}
 		else
 		{
 			btnJoin.setEnabled(false);
 			btnHost.setEnabled(false);
-			btnRetry.setVisible(true);
-			btnRetry.setEnabled(true);
+			// btnRetry.setVisible(true);
+			// btnRetry.setEnabled(true);
 			lConnection.setText("Connection Failed...\nPlease restart application.\nAttemtps: " + attempts);
 		}
 		if (enterState == 1)

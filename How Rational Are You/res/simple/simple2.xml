@@ -355,6 +355,10 @@
 
         <alias name="colorselector.cursor" ref="-selH"/>
     </images>
+    <images file="yourturn.png">
+        <area name="yourturn-background" xywh="*"/>
+    </images>
+
     <images file="rollpanelbg.png">
         <area name="rollpanel.background" xywh="*"/>
     </images>
@@ -401,6 +405,30 @@
     <images file="correcttrustbackground.png">
         <area name="correcttrust-background" xywh="*" border="20"/>
     </images>
+    <images file="profitprison.png">
+        <area name="profitprison-background" xywh="*" border="240,20,20,20"/>
+    </images>
+    <images file="lossprison.png">
+        <area name="lossprison-background" xywh="*" border="240,20,20,20"/>
+    </images>
+
+
+    <images file="betray.png">
+        <select name="betray-background">
+            <area xywh="320,0,318,239" if="hover"/>
+            <area xywh="639,0,317,239" if="selected"/>
+            <area xywh="0,0,319,239"/>
+        </select>
+    </images>
+    <images file="cooperate.png">
+        <select name="cooperate-background">
+            <area xywh="319,0,319,239" if="hover"/>
+            <area xywh="639,0,318,239" if="selected"/>
+            <area xywh="0,0,319,239"/>
+        </select>
+    </images>
+
+
 
 
 
@@ -548,6 +576,15 @@
         <param name="maxWidth"><int>0</int></param>
         <param name="minHeight"><int>0</int></param>
         <param name="maxHeight"><int>0</int></param>
+    </theme>
+
+    <theme name="labelyourturn" ref="-defaults" allowWildcard="true">
+        <param name="font"><font>label</font></param>
+        <param name="minWidth"><int>0</int></param>
+        <param name="maxWidth"><int>800</int></param>
+        <param name="minHeight"><int>600</int></param>
+        <param name="maxHeight"><int>0</int></param>
+        <param name="background"><image>yourturn-background</image></param>
     </theme>
 
     <theme name="title" ref="-defaults" allowWildcard="true">
@@ -714,7 +751,7 @@
         <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
         <param name="minWidth"><int>0</int></param>
         <param name="maxWidth"><int>600</int></param>
-        <param name="minHeight"><int>0</int></param>
+        <param name="minHeight"><int>20</int></param>
         <param name="inputMap"><inputMap>-defaultInputMap</inputMap></param>
         <param name="maxHeight"><int>60</int></param>
     </theme>
@@ -722,12 +759,35 @@
     <theme name="rollbutton" ref="-defaults" allowWildcard="true">
         <param name="background"><image>choice.button</image></param>
         <param name="border"><border>background.border</border></param>
+        <param name="font"><font>scoretotal12</font></param>
+        <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
+        <param name="minWidth"><int>0</int></param>
+        <param name="maxWidth"><int>600</int></param>
+        <param name="minHeight"><int>0</int></param>
+        <param name="inputMap"><inputMap>-defaultInputMap</inputMap></param>
+        <param name="maxHeight"><int>150</int></param>
+    </theme>
+    
+    <theme name="betraybutton" ref="-defaults" allowWildcard="true">
+        <param name="background"><image>betray-background</image></param>
+        <param name="border"><border>background.border</border></param>
         <param name="font"><font>whiteatari14</font></param>
         <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
         <param name="minWidth"><int>0</int></param>
-        <param name="maxWidth"><int>0</int></param>
+        <param name="maxWidth"><int>319</int></param>
         <param name="minHeight"><int>0</int></param>
-        <param name="maxHeight"><int>91</int></param>
+        <param name="maxHeight"><int>239</int></param>
+    </theme>
+    
+    <theme name="cooperatebutton" ref="-defaults" allowWildcard="true">
+        <param name="background"><image>cooperate-background</image></param>
+        <param name="border"><border>background.border</border></param>
+        <param name="font"><font>whiteatari14</font></param>
+        <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
+        <param name="minWidth"><int>0</int></param>
+        <param name="maxWidth"><int>319</int></param>
+        <param name="minHeight"><int>0</int></param>
+        <param name="maxHeight"><int>239</int></param>
     </theme>
 	
     <theme name="togglebutton" ref="button" allowWildcard="true">
@@ -785,41 +845,6 @@
 
     <theme name="correct-panel" ref="-defaults" allowWildcard="true">
                     <param name="background"><image>correct-background</image></param>
-                    <param name="border"><border>background.border</border></param>
-        <param name="defaultGap"><dimension>5,5</dimension></param>
-        <param name="smallGap"><dimension>8,8</dimension></param>
-        <param name="mediumGap"><dimension>10,10</dimension></param>
-        <param name="largeGap"><dimension>15,15</dimension></param>
-        <param name="namedGaps"><map/></param>
-        <param name="minWidth"><int>350</int></param>
-        <param name="maxWidth"><int>350</int></param>
-        <param name="minHeight"><int>350</int></param>
-        <param name="maxHeight"><int>350</int></param>
-        <param name="textAlignment"><enum type="alignment">FILL</enum></param>
-        <param name="font"><font>whiteatari14</font></param>
-        <theme name="label" ref="-defaults">
-            <param name="font"><font>scoreatari12</font></param>
-        </theme>
-        <theme name="labelright" ref="-defaults">
-            <param name="font"><font>whiteatari14</font></param>
-            <param name="textAlignment"><enum type="alignment">RIGHT</enum></param>
-        </theme>
-        <theme name="labelmiddle" ref="-defaults">
-            <param name="font"><font>whiteatari14</font></param>
-            <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
-        </theme>
-        <theme name="labelscoretotal" ref="-defaults">
-            <param name="font"><font>scoretotal12</font></param>
-            <param name="textAlignment"><enum type="alignment">LEFT</enum></param>
-        </theme>
-        <theme name="labelscoretotalright" ref="-defaults">
-            <param name="font"><font>scoretotal12</font></param>
-            <param name="textAlignment"><enum type="alignment">RIGHT</enum></param>
-        </theme>
-    </theme>
-
-    <theme name="correcttrust-panel" ref="-defaults" allowWildcard="true">
-                    <param name="background"><image>correcttrust-background</image></param>
                     <param name="border"><border>background.border</border></param>
         <param name="defaultGap"><dimension>5,5</dimension></param>
         <param name="smallGap"><dimension>8,8</dimension></param>
@@ -921,8 +946,111 @@
         </theme>
     </theme>
 
+    <theme name="correcttrust-panel" ref="-defaults" allowWildcard="true">
+                    <param name="background"><image>correcttrust-background</image></param>
+                    <param name="border"><border>background.border</border></param>
+        <param name="defaultGap"><dimension>5,5</dimension></param>
+        <param name="smallGap"><dimension>8,8</dimension></param>
+        <param name="mediumGap"><dimension>10,10</dimension></param>
+        <param name="largeGap"><dimension>15,15</dimension></param>
+        <param name="namedGaps"><map/></param>
+        <param name="minWidth"><int>350</int></param>
+        <param name="maxWidth"><int>350</int></param>
+        <param name="minHeight"><int>350</int></param>
+        <param name="maxHeight"><int>350</int></param>
+        <param name="textAlignment"><enum type="alignment">FILL</enum></param>
+        <param name="font"><font>whiteatari14</font></param>
+        <theme name="label" ref="-defaults">
+            <param name="font"><font>scoreatari12</font></param>
+        </theme>
+        <theme name="labelright" ref="-defaults">
+            <param name="font"><font>whiteatari14</font></param>
+            <param name="textAlignment"><enum type="alignment">RIGHT</enum></param>
+        </theme>
+        <theme name="labelmiddle" ref="-defaults">
+            <param name="font"><font>whiteatari14</font></param>
+            <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
+        </theme>
+        <theme name="labelscoretotal" ref="-defaults">
+            <param name="font"><font>scoretotal12</font></param>
+            <param name="textAlignment"><enum type="alignment">LEFT</enum></param>
+        </theme>
+        <theme name="labelscoretotalright" ref="-defaults">
+            <param name="font"><font>scoretotal12</font></param>
+            <param name="textAlignment"><enum type="alignment">RIGHT</enum></param>
+        </theme>
+    </theme>
+
     <theme name="incorrecttrust-panel" ref="-defaults" allowWildcard="true">
                     <param name="background"><image>incorrecttrust-background</image></param>
+                    <param name="border"><border>background.border</border></param>
+        <param name="defaultGap"><dimension>5,5</dimension></param>
+        <param name="smallGap"><dimension>8,8</dimension></param>
+        <param name="mediumGap"><dimension>10,10</dimension></param>
+        <param name="largeGap"><dimension>15,15</dimension></param>
+        <param name="namedGaps"><map/></param>
+        <param name="minWidth"><int>350</int></param>
+        <param name="maxWidth"><int>350</int></param>
+        <param name="minHeight"><int>350</int></param>
+        <param name="maxHeight"><int>350</int></param>
+        <theme name="label" ref="-defaults">
+            <param name="font"><font>scoreatari12r</font></param>
+        </theme>
+        <theme name="labelright" ref="-defaults">
+            <param name="font"><font>whiteatari14</font></param>
+            <param name="textAlignment"><enum type="alignment">RIGHT</enum></param>
+        </theme>
+        <theme name="labelmiddle" ref="-defaults">
+            <param name="font"><font>whiteatari14</font></param>
+            <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
+        </theme>
+        <theme name="labelscoretotal" ref="-defaults">
+            <param name="font"><font>scoretotal12</font></param>
+            <param name="textAlignment"><enum type="alignment">LEFT</enum></param>
+        </theme>
+        <theme name="labelscoretotalright" ref="-defaults">
+            <param name="font"><font>scoretotal12</font></param>
+            <param name="textAlignment"><enum type="alignment">RIGHT</enum></param>
+        </theme>
+    </theme>
+
+    <theme name="correctprison-panel" ref="-defaults" allowWildcard="true">
+                    <param name="background"><image>profitprison-background</image></param>
+                    <param name="border"><border>background.border</border></param>
+        <param name="defaultGap"><dimension>5,5</dimension></param>
+        <param name="smallGap"><dimension>8,8</dimension></param>
+        <param name="mediumGap"><dimension>10,10</dimension></param>
+        <param name="largeGap"><dimension>15,15</dimension></param>
+        <param name="namedGaps"><map/></param>
+        <param name="minWidth"><int>350</int></param>
+        <param name="maxWidth"><int>350</int></param>
+        <param name="minHeight"><int>350</int></param>
+        <param name="maxHeight"><int>350</int></param>
+        <param name="textAlignment"><enum type="alignment">FILL</enum></param>
+        <param name="font"><font>whiteatari14</font></param>
+        <theme name="label" ref="-defaults">
+            <param name="font"><font>scoreatari12</font></param>
+        </theme>
+        <theme name="labelright" ref="-defaults">
+            <param name="font"><font>whiteatari14</font></param>
+            <param name="textAlignment"><enum type="alignment">RIGHT</enum></param>
+        </theme>
+        <theme name="labelmiddle" ref="-defaults">
+            <param name="font"><font>whiteatari14</font></param>
+            <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
+        </theme>
+        <theme name="labelscoretotal" ref="-defaults">
+            <param name="font"><font>scoretotal12</font></param>
+            <param name="textAlignment"><enum type="alignment">LEFT</enum></param>
+        </theme>
+        <theme name="labelscoretotalright" ref="-defaults">
+            <param name="font"><font>scoretotal12</font></param>
+            <param name="textAlignment"><enum type="alignment">RIGHT</enum></param>
+        </theme>
+    </theme>
+
+    <theme name="incorrectprison-panel" ref="-defaults" allowWildcard="true">
+                    <param name="background"><image>lossprison-background</image></param>
                     <param name="border"><border>background.border</border></param>
         <param name="defaultGap"><dimension>5,5</dimension></param>
         <param name="smallGap"><dimension>8,8</dimension></param>

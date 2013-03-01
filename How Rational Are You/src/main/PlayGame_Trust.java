@@ -16,6 +16,7 @@ import main.textpage.TextPage.TextPageFrame;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.util.ResourceLoader;
@@ -45,6 +46,7 @@ import de.matthiasmann.twl.ValueAdjusterInt;
 
 public class PlayGame_Trust extends BasicTWLGameState {
 	
+	Input input;
 	private int gameState, overallState, sessionID;
 	private final int serverlost = -4;
 	private final int cancelled = -2;
@@ -58,6 +60,7 @@ public class PlayGame_Trust extends BasicTWLGameState {
 	Label lReceived, lblReceived, lReturned, lblReturned;
 	Label lProfit, lProfit2, lblProfit, lblProfit2;
 	Label lNew, lNew2, lblNew, lblNew2;
+	Label lblYourTurn;
 	
 	int gcw;
 	int gch;
@@ -72,6 +75,7 @@ public class PlayGame_Trust extends BasicTWLGameState {
 	int playerID, otherPlayerID;
 	int otherPlayerReady;
 	int player1_x, player1_y, player2_x, player2_y;
+	private boolean pShowRollBanner = false;
 	
 	// Game variable
 	private int playerGive, playerReturn;
@@ -108,7 +112,7 @@ public class PlayGame_Trust extends BasicTWLGameState {
 	
 	// Ticker setup
 	private String start_message = "";
-	private String full_start_message = "MAKE YOUR BID...";
+	private String full_start_message = "TO TRUST \n ... OR NOT TO TRUST..?";
 	private int full_start_counter = 0;
 	private String ticker = "";
 	private boolean tickerBoolean = true;
@@ -205,7 +209,7 @@ public class PlayGame_Trust extends BasicTWLGameState {
 			returnValue = vaBid.getValue();
 			packetReturn.playerReturnValue = returnValue;
 			packetReturn.player = playerID;
-			HRRUClient.cs.setGameState(4);
+			HRRUClient.cs.setGameState(3);
 			client.sendTCP(packetReturn);
 			lblSecond.setText("You returned " + returnValue + " points!");
 			disableGUI();
@@ -233,7 +237,7 @@ public class PlayGame_Trust extends BasicTWLGameState {
 				
 		// Reset main variables
 		rootPane.removeAllChildren();
-		timer = 10;
+		timer = 50;
 		timer2 = 999;
 		overallTimer = 0;
 		sessionID = HRRUClient.cs.getSessionID();
@@ -251,6 +255,7 @@ public class PlayGame_Trust extends BasicTWLGameState {
 		// Reset variables
 		bPlayerGive = false;
 		bPlayerReturn = false;
+		pShowRollBanner = false;
 		maxToGive = 0;
 		maxToReturn = 0;
 		giveValue = 0;
@@ -262,6 +267,12 @@ public class PlayGame_Trust extends BasicTWLGameState {
 		time_out = false;
 		vaBid.setValue(0);
 		
+		// Turn label
+		lblYourTurn = new Label();
+		lblYourTurn.setSize(800, 600);
+		lblYourTurn.setTheme("labelyourturn");
+		lblYourTurn.setPosition(0,0);
+		lblYourTurn.setVisible(false);
 		
 		// Retrieve player information
 		player1 = HRRUClient.cs.getP1();
@@ -294,6 +305,8 @@ public class PlayGame_Trust extends BasicTWLGameState {
 		if(playerID == playerGive)
 		{
 			System.out.println("player is playerGive" + playerGive + "" + playerID);
+			pShowRollBanner = true;
+			lblYourTurn.setVisible(true);
 			bPlayerGive = true;
 			bPlayerReturn = false;
 			giveScore = player.getScore();
@@ -342,11 +355,13 @@ public class PlayGame_Trust extends BasicTWLGameState {
 		}
 		
 		// Set up text
+		
 		questionDescriptionModel.setHtml("<html><body><div>"
-				+ "<p><a style='font-family: name;'>" + playerGiveName + "</a> can offer any amount up to <a style='font-family: highlight;'>" + maxToGive + "</a> to "
-				+ "<a style='font-family: name;'>" + playerReturnName + "</a> and keep the rest. This amount is multiplied by "
-				+ "<a style='font-family: highlight;'>" + multiplier + "</a> and given to <a style='font-family: name;'>" + playerReturnName + "."
-				+ playerReturnName + "</a> can then return any of this amount back to <a style='font-family: name;'>"+ playerGiveName + "</a>.</p>"
+				+ "<p style='margin-top: 10px; text-align: center;'><a style='font-family: name;'>" + playerGiveName + "</a> can give any amount up to <a style='font-family: highlight;'>" + maxToGive + "</a> to "
+				+ "<a style='font-family: name;'>" + playerReturnName + "</a></p>"
+				+ "<p style='margin-top: 10px; text-align: center;'><a style='font-family: name;'>" + playerGiveName + "</a> keeps the rest of the amount not given.</p><p style='margin-top: 10px; text-align: center;'>The amount given is multiplied by "
+				+ "<a style='font-family: highlight;'>" + multiplier + "</a> and given to <a style='font-family: name;'>" + playerReturnName + ".</a></p>"
+				+ "<p style='margin-top: 10px; text-align: center;'><a style='font-family: name;'>" + playerReturnName + "</a> can then return any of this amount back to <a style='font-family: name;'>"+ playerGiveName + "</a>.</p>"
 				+ "</div></body></html>");
 		
 		
@@ -364,6 +379,7 @@ public class PlayGame_Trust extends BasicTWLGameState {
 		rootPane.add(firstPanel);
 		rootPane.add(secondPanel);
 		rootPane.add(questionDescription);
+		rootPane.add(lblYourTurn);
 	}
 
 	@Override
@@ -462,9 +478,9 @@ public class PlayGame_Trust extends BasicTWLGameState {
 		
 		// Bid GUI
 		vaBid = new ValueAdjusterInt();
+		vaBid.setTooltipContent(null);
 		vaBid.setSize(200, 30);
 		vaBid.setPosition((gcw/2) - vaBid.getWidth()/2, fixed_y + 340);
-		
 		btnSubmit = new Button("Submit Offer");
 		btnSubmit.setSize(200, 30);
 		btnSubmit.setPosition((gcw/2) - btnSubmit.getWidth()/2 - 2, fixed_y + 380);
@@ -584,7 +600,7 @@ public class PlayGame_Trust extends BasicTWLGameState {
 				g.drawString("0" + timer2, timer_x+145, timer_y-10);
 			else if(timer2<10)
 				g.drawString("00" + timer2, timer_x+145, timer_y-10);
-			else
+			else 
 				g.drawString("" + timer2, timer_x+145, timer_y-10);
 			
 			if(finished)
@@ -615,6 +631,7 @@ public class PlayGame_Trust extends BasicTWLGameState {
 
 	@Override
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
+		input = gc.getInput();
 		clock2 += delta;
 		clock3 += delta;
 		timer2 -= delta;
@@ -693,16 +710,25 @@ public class PlayGame_Trust extends BasicTWLGameState {
 		// Update if player is giving
 		if(bPlayerGive)
 		{
+			if(pShowRollBanner)
+			{
+				if(input.isMousePressed(Input.MOUSE_LEFT_BUTTON))
+				{
+					pShowRollBanner = false;
+					lblYourTurn.setVisible(false);
+				}
+			}
 			if(gameState == 1)
 			{
 				// Player Give Turn, reset timer and wait for other player
 				overallTimer += timer;
-				timer = 5;
+				timer = 50;
 				timer2 = 999;
 				HRRUClient.cs.setGameState(2);
 			}
 			else if(gameState == 3)
 			{
+				timer = 7;
 				returnValue = player.getCurrentTrustScore().getPlayerReturnValue();
 				lblSecond.setText(playerReturnName + " returned " + returnValue + " points!");
 				HRRUClient.cs.setGameState(4);
@@ -713,9 +739,11 @@ public class PlayGame_Trust extends BasicTWLGameState {
 		{
 			if(gameState == 1)
 			{
+				pShowRollBanner = true;
+				lblYourTurn.setVisible(true);
 				// Player Return turn
 				overallTimer += timer;
-				timer = 5;
+				timer = 50;
 				timer2 = 999;
 				enableChoices();
 				time_out = false;
@@ -727,6 +755,20 @@ public class PlayGame_Trust extends BasicTWLGameState {
 				lblFirst.setText(playerGiveName + " gave " + giveValue + " points!\n\n"
 						+ "This gives you " + giveValueFull + " points!\n\n" 
 						+ "How many points will you return?");
+			}
+			if(gameState == 2)
+				if(pShowRollBanner)
+				{
+					if(input.isMousePressed(Input.MOUSE_LEFT_BUTTON))
+					{
+						pShowRollBanner = false;
+						lblYourTurn.setVisible(false);
+					}
+				}
+			if(gameState == 3)
+			{
+				timer = 7;
+				HRRUClient.cs.setGameState(4);
 			}
 			
 		}
@@ -758,8 +800,14 @@ public class PlayGame_Trust extends BasicTWLGameState {
 			// 	Set new variables to finish
 				finished = true;
 				overallTimer += timer;
-				timer = 5;
+				timer = 7;
 				timer2 = 999;
+				clock2 = 0;
+				clock3 = 0;
+				full_start_message = "The results are in...";
+				full_start_counter = 0;
+				ticker = "";
+				start_message = "";
 				rootPane.removeAllChildren();
 				rootPane.add(giveResultPanel);
 				rootPane.add(returnResultPanel);

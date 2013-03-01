@@ -30,6 +30,7 @@ import conn.Packet.Packet16SendBid;
 import TWLSlick.BasicTWLGameState;
 import TWLSlick.RootPane;
 import de.matthiasmann.twl.ResizableFrame.ResizableAxis;
+import de.matthiasmann.twl.textarea.HTMLTextAreaModel;
 import de.matthiasmann.twl.textarea.SimpleTextAreaModel;
 import de.matthiasmann.twl.utils.PNGDecoder;
 import de.matthiasmann.twl.utils.PNGDecoder.Format;
@@ -89,13 +90,15 @@ public class PlayGame_Bid extends BasicTWLGameState {
 	// Confirmation Panel & Variables
 	Label lblConfirmation;
 	Button btnYes, btnNo;
+	TextArea description;
+	HTMLTextAreaModel descriptionModel;
 	
 	Image scorebackground, background;
 	private int header_x = 330;
 	private int header_y = 25;
 	private int timer_x = 600;
 	private int timer_y = 550;
-	private int fixed_y = 150;
+	private int fixed_y = 200;
 	
 	private String start_message = "";
 	private String full_start_message = "MAKE YOUR BID...";
@@ -201,7 +204,8 @@ public class PlayGame_Bid extends BasicTWLGameState {
 		full_start_counter = 0;
 		ticker = "";
 		tickerBoolean = true;
-		winString = "The highest bidder wins the value\n of the item in points!";
+		winString = "Think carefully.";
+		
 				
 		// Testing
 		/*
@@ -238,6 +242,14 @@ public class PlayGame_Bid extends BasicTWLGameState {
 			otherPlayerID = 1;
 			maximumBid = player.getScore();
 		}
+
+		// setup description
+		descriptionModel.setHtml("<html><body><div><p style='text-align: center;'>"
+				+ "You and " + otherPlayer.getName() + " are both "
+				+ "<a style='font-family: name;'>bidding</a> for the item using your points.</p>"
+				+ "<p style='margin-top: 10px; text-align: center;'>The player with the highest <a style='font-family: name;'>bid</a> wins the item for the cost of their winning bid.</p>"
+				+ "<p style='margin-top: 10px; text-align: center;'>The highest bidder will then win the <a style='font-family: name;'>value</a> of the item in <a style='font-family: name;'>points!</a></p>" 
+				+ "</div></body></html>");
 		
 		// Setup new item variables
 		item_id = HRRUClient.cs.getSecondary_id();
@@ -285,7 +297,8 @@ public class PlayGame_Bid extends BasicTWLGameState {
 		lblConfirmation.setVisible(false);
 		p1ResultPanel.setVisible(false);
 		p2ResultPanel.setVisible(false);
-		
+		description.setVisible(true);
+		rootPane.add(description);
 		rootPane.add(p1ResultPanel);
 		rootPane.add(p2ResultPanel);
 		rootPane.add(btnYes);
@@ -325,6 +338,11 @@ public class PlayGame_Bid extends BasicTWLGameState {
 		itemPanel.setPosition(50, fixed_y);
 		itemDescriptionModel = new SimpleTextAreaModel();
 		itemDescription = new TextArea(itemDescriptionModel);
+		descriptionModel = new HTMLTextAreaModel();
+		description = new TextArea(descriptionModel);
+		description.setTheme("trusttextarea");
+		description.setPosition(10,110);
+		description.setSize(780,100);
 		
 		lItemName = new Label("Name: ");
 		lDescription = new Label("Description: ");
@@ -367,8 +385,8 @@ public class PlayGame_Bid extends BasicTWLGameState {
 		btnNo.setTheme("choicebutton");
 		
 		lblConfirmation.setPosition((gcw/2) - lblConfirmation.getWidth()/2, fixed_y + 330);
-		btnYes.setPosition((gcw/2) - 152, fixed_y + 360);
-		btnNo.setPosition((gcw/2) - 152, fixed_y + 395);
+		btnYes.setPosition((gcw/2) - 310, 550);
+		btnNo.setPosition((gcw/2) + 10, 550);
 		btnYes.setSize(300, 30);
 		btnNo.setSize(300, 30);
 		
@@ -659,6 +677,7 @@ public class PlayGame_Bid extends BasicTWLGameState {
 				clock2 = 0;
 				clock3 = 0;
 				lblConfirmation.setVisible(false);
+				description.setVisible(false);
 				full_start_message = "The results are in...";
 				full_start_counter = 0;
 				ticker = "";
@@ -720,6 +739,7 @@ public class PlayGame_Bid extends BasicTWLGameState {
 					winCheck = biddingScore.isWin();
 					playerWon = biddingScore.getPlayerWon();
 					amountWon = biddingScore.getAmountWon();
+					winString = "No one won the item!";
 					if(winCheck)
 					{
 						winString = "You won " + amountWon + "!";
@@ -798,8 +818,8 @@ public class PlayGame_Bid extends BasicTWLGameState {
 			{
 				HRRUClient.cs.updateTimer(overallTimer);
 				System.out.println("Time Subtract" + (overallTimer));
-				HRRUClient.cs.setState(p1_turn);
 				HRRUClient.cs.setSync(false);
+				HRRUClient.cs.setState(p1_turn);
 				sbg.enterState(play);
 			}
 		}

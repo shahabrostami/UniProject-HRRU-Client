@@ -44,6 +44,11 @@ public class NetworkListener extends Listener{
 	}
 	
 	public void received(Connection c, Object o){
+		Log.set(Log.LEVEL_TRACE);
+		if(o instanceof Packet00SyncMessage)
+		{
+			HRRUClient.cs.setSync(true);
+		}
 		if(o instanceof Packet1CreateAnswer)
 		{
 			System.out.println("hey");
@@ -320,11 +325,28 @@ public class NetworkListener extends Listener{
 				HRRUClient.cs.getP2().getCurrentTrustScore().setPlayerReturnValue(playerReturnValue);
 			}
 			HRRUClient.cs.setGameState(3);
-			
 		}
-		if(o instanceof Packet00SyncMessage)
+		if(o instanceof Packet20SendPrison)
 		{
-			HRRUClient.cs.setSync(true);
+			int player = HRRUClient.cs.getPlayer();
+			int otherPlayerChoice = ((Packet20SendPrison)o).choice;
+			int otherPlayerTime = ((Packet20SendPrison)o).elapsedTime;
+			if(player==1)
+			{
+				HRRUClient.cs.getP1().getCurrentPrisonScore().setOtherPlayerChoice(otherPlayerChoice);
+				HRRUClient.cs.getP1().getCurrentPrisonScore().setOtherPlayerTime(otherPlayerTime);
+			}
+			if(player==2)
+			{
+				HRRUClient.cs.getP2().getCurrentPrisonScore().setOtherPlayerChoice(otherPlayerChoice);
+				HRRUClient.cs.getP2().getCurrentPrisonScore().setOtherPlayerTime(otherPlayerTime);
+			}
+			System.out.println("nice");
+			HRRUClient.cs.setGameState(2);
+		}
+		if(o instanceof Packet21EndPrison)
+		{
+			HRRUClient.cs.setGameState(3);
 		}
 	}
 

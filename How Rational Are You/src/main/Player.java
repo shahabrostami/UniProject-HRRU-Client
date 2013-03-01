@@ -26,6 +26,9 @@ public class Player {
 	private TrustScore currentTrustScore;
 	private ArrayList<TrustScore> trustScores;
 	
+	private PrisonScore currentPrisonScore;
+	private ArrayList<PrisonScore> prisonScores;
+	
 	public Player(String name) throws SlickException
 	{
 		this.setName(name);
@@ -38,6 +41,8 @@ public class Player {
 		this.biddingScores = new ArrayList<BiddingScore>();
 		this.setCurrentTrustScore(new TrustScore(0,0,0,0,0,0));
 		this.trustScores = new ArrayList<TrustScore>();
+		this.setCurrentPrisonScore(new PrisonScore(0,0,0,0,false,false));
+		this.prisonScores = new ArrayList<PrisonScore>();
 	}
 
 	public String getName() {
@@ -139,12 +144,10 @@ public class Player {
 		this.biddingScores.add(biddingScore);
 	}
 
-	
 	public ArrayList<TrustScore> getTrustScores() {
 		return trustScores;
 	}
 
-	
 	public void setTrustScores(ArrayList<TrustScore> trustScores) {
 		this.trustScores = trustScores;
 	}
@@ -160,4 +163,27 @@ public class Player {
 	public void setCurrentTrustScore(TrustScore currentTrustScore) {
 		this.currentTrustScore = currentTrustScore;
 	}
+
+	public PrisonScore getCurrentPrisonScore() {
+		return currentPrisonScore;
+	}
+
+	public void setCurrentPrisonScore(PrisonScore currentPrisonScore) {
+		this.currentPrisonScore = currentPrisonScore;
+	}
+
+	public ArrayList<PrisonScore> getPrisonScores() {
+		return prisonScores;
+	}
+
+	public void setPrisonScores(ArrayList<PrisonScore> prisonScores) {
+		this.prisonScores = prisonScores;
+	}
+	
+	public void addPrisonScore(PrisonScore prisonScore) {
+		this.prisonScores.add(prisonScore);
+	}
+
+	
+
 }

@@ -10,6 +10,7 @@ import org.lwjgl.input.Mouse;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 import com.esotericsoftware.kryonet.Client;
@@ -29,6 +30,7 @@ public class Play extends BasicTWLGameState {
 	public Client client;
 	DialogLayout firstPanel;
 	
+	Input input;
 	int gcw;
 	int gch;
 	
@@ -42,6 +44,8 @@ public class Play extends BasicTWLGameState {
 	private Player player;
 	private Player player1;
 	private Player player2;
+	private boolean p1ShowRollBanner = false;
+	private boolean p2ShowRollBanner = false;
 	
 	private Font loadFont, loadMainFont;
 	private BasicFont mainFont;
@@ -57,6 +61,7 @@ public class Play extends BasicTWLGameState {
 	private final int play_question = 6;
 	private final int play_bidgame = 7;
     private final int play_trustgame = 8;
+    private final int play_prisongame = 9;
 	private final int statistics = 15;
 	
 	// states: 0 = idle, 1 = rolling, 2 = navigate board
@@ -68,7 +73,7 @@ public class Play extends BasicTWLGameState {
 	
 	DialogLayout playerPanel;
 	Label lStatus, lPlayer1, lPlayer2, lPlayer1Score, lPlayer2Score;
-	Label player1turn;
+	Label player1turn, lblYourTurn;
 	Label lImgPlayer1, lImgPlayer2; 
 	ToggleButton btnRoll;
 	DialogLayout rollPanel;
@@ -76,7 +81,7 @@ public class Play extends BasicTWLGameState {
 	
 	public static ChatFrame chatFrame;
 	
-	Image scorebackground, background;
+	Image scorebackground, background, yourTurnBG;
 	
 	Packet00SyncMessage syncMessage;
 	Packet11TurnMessage turnMessage;
@@ -89,6 +94,7 @@ public class Play extends BasicTWLGameState {
 	@Override
 	public void enter(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		super.enter(gc, sbg);
+		rootPane.removeAllChildren();
 		state = 0;
 		clock = 0;
 		timer = HRRUClient.cs.getTimer();
@@ -110,6 +116,7 @@ public class Play extends BasicTWLGameState {
 			btnRoll.setVisible(true);
 			currentPlayer = true;
 			player = HRRUClient.cs.getP1();
+			p1ShowRollBanner = true;
 			/*
 			ActivityScore list;
 			if(!(player.getActivityScores().isEmpty()))
@@ -126,7 +133,7 @@ public class Play extends BasicTWLGameState {
 					System.out.println(list.getPoints());
 				}
 			}
-			*/
+			
 			
 			TrustScore list;
 			if(!(player.getTrustScores().isEmpty()))
@@ -144,13 +151,24 @@ public class Play extends BasicTWLGameState {
 				}
 			}
 			
+			*/
 		}
 		else {
+			p2ShowRollBanner = true;
 			btnRoll.setVisible(true);
 			currentPlayer = false;
 			player = HRRUClient.cs.getP2();
 		}
 		btnRoll.setActive(false);
+		
+		lblYourTurn = new Label();
+		lblYourTurn.setSize(800, 600);
+		lblYourTurn.setTheme("labelyourturn");
+		if(playerID == 1)
+			lblYourTurn.setVisible(true);
+		else
+			lblYourTurn.setVisible(false);
+		lblYourTurn.setPosition(0,0);
 		
 		chatFrame = new ChatFrame();
         chatFrame.setSize(296, 200);
@@ -167,10 +185,10 @@ public class Play extends BasicTWLGameState {
 		rollPanel.setSize(304, 270);
 		btnRoll.setTheme("rollbutton");
 		
-		rootPane.removeAllChildren();
 		rootPane.add(rollPanel);
 		rootPane.add(lStatus);
 		rootPane.add(chatFrame);
+		rootPane.add(lblYourTurn);
 		resetPosition();
 		
 		turnMessage = new Packet11TurnMessage();
@@ -218,6 +236,7 @@ public class Play extends BasicTWLGameState {
 		gch = gc.getHeight();
 		scorebackground = new Image("simple/playerscorebackground.png");
 		background = new Image("simple/background.png");
+		yourTurnBG = new Image("simple/yourturn.png");
 		
 		header = new BasicFont("Atari Font Full Version", Font.PLAIN, 12);
 		// Create custom font for question
@@ -267,6 +286,7 @@ public class Play extends BasicTWLGameState {
 		sbg.addState(new PlayQuestionTest(play_question, question_list));
 		sbg.addState(new PlayGame_Bid(play_bidgame));
 		sbg.addState(new PlayGame_Trust(play_trustgame));
+		sbg.addState(new PlayGame_Prisoners(play_prisongame));
 		sbg.addState(new Statistics(statistics));
 		//sbg.addState(new PlayPuzzle(play_puzzle, puzzle_list));
 		//sbg.addState(new PlayPuzzle(9));
@@ -275,6 +295,7 @@ public class Play extends BasicTWLGameState {
 		sbg.getState(play_question).init(gc, sbg);
 		sbg.getState(play_bidgame).init(gc, sbg);
 		sbg.getState(play_trustgame).init(gc, sbg);
+		sbg.getState(play_prisongame).init(gc, sbg);
 		sbg.getState(statistics).init(gc, sbg);
 		//sbg.getState(play_puzzle).init(gc, sbg);
 	}
@@ -309,13 +330,12 @@ public class Play extends BasicTWLGameState {
 
 	@Override
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
-		gc.getInput();
+		input = gc.getInput();
 		int xpos = Mouse.getX();
 		int ypos= Mouse.getY();
 		mouse = "timer:" + ((timer/1000)+1) + "\nxpos: " + xpos + "\nypos: " + ypos;
 		gameState = HRRUClient.cs.getState();
 		timer -= delta;
-		
 		if(gameState == serverlost)
 			sbg.enterState(0);
 		
@@ -324,9 +344,11 @@ public class Play extends BasicTWLGameState {
 				sbg.enterState(1);
 			else sbg.enterState(2);
 		}
+
+		else 
 		
 		if(timer <0)
-			sbg.enterState(10);
+			sbg.enterState(15);
 		
 		if(state == 0)
 		{
@@ -334,6 +356,14 @@ public class Play extends BasicTWLGameState {
 			{
 				if(gameState == p1_turn)
 				{
+					if(p1ShowRollBanner)
+					{
+						if(input.isMousePressed(Input.MOUSE_LEFT_BUTTON))
+						{
+							p1ShowRollBanner = false;
+							lblYourTurn.setVisible(false);
+						}
+					}
 					lStatus.setText(player1.getName() + ", it's your turn!");
 					currentPlayer = true;
 					btnRoll.setText("ROLL");
@@ -351,6 +381,15 @@ public class Play extends BasicTWLGameState {
 			{
 				if(gameState == p2_turn)
 				{
+					if(p2ShowRollBanner)
+					{
+						lblYourTurn.setVisible(true);
+						if(input.isMousePressed(Input.MOUSE_LEFT_BUTTON))
+						{
+							p2ShowRollBanner = false;
+							lblYourTurn.setVisible(false);
+						}
+					}
 					btnRoll.setText("ROLL");
 					lStatus.setText(player2.getName() + ", it's your turn!");
 					currentPlayer = true;
@@ -372,10 +411,10 @@ public class Play extends BasicTWLGameState {
 			if(state==1)
 			{
 				clock += delta;
-				if(clock>=6) // should be 60
+				if(clock>=60) // should be 60
 				{
 					dice.rollDice();
-					clock-=6; // should be 60
+					clock-=60; // should be 60
 					if(dice.getPosition()==0)
 					{
 						dice_counter = dice.getCurrentNumber();
@@ -390,10 +429,10 @@ public class Play extends BasicTWLGameState {
 			if(state == 2)
 			{
 				clock += delta;
-				if(clock>=20) // should be 200
+				if(clock>=200) // should be 200
 				{
 					player.updatePosition();
-					clock-=20;
+					clock-=200;
 					dice_counter--;
 					if(dice_counter==0)
 					{
@@ -419,7 +458,7 @@ public class Play extends BasicTWLGameState {
 					btnRoll.setText("WAITING FOR " + player1.getName());
 				btnRoll.setVisible(false);
 				state = 4;
-				clock = 20; // should be 200
+				clock = 200; // should be 200
 			}
 		}
 	
@@ -446,25 +485,26 @@ public class Play extends BasicTWLGameState {
 		{
 			if(gameState == play)
 			{
-				client.sendTCP(syncMessage);
 				System.out.println(timer + "timer");
 				int currentTile = board.gridSquares[player.getPosition()].getTileType();
 				int otherPlayerTile;
-					HRRUClient.cs.setTimer(timer);
-					if(HRRUClient.cs.getPlayer() == 1)
-						otherPlayerTile = board.gridSquares[HRRUClient.cs.getP2().getPosition()].getTileType();
-					else
-						otherPlayerTile = board.gridSquares[HRRUClient.cs.getP1().getPosition()].getTileType();
+				HRRUClient.cs.setTimer(timer);
+				if(HRRUClient.cs.getPlayer() == 1)
+					otherPlayerTile = board.gridSquares[HRRUClient.cs.getP2().getPosition()].getTileType();
+				else
+					otherPlayerTile = board.gridSquares[HRRUClient.cs.getP1().getPosition()].getTileType();
 					
-					int activity_id = HRRUClient.cs.getActivity_id();
-					System.out.println(otherPlayerTile + "the tile");
-					
-					if(otherPlayerTile == 3 || currentTile == 3)
-					{
-						if(activity_id == 1)
-							sbg.enterState(play_bidgame);
-						else if(activity_id == 2)
-							sbg.enterState(play_trustgame);
+				int activity_id = HRRUClient.cs.getActivity_id();
+				System.out.println(otherPlayerTile + "the tile");
+				
+				if(otherPlayerTile == 3 || currentTile == 3)
+				{
+					if(activity_id == 1)
+						sbg.enterState(play_bidgame);
+					else if(activity_id == 2)
+						sbg.enterState(play_trustgame);
+					else if(activity_id == 3)
+							sbg.enterState(play_prisongame);
 					}
 					else if(currentTile == 1)	
 					{

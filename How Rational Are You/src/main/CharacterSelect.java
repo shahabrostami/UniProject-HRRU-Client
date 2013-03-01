@@ -31,6 +31,7 @@ public class CharacterSelect extends BasicTWLGameState {
 	public Client client;
 	DialogLayout firstPanel;
 	
+	boolean p1ShowRollBanner, p2ShowRollBanner;
 	private int gameState;
 	int clock;
 	int player;
@@ -58,9 +59,9 @@ public class CharacterSelect extends BasicTWLGameState {
 	int p1charid, p2charid;
 	String p1name, p2name;
 	
+	Label lblYourTurn;
 	Label lTitle, lStatus, lSelCharacter, lP1Name, lP2Name;
 	Button btnSelect;
-	
 	
 	public CharacterSelect(int main) {
 		client = HRRUClient.conn.getClient();
@@ -93,12 +94,24 @@ public class CharacterSelect extends BasicTWLGameState {
 		
 		selectedCharacter = null;
 		
+		// Turn label
+		lblYourTurn = new Label();
+		lblYourTurn.setSize(800, 600);
+		lblYourTurn.setTheme("labelyourturn");
+		if(player == 1)
+			lblYourTurn.setVisible(true);
+		else
+			lblYourTurn.setVisible(false);
+		lblYourTurn.setPosition(0,0);
+				
 		if(player == 1) {
 			picking = true;
+			p1ShowRollBanner = true;
 			lStatus.setText(p1name + " you're first!");
 		}
 		else {
 			player = 2;
+			p2ShowRollBanner = true;
 			lStatus.setText("Waiting for " + p1name);
 		}
 		HRRUClient.cs.getP1().setScore(1000);
@@ -113,6 +126,7 @@ public class CharacterSelect extends BasicTWLGameState {
 		rootPane.add(lSelCharacter);
 		rootPane.add(lP1Name);
 		rootPane.add(lP2Name);
+		rootPane.add(lblYourTurn);
 		rootPane.setTheme("");		
 	}
 
@@ -187,9 +201,9 @@ public class CharacterSelect extends BasicTWLGameState {
 		lP2Name= new Label("");
 
 		btnSelect = new Button("Select Character");
-		
+		btnSelect.setTheme("choicebutton");
 		btnSelect.setPosition(450, 225);
-		btnSelect.setSize(300, 20);
+		btnSelect.setSize(300, 40);
         btnSelect.addCallback(new Runnable() {
             public void run() {
             	chooseCharacter();
@@ -259,6 +273,7 @@ public class CharacterSelect extends BasicTWLGameState {
 		mouse = "xpos: " + xpos + "\nypos: " + ypos;
 		gameState = HRRUClient.cs.getState();
 		
+		
 		if(gameState == serverlost)
 			sbg.enterState(0);
 		
@@ -270,6 +285,15 @@ public class CharacterSelect extends BasicTWLGameState {
 		}
 		
 		if(player == 1) {
+			if(p1ShowRollBanner)
+			{
+				lblYourTurn.setVisible(true);
+				if(input.isMousePressed(Input.MOUSE_LEFT_BUTTON))
+				{
+					p1ShowRollBanner = false;
+					lblYourTurn.setVisible(false);
+				}
+			}
 			if(gameState == p2_charselect) {
 				p2charid = HRRUClient.cs.getP2().getPlayerCharacterID();
 				p2chosen = true;
@@ -277,6 +301,15 @@ public class CharacterSelect extends BasicTWLGameState {
 		}
 		else if(player == 2) {
 			if(gameState == p1_charselect) {
+				if(p2ShowRollBanner)
+				{
+					lblYourTurn.setVisible(true);
+					if(input.isMousePressed(Input.MOUSE_LEFT_BUTTON))
+					{
+						p2ShowRollBanner = false;
+						lblYourTurn.setVisible(false);
+					}
+				}
 				p1charid = HRRUClient.cs.getP1().getPlayerCharacterID();
 				p1chosen = true;
 				lStatus.setText(p2name + ", it's your turn!");
@@ -285,6 +318,7 @@ public class CharacterSelect extends BasicTWLGameState {
 		}
 		
 		if(picking) {
+			
 			btnSelect.setEnabled(true);
 			if((xpos>startx*2 && xpos < startx*2+(74*5)) && (ypos>80 && ypos<gch-starty*2)) {
 				currentx = (xpos-startx*2)/74;

@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.serializers.BeanSerializer;
+import com.esotericsoftware.kryo.serializers.FieldSerializer;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.minlog.Log;
 
@@ -16,7 +17,6 @@ public class Connection {
 	
 	public Connection() {
 		client = new Client(65536, 16384);
-		
 		NetworkListener n1 = new NetworkListener();
 		n1.init(client);
 		client.addListener(n1);
@@ -56,6 +56,8 @@ public class Connection {
 		kryo.register(Packet17EndBid.class);
 		kryo.register(Packet18TrustFirst.class);
 		kryo.register(Packet19TrustSecond.class);
+		kryo.register(Packet20SendPrison.class);
+		kryo.register(Packet21EndPrison.class);
 		kryo.register(int[].class);
 	}
 	

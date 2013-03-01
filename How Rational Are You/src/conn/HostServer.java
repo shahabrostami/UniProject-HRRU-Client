@@ -1,6 +1,11 @@
 package conn;
 
+import java.awt.Font;
+import java.awt.FontFormatException;
+import java.io.IOException;
+
 import conn.Packet.*;
+import main.BasicFont;
 import main.HRRUClient;
 import main.Player;
 
@@ -18,9 +23,11 @@ import de.matthiasmann.twl.EditField.Callback;
 
 public class HostServer extends BasicTWLGameState {
 
+	// static variables
 	public static boolean p1ready = false;
 	public static boolean p2ready = false;
 	
+	// states
 	private final int serverlost = -4;
 	private final int cancelled = -2;
 	private final int waiting = 0; 
@@ -28,8 +35,18 @@ public class HostServer extends BasicTWLGameState {
 	private final int ready = 3;
 	private final int start = 4;
 	
-	int clock;
+	// Ticker variables
+	private int titleFontSize = 60;
+	private Font loadFont, loadTitleFont;
+	private BasicFont titleFont;
+	private String start_message = "";
+	private String full_start_message = "HOSTING A GAME...?";
+	private int full_start_counter = 0;
+	private String ticker = "";
+	private boolean tickerBoolean = true;
+	private int clock3, clock2, clock = 0;
 	
+	// state variables
 	private int state;
 	private boolean back = false;
 	public Client client;
@@ -56,6 +73,14 @@ public class HostServer extends BasicTWLGameState {
 	@Override
 	public void enter(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		super.enter(gc, sbg);
+		// RESET VARIABLES
+		start_message = "";
+		full_start_message = "HOSTING A GAME...?";
+		full_start_counter = 0;
+		ticker = "";
+		tickerBoolean = true;
+		clock2 = 0;
+		clock3 = 0;
 		clock = 300;
         rootPane.removeAllChildren();
         hostPanel.setTheme("login-panel");
@@ -188,10 +213,24 @@ public class HostServer extends BasicTWLGameState {
 
 	@Override
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
+		// game properties
 		gcw = gc.getWidth();
 		gch = gc.getHeight();
 		gc.setShowFPS(false);
 		
+		// font properties
+		try {
+			loadFont = java.awt.Font.createFont(java.awt.Font.TRUETYPE_FONT,
+					      org.newdawn.slick.util.ResourceLoader.getResourceAsStream("font/visitor2.ttf"));
+		} catch (FontFormatException e) {
+				e.printStackTrace();
+		} catch (IOException e) {
+				e.printStackTrace();
+		}
+		loadTitleFont = loadFont.deriveFont(Font.BOLD,titleFontSize);
+		titleFont = new BasicFont(loadTitleFont);
+		
+		// GUI properties
 		lStatus = new Label("Enter your name and a password for your game.");
 		lPlayer1 = new Label();
 		lPlayer2 = new Label();
@@ -250,6 +289,11 @@ public class HostServer extends BasicTWLGameState {
             }
         });
         
+        btnStart.setTheme("choicebutton");
+        btnReady.setTheme("choicebutton");
+        btnJoin.setTheme("choicebutton");
+        btnBack.setTheme("choicebutton");
+        btnCancel.setTheme("choicebutton");
 
 	    hostPanel.setIncludeInvisibleWidgets(false);
         DialogLayout.Group hLabels = hostPanel.createParallelGroup(lName, lPassword);
@@ -290,12 +334,15 @@ public class HostServer extends BasicTWLGameState {
 
 	@Override
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
-
+		g.setFont(titleFont.get());
+		g.drawString("> " + start_message + "" + ticker, 50, 50);
 	}
 
 	@Override
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
 		// Back to main menu
+		clock3 += delta;
+		clock2 += delta;
 		if(back) {
 			lStatus.setText("Enter your name and a password for your game.");
 			sbg.enterState(0);
@@ -303,6 +350,31 @@ public class HostServer extends BasicTWLGameState {
 		}
 		
 		state = HRRUClient.cs.getState();
+		
+		// full message ticker
+		if(clock3 > 100){
+			if(full_start_counter < full_start_message.length())
+			{
+				start_message += full_start_message.substring(full_start_counter, full_start_counter+1);
+				full_start_counter++;
+				clock3-=100;
+			}
+		}
+		// ticker symbol
+		if(clock2>999)
+		{
+			clock2-=1000;
+			if(tickerBoolean) 
+			{
+				ticker = "|";
+				tickerBoolean = false;
+			}
+			else
+			{
+				ticker = "";
+				tickerBoolean = true;
+			}
+		}
 		
 		// Connection to server lost.
 		if(state == serverlost)

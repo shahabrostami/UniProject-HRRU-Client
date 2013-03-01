@@ -139,7 +139,7 @@ public class PlayQuestionTest extends BasicTWLGameState {
 			choices[i].setVisible(true);
 			choices[i].setEnabled(true);
 		}
-		currentAnswer = -1;
+		currentAnswer = 0;
 		lblConfirmation.setVisible(false);
 		btnYes.setVisible(false);
 		btnNo.setVisible(false);
