@@ -44,8 +44,8 @@ public class Play extends BasicTWLGameState {
 	private Player player;
 	private Player player1;
 	private Player player2;
-	private boolean p1ShowRollBanner = false;
-	private boolean p2ShowRollBanner = false;
+	private boolean p1ShowRollBanner, p1ShowWaitBanner = false;
+	private boolean p2ShowRollBanner, p2ShowWaitBanner = false;
 	
 	private Font loadFont, loadMainFont;
 	private BasicFont mainFont;
@@ -62,6 +62,7 @@ public class Play extends BasicTWLGameState {
 	private final int play_bidgame = 7;
     private final int play_trustgame = 8;
     private final int play_prisongame = 9;
+    private final int play_ultgame = 10;
 	private final int statistics = 15;
 	
 	// states: 0 = idle, 1 = rolling, 2 = navigate board
@@ -73,15 +74,19 @@ public class Play extends BasicTWLGameState {
 	
 	DialogLayout playerPanel;
 	Label lStatus, lPlayer1, lPlayer2, lPlayer1Score, lPlayer2Score;
-	Label player1turn, lblYourTurn;
+	Label player1turn, lblYourTurn, lblYourWait;
 	Label lImgPlayer1, lImgPlayer2; 
 	ToggleButton btnRoll;
-	DialogLayout rollPanel;
+	DialogLayout rollPanel, backgroundLayout;
 	BasicFont header; 
+	
+	DialogLayout backgroundChoices;
+	Image background0, background1, background2, background3, background4, background5;
+	ToggleButton tBackground0, tBackground1, tBackground2, tBackground3, tBackground4, tBackground5;
 	
 	public static ChatFrame chatFrame;
 	
-	Image scorebackground, background, yourTurnBG;
+	Image scorebackground, background, yourTurnBG, yourWaitBG;
 	
 	Packet00SyncMessage syncMessage;
 	Packet11TurnMessage turnMessage;
@@ -108,7 +113,7 @@ public class Play extends BasicTWLGameState {
 		syncMessage.sessionID = sessionID;
 		syncMessage.player = playerID;
 		
-		board = new Board(10);
+		board = new Board(9);
 		System.out.println("Time After: " + timer);
 		
 		if(playerID == 1)
@@ -117,6 +122,7 @@ public class Play extends BasicTWLGameState {
 			currentPlayer = true;
 			player = HRRUClient.cs.getP1();
 			p1ShowRollBanner = true;
+			// p1ShowWaitBanner = false;
 			/*
 			ActivityScore list;
 			if(!(player.getActivityScores().isEmpty()))
@@ -155,40 +161,46 @@ public class Play extends BasicTWLGameState {
 		}
 		else {
 			p2ShowRollBanner = true;
+			// p2ShowWaitBanner = true;
 			btnRoll.setVisible(true);
 			currentPlayer = false;
 			player = HRRUClient.cs.getP2();
 		}
 		btnRoll.setActive(false);
 		
-		lblYourTurn = new Label();
-		lblYourTurn.setSize(800, 600);
-		lblYourTurn.setTheme("labelyourturn");
 		if(playerID == 1)
+		{
+			lStatus.setTheme("statusgreen");
 			lblYourTurn.setVisible(true);
+			// lblYourWait.setVisible(false);
+		}
 		else
+		{
+			lStatus.setTheme("statuswhite");
 			lblYourTurn.setVisible(false);
+			// lblYourWait.setVisible(true);
+		}
+
+		lStatus.reapplyTheme();
 		lblYourTurn.setPosition(0,0);
 		
 		chatFrame = new ChatFrame();
         chatFrame.setSize(296, 200);
         chatFrame.setDraggable(false);
         chatFrame.setResizableAxis(ResizableAxis.NONE);
+        chatFrame.requestKeyboardFocus();
 		
-        lStatus.setText(player1.getName() + ", it's your turn!");
-        lStatus.setPosition(305, 0);
-        lStatus.setTheme("scoreatarititle");
-        lStatus.setSize(495, 106);
-        
-		rollPanel.setTheme("roll-panel");
-		rollPanel.setPosition(0,105);
-		rollPanel.setSize(304, 270);
-		btnRoll.setTheme("rollbutton");
+        if(playerID == 1)
+        	lStatus.setText(player1.getName() + ", it's your turn!");
+        else
+        	lStatus.setText("Waiting for " + player1.getName() + "...");
 		
 		rootPane.add(rollPanel);
 		rootPane.add(lStatus);
 		rootPane.add(chatFrame);
 		rootPane.add(lblYourTurn);
+		rootPane.add(backgroundLayout);
+		// rootPane.add(lblYourWait);
 		resetPosition();
 		
 		turnMessage = new Packet11TurnMessage();
@@ -215,6 +227,14 @@ public class Play extends BasicTWLGameState {
 		state = 1;
 	}
 	
+	void setBackgroundsTogglesFalse(){
+	    tBackground0.setActive(false);	
+	    tBackground1.setActive(false);	
+	    tBackground2.setActive(false);	
+	    tBackground3.setActive(false);	
+	    tBackground4.setActive(false);	
+	    tBackground5.setActive(false);	
+	}
 	@Override
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		// Game 
@@ -236,7 +256,15 @@ public class Play extends BasicTWLGameState {
 		gch = gc.getHeight();
 		scorebackground = new Image("simple/playerscorebackground.png");
 		background = new Image("simple/background.png");
+		background0 = new Image("simple/background.png");
+		background1 = new Image("simple/backgroundblue2.png");
+		background2 = new Image("simple/backgroundgreen.png");
+		background3 = new Image("simple/backgroundgreen2.png");
+		background4 = new Image("simple/backgroundgreen3.png");
+		background5 = new Image("simple/backgroundblue.png");
+		
 		yourTurnBG = new Image("simple/yourturn.png");
+		yourWaitBG = new Image("simple/yourwait.png");
 		
 		header = new BasicFont("Atari Font Full Version", Font.PLAIN, 12);
 		// Create custom font for question
@@ -263,6 +291,13 @@ public class Play extends BasicTWLGameState {
 			e.printStackTrace();
 		}
 		
+		lblYourTurn = new Label();
+		lblYourTurn.setSize(800, 600);
+		lblYourTurn.setTheme("labelyourturn");
+		lblYourWait = new Label();
+		lblYourWait.setSize(800, 600);
+		lblYourWait.setTheme("labelyourwait");
+		
 		dice = new Dice(1);
 		
 		rollPanel = new DialogLayout();
@@ -283,10 +318,81 @@ public class Play extends BasicTWLGameState {
         rollPanel.setVerticalGroup(rollPanel.createSequentialGroup()
         		.addGap(180).addWidget(btnRoll));
 		
+        // Background layout
+        backgroundLayout = new DialogLayout();
+        backgroundLayout.setSize(400,80);
+        backgroundLayout.setPosition(325,500);
+        tBackground0 = new ToggleButton("0");
+        tBackground1 = new ToggleButton("1");
+        tBackground2 = new ToggleButton("2");
+        tBackground3 = new ToggleButton("3");
+        tBackground4 = new ToggleButton("4");
+        tBackground5 = new ToggleButton("5");
+        tBackground0.setActive(true);
+        tBackground0.setSize(10, 10);
+        tBackground1.setSize(10, 10);
+        tBackground2.setSize(10, 10);
+        tBackground3.setSize(10, 10);
+        tBackground4.setSize(10, 10);
+        tBackground5.setSize(10, 10);
+        
+        tBackground0.addCallback(new Runnable() {
+            public void run() {
+                background = background0;
+                setBackgroundsTogglesFalse();
+                tBackground0.setActive(true);
+            }
+        });
+        tBackground1.addCallback(new Runnable() {
+            public void run() {
+                background = background1;
+                setBackgroundsTogglesFalse();
+                tBackground1.setActive(true);
+            }
+        });
+        tBackground2.addCallback(new Runnable() {
+            public void run() {
+                background = background2;
+                setBackgroundsTogglesFalse();
+                tBackground2.setActive(true);
+            }
+        });
+        tBackground3.addCallback(new Runnable() {
+            public void run() {
+                background = background3;
+                setBackgroundsTogglesFalse();
+                tBackground3.setActive(true);
+            }
+        });
+        tBackground4.addCallback(new Runnable() {
+            public void run() {
+                background = background4;
+                setBackgroundsTogglesFalse();
+                tBackground4.setActive(true);
+            }
+        });
+        tBackground5.addCallback(new Runnable() {
+            public void run() {
+                background = background5;
+                setBackgroundsTogglesFalse();
+                tBackground5.setActive(true);
+            }
+        });
+        
+        Label lblBackground = new Label("Background: ");
+        DialogLayout.Group hTB = backgroundLayout.createSequentialGroup(lblBackground, tBackground0, tBackground1,tBackground2,tBackground3,tBackground4,tBackground5);
+        
+        backgroundLayout.setHorizontalGroup(backgroundLayout.createSequentialGroup().addGroup(hTB));
+        
+        backgroundLayout.setVerticalGroup(backgroundLayout.createSequentialGroup()
+				.addGap(60).addGroup(backgroundLayout.createParallelGroup(lblBackground, tBackground0, tBackground1,tBackground2,tBackground3,tBackground4,tBackground5)));
+        
+        
 		sbg.addState(new PlayQuestionTest(play_question, question_list));
 		sbg.addState(new PlayGame_Bid(play_bidgame));
 		sbg.addState(new PlayGame_Trust(play_trustgame));
 		sbg.addState(new PlayGame_Prisoners(play_prisongame));
+		sbg.addState(new PlayGame_Ultimatum(play_ultgame));
 		sbg.addState(new Statistics(statistics));
 		//sbg.addState(new PlayPuzzle(play_puzzle, puzzle_list));
 		//sbg.addState(new PlayPuzzle(9));
@@ -296,19 +402,23 @@ public class Play extends BasicTWLGameState {
 		sbg.getState(play_bidgame).init(gc, sbg);
 		sbg.getState(play_trustgame).init(gc, sbg);
 		sbg.getState(play_prisongame).init(gc, sbg);
+		sbg.getState(play_ultgame).init(gc, sbg);
 		sbg.getState(statistics).init(gc, sbg);
 		//sbg.getState(play_puzzle).init(gc, sbg);
+		
+		lStatus.setPosition(305, 10);
+        lStatus.setTheme("statuswhite");
+        lStatus.setSize(495, 107);
+        
+		rollPanel.setTheme("roll-panel");
+		rollPanel.setPosition(0,105);
+		rollPanel.setSize(304, 270);
+		btnRoll.setTheme("importantrollbutton");
 	}
 
 	@Override
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
-		g.drawImage(background, 0,0);
-		for(int i = 0; i < board.getScale()*3-3; i++)
-			g.drawImage(board.gridSquares[i].gridSquare.getImage(), board.gridSquares[i].getx(), board.gridSquares[i].gety());
-		
-		for(int j = board.getSize()-1; j >= board.getScale()*3-3; j--)
-			g.drawImage(board.gridSquares[j].gridSquare.getImage(), board.gridSquares[j].getx(), board.gridSquares[j].gety());
-		
+		g.drawImage(background, 0,0);		
 		g.drawImage(scorebackground, 0,0);
 		g.setFont(mainFont.get());
 		g.drawImage(player1.getPlayerCharacter().getCharacterImage(), 13,13);
@@ -318,12 +428,18 @@ public class Play extends BasicTWLGameState {
 		g.drawString("" + player1.getScore(), 204, 22);
 		g.drawString("" + player2.getScore(), 204, 64);
 		
-		g.drawImage(player1.getPlayerCharacter().getCharacterImage(), board.gridSquares[player1.getPosition()].getx(), board.gridSquares[player1.getPosition()].gety());
-		g.drawImage(player2.getPlayerCharacter().getCharacterImage(), board.gridSquares[player2.getPosition()].getx(), board.gridSquares[player2.getPosition()].gety());
-		
 		g.drawString(mouse, 650, 550);
 		
 		g.scale(1.25f, 1.25f);
+		for(int i = 0; i < board.getScale()*3-3; i++)
+			g.drawImage(board.gridSquares[i].gridSquare.getImage(), board.gridSquares[i].getx(), board.gridSquares[i].gety());
+		
+		for(int j = board.getSize()-1; j >= board.getScale()*3-3; j--)
+			g.drawImage(board.gridSquares[j].gridSquare.getImage(), board.gridSquares[j].getx(), board.gridSquares[j].gety());
+		
+		g.drawImage(player1.getPlayerCharacter().getCharacterImage(), board.gridSquares[player1.getPosition()].getx(), board.gridSquares[player1.getPosition()].gety());
+		g.drawImage(player2.getPlayerCharacter().getCharacterImage(), board.gridSquares[player2.getPosition()].getx(), board.gridSquares[player2.getPosition()].gety());
+		
 		if(state>0 && state < 3)
 			dice.dice.draw(105, 97+dice.getY());
 	}
@@ -356,6 +472,7 @@ public class Play extends BasicTWLGameState {
 			{
 				if(gameState == p1_turn)
 				{
+					// if p1 turn, show turn banner
 					if(p1ShowRollBanner)
 					{
 						if(input.isMousePressed(Input.MOUSE_LEFT_BUTTON))
@@ -366,14 +483,14 @@ public class Play extends BasicTWLGameState {
 					}
 					lStatus.setText(player1.getName() + ", it's your turn!");
 					currentPlayer = true;
-					btnRoll.setText("ROLL");
+					btnRoll.setText("CLICK TO ROLL");
 					btnRoll.setVisible(true);
 				}
 				else
 				{
 					lStatus.setText("It's " + player2.getName() + "'s turn.");
 					currentPlayer = false;
-					btnRoll.setText("WAITING FOR " + player2.getName());
+					btnRoll.setText("Waiting for " + player2.getName() + "...");
 					btnRoll.setVisible(false);
 				}
 			}
@@ -381,6 +498,9 @@ public class Play extends BasicTWLGameState {
 			{
 				if(gameState == p2_turn)
 				{
+					// if p2 turn, show turn banner
+					lStatus.setTheme("statusgreen");
+					lStatus.reapplyTheme();
 					if(p2ShowRollBanner)
 					{
 						lblYourTurn.setVisible(true);
@@ -390,13 +510,34 @@ public class Play extends BasicTWLGameState {
 							lblYourTurn.setVisible(false);
 						}
 					}
-					btnRoll.setText("ROLL");
+					btnRoll.setText("CLICK TO ROLL");
 					lStatus.setText(player2.getName() + ", it's your turn!");
 					currentPlayer = true;
 					btnRoll.setVisible(true);
 				}
 				else
 				{
+					// WAIT BANNER if p2 waitng, show wait banner
+					/*
+					if(p2ShowWaitBanner)
+					{
+						lblYourWait.setVisible(true);
+						if(input.isMousePressed(Input.MOUSE_LEFT_BUTTON))
+						{
+							p2ShowWaitBanner = false;
+							lblYourWait.setVisible(false);
+						}
+					}*/
+					if((timer % 2000) < 1000)
+					{
+						lStatus.setTheme("statuswhite");
+						lStatus.reapplyTheme();
+					}
+					else
+					{
+						lStatus.setTheme("statusred");
+						lStatus.reapplyTheme();
+					}
 					lStatus.setText("It's " + player1.getName() + "'s turn.");
 					currentPlayer = false;
 					btnRoll.setText("WAITING FOR " + player1.getName());
@@ -408,6 +549,7 @@ public class Play extends BasicTWLGameState {
 		if(currentPlayer)
 		{
 			//roll dice
+			lblYourWait.setVisible(false);
 			if(state==1)
 			{
 				clock += delta;
@@ -447,15 +589,21 @@ public class Play extends BasicTWLGameState {
 				turnMessage.playerID = playerID;
 				turnMessage.moves = dice_counter_copy;
 				turnMessage.tile = board.gridSquares[player.getPosition()].getTileType();
+				System.out.println("tiletype" + turnMessage.tile);
 				client.sendTCP(turnMessage);
 				
 				if(playerID == 1)
 				{
+					p1ShowWaitBanner = true;
 					HRRUClient.cs.setState(p2_turn);
-					btnRoll.setText("WAITING FOR " + player2.getName());
+					lStatus.setText("Waiting for " + player2.getName() + "...");
+					btnRoll.setText("Waiting for " + player2.getName() + "...");
 				}
 				else
-					btnRoll.setText("WAITING FOR " + player1.getName());
+				{
+					lStatus.setText("Waiting for " + player1.getName() + "...");
+					btnRoll.setText("Waiting for " + player1.getName() + "...");
+				}
 				btnRoll.setVisible(false);
 				state = 4;
 				clock = 200; // should be 200
@@ -464,8 +612,35 @@ public class Play extends BasicTWLGameState {
 	
 		if(state == 4)
 		{
+			// WAIT BANNER if p1 is waiting
+			/*
+			if(p1ShowWaitBanner && playerID == 1)
+			{
+				rootPane.removeChild(lblYourWait);
+				rootPane.add(lblYourWait);
+				lblYourWait.setVisible(true);
+				if(input.isMousePressed(Input.MOUSE_LEFT_BUTTON))
+				{
+					p1ShowWaitBanner = false;
+					lblYourWait.setVisible(false);
+				}
+			}
+			*/
+			if((timer % 2000) < 1000)
+			{
+				lStatus.setTheme("statuswhite");
+				lStatus.reapplyTheme();
+			}
+			else
+			{
+				lStatus.setTheme("statusred");
+				lStatus.reapplyTheme();
+			}
 			if(gameState == start_play)
 			{
+				// lblYourWait.setVisible(false);
+				lStatus.setTheme("statusgreen");
+				lStatus.reapplyTheme();
 				clock--;
 				lStatus.setText("Starting in " + (clock/100+1) + "...");
 				if(clock<=0)
@@ -501,19 +676,15 @@ public class Play extends BasicTWLGameState {
 				{
 					if(activity_id == 1)
 						sbg.enterState(play_bidgame);
-					else if(activity_id == 2)
+					if(activity_id == 2)
 						sbg.enterState(play_trustgame);
-					else if(activity_id == 3)
-							sbg.enterState(play_prisongame);
-					}
-					else if(currentTile == 1)	
-					{
-						sbg.enterState(play_question);
-					}
-					else if(currentTile == 2)
-					{
-						// sbg.enterState(play_puzzle);
-					}
+					if(activity_id == 3)
+						sbg.enterState(play_prisongame);
+					if(activity_id == 4)
+						sbg.enterState(play_ultgame);
+				}
+				else
+					sbg.enterState(play_question);
 			}
 		}
 	}

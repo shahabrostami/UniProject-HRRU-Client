@@ -56,7 +56,10 @@ public class PlayGame_Trust extends BasicTWLGameState {
 	
 	public Client client;
 	DialogLayout giveResultPanel, returnResultPanel;
+	Label lGive, lblGive, lChoose, lblChoose, lKeep, lblKeep;
 	Label lGave, lblGave;
+	Label lKeep2, lblKeep2, lReturn, lblReturn;
+	Label lKept, lblKept, lReceivedBack, lblReceivedBack;
 	Label lReceived, lblReceived, lReturned, lblReturned;
 	Label lProfit, lProfit2, lblProfit, lblProfit2;
 	Label lNew, lNew2, lblNew, lblNew2;
@@ -91,7 +94,7 @@ public class PlayGame_Trust extends BasicTWLGameState {
 	Label lblFirst, lblSecond;
 	TextArea questionDescription;
 	HTMLTextAreaModel questionDescriptionModel;
-	ValueAdjusterInt vaBid;
+	ValueAdjusterInt vaBid; 
 	Button btnSubmit;
 	
 	// Confirmation Panel & Variables
@@ -128,7 +131,7 @@ public class PlayGame_Trust extends BasicTWLGameState {
 	private BasicFont mainFont, titleFont, readyFont, questionFont, timerFont, timerMFont;;
 	
 	// Timers and state variables
-	private int clock2,clock3,timer,timer2,overallTimer = 0;
+	private int clock2,clock3,clock4,timer,timer2,overallTimer = 0;
 	private boolean end, ready, win, time_out, finished, resume = false;
 	
 	private boolean playedBefore = false;
@@ -151,9 +154,9 @@ public class PlayGame_Trust extends BasicTWLGameState {
 		btnNo.setVisible(false);
 		lblConfirmation.setPosition((gcw/2) - lblConfirmation.getWidth()/2, fixed_y + 350);
 		if(bPlayerGive)
-			lblConfirmation.setText("You gave " + giveValue + ".\nWaiting for " + otherPlayer.getName());
+			lblConfirmation.setText("\nYou gave " + giveValue + ".\nWaiting for " + otherPlayer.getName());
 		else
-			lblConfirmation.setText("You returned " + returnValue + " points!");
+			lblConfirmation.setText("\n\nYou returned " + returnValue + " points!");
 	}
 	
 	void disableChoices()
@@ -198,7 +201,7 @@ public class PlayGame_Trust extends BasicTWLGameState {
 			HRRUClient.cs.setGameState(1);
 			client.sendTCP(packetGive);
 
-			lblFirst.setText("You gave " + giveValue + " points!\n\n"
+			lblFirst.setText("\nYou gave " + giveValue + " points!\n\n"
 					+	"This gives " + otherPlayer.getName() + " " + giveValueFull + " points!");
 
 			disableGUI();
@@ -211,7 +214,7 @@ public class PlayGame_Trust extends BasicTWLGameState {
 			packetReturn.player = playerID;
 			HRRUClient.cs.setGameState(3);
 			client.sendTCP(packetReturn);
-			lblSecond.setText("You returned " + returnValue + " points!");
+			lblSecond.setText("\n\nYou returned " + returnValue + " points!");
 			disableGUI();
 		}
 	}
@@ -237,8 +240,9 @@ public class PlayGame_Trust extends BasicTWLGameState {
 				
 		// Reset main variables
 		rootPane.removeAllChildren();
-		timer = 50;
+		timer = 70;
 		timer2 = 999;
+		clock4 = 0;
 		overallTimer = 0;
 		sessionID = HRRUClient.cs.getSessionID();
 		HRRUClient.cs.setGameState(0);
@@ -318,26 +322,26 @@ public class PlayGame_Trust extends BasicTWLGameState {
 			vaBid.setMinMaxValue(0, maxToGive);
 			vaBid.setVisible(true);
 			btnSubmit.setVisible(true);
-			lblFirst.setText("Submit value for " + otherPlayer.getName());
+			lblFirst.setText("Submit value for " + otherPlayer.getName() + "...");
 			lblSecond.setText("");
 			playerGiveName = player.getName();
 			playerReturnName = otherPlayer.getName();
 		}
 		else
 		{
-			System.out.println("player is playerReturn" + playerReturn + "" + playerID);
+			System.out.println("player is playerReturn" + playerReturn + "" + playerID + ".");
 			bPlayerReturn = true;
 			bPlayerGive = false;
 			returnScore = player.getScore();
 			giveScore = otherPlayer.getScore();
 			vaBid.setVisible(false);
 			btnSubmit.setVisible(false);
-			lblFirst.setText("Waiting for " + otherPlayer.getName());
+			lblFirst.setText("\n\nWaiting for " + otherPlayer.getName());
 			lblSecond.setText("");
 			playerReturnName = player.getName();
 			playerGiveName = otherPlayer.getName();
 		}
-		
+		lGive.setText(playerReturnName + " receives: ");
 		// Set GUI
 		if(playerGive == 1)
 		{
@@ -357,10 +361,10 @@ public class PlayGame_Trust extends BasicTWLGameState {
 		// Set up text
 		
 		questionDescriptionModel.setHtml("<html><body><div>"
-				+ "<p style='margin-top: 10px; text-align: center;'><a style='font-family: name;'>" + playerGiveName + "</a> can give any amount up to <a style='font-family: highlight;'>" + maxToGive + "</a> to "
-				+ "<a style='font-family: name;'>" + playerReturnName + "</a></p>"
-				+ "<p style='margin-top: 10px; text-align: center;'><a style='font-family: name;'>" + playerGiveName + "</a> keeps the rest of the amount not given.</p><p style='margin-top: 10px; text-align: center;'>The amount given is multiplied by "
+				+ "<p style='margin-top: 10px; text-align: center;'><a style='font-family: name;'>" + playerGiveName + "</a> can choose any amount up to <a style='font-family: highlight;'>" + maxToGive + "</a>.</p>"
+				+  "<p style='margin-top: 10px; text-align: center;'>The amount chosen is multiplied by "
 				+ "<a style='font-family: highlight;'>" + multiplier + "</a> and given to <a style='font-family: name;'>" + playerReturnName + ".</a></p>"
+				+ "<p style='margin-top: 10px; text-align: center;'><a style='font-family: name;'>" + playerGiveName + "</a> keeps the rest of the amount not given.</p>"
 				+ "<p style='margin-top: 10px; text-align: center;'><a style='font-family: name;'>" + playerReturnName + "</a> can then return any of this amount back to <a style='font-family: name;'>"+ playerGiveName + "</a>.</p>"
 				+ "</div></body></html>");
 		
@@ -369,6 +373,13 @@ public class PlayGame_Trust extends BasicTWLGameState {
 		btnYes.setVisible(false);
 		btnNo.setVisible(false);
 		lblConfirmation.setVisible(false);
+		lKeep2.setVisible(false);
+		lReturn.setVisible(false);
+		lblKeep2.setVisible(false);
+		lblReturn.setVisible(false);
+		questionDescription.setVisible(true);
+		firstPanel.setVisible(true);
+		secondPanel.setVisible(true);
 		
 		// Setup new item variables
 		rootPane.add(btnYes);
@@ -435,19 +446,63 @@ public class PlayGame_Trust extends BasicTWLGameState {
 		// Setup Player GUI
 		firstPanel = new DialogLayout();
 		secondPanel = new DialogLayout();
-		firstPanel.setSize(380, 70);
-		secondPanel.setSize(380, 70);
+		firstPanel.setSize(380, 80);
+		secondPanel.setSize(380, 80);
 		firstPanel.setTheme("firsttrust-panel");
 		secondPanel.setTheme("secondtrust-panel");
 		firstPanel.setPosition(100, 260);
 		secondPanel.setPosition(100, 370);
+		firstPanel.setIncludeInvisibleWidgets(false);
+		secondPanel.setIncludeInvisibleWidgets(false);
 		
 		lblFirst = new Label("");
 		lblSecond = new Label("");
-		firstPanel.setHorizontalGroup(firstPanel.createParallelGroup().addWidget(lblFirst));
-		firstPanel.setVerticalGroup(firstPanel.createSequentialGroup().addWidget(lblFirst));
-		secondPanel.setHorizontalGroup(secondPanel.createParallelGroup().addWidget(lblSecond));
-		secondPanel.setVerticalGroup(secondPanel.createSequentialGroup().addWidget(lblSecond));
+		lGive = new Label("Give: ");
+		lblGive = new Label("");
+		lChoose = new Label("Choose: ");
+		lblChoose = new Label("");
+		lKeep = new Label("Keep: ");
+		lblKeep = new Label("");
+		
+		lGive.setTheme("labelscoretotal");
+		lKeep.setTheme("labelscoretotal");
+		lChoose.setTheme("labelscoretotal");
+		lblGive.setTheme("labelscoretotalright");
+		lblKeep.setTheme("labelscoretotalright");
+		lblChoose.setTheme("labelscoretotalright");
+		
+		DialogLayout.Group hGLeft = firstPanel.createParallelGroup(lGive, lKeep, lChoose);
+		DialogLayout.Group hGRight = firstPanel.createParallelGroup(lblGive, lblKeep, lblChoose);
+		firstPanel.setHorizontalGroup(firstPanel.createParallelGroup()
+				.addWidget(lblFirst)
+				.addGroup(firstPanel.createSequentialGroup(hGLeft, hGRight)));
+		
+		firstPanel.setVerticalGroup(firstPanel.createSequentialGroup()
+				.addWidget(lblFirst)
+				.addGroup(firstPanel.createParallelGroup(lChoose, lblChoose))
+				.addGroup(firstPanel.createParallelGroup(lKeep, lblKeep))
+				.addGroup(firstPanel.createParallelGroup(lGive, lblGive)));
+		
+		lKeep2 = new Label("Keep: ");
+		lblKeep2 = new Label("");
+		lReturn = new Label("Return: ");
+		lblReturn = new Label("");
+		
+		lKeep2.setTheme("labelscoretotal");
+		lReturn.setTheme("labelscoretotal");
+		lblKeep2.setTheme("labelscoretotalright");
+		lblReturn.setTheme("labelscoretotalright");
+		
+		DialogLayout.Group hRLeft = secondPanel.createParallelGroup(lKeep2, lReturn);
+		DialogLayout.Group hRRight = secondPanel.createParallelGroup(lblKeep2, lblReturn);
+		
+		secondPanel.setHorizontalGroup(secondPanel.createParallelGroup()
+				.addWidget(lblSecond)
+				.addGroup(secondPanel.createSequentialGroup(hRLeft, hRRight)));
+		secondPanel.setVerticalGroup(secondPanel.createSequentialGroup()
+				.addWidget(lblSecond)
+				.addGroup(secondPanel.createParallelGroup(lKeep2, lblKeep2))
+				.addGroup(secondPanel.createParallelGroup(lReturn, lblReturn)));
 		
 		// Confirmation GUI
 		lblConfirmation = new Label("");
@@ -481,6 +536,7 @@ public class PlayGame_Trust extends BasicTWLGameState {
 		vaBid.setTooltipContent(null);
 		vaBid.setSize(200, 30);
 		vaBid.setPosition((gcw/2) - vaBid.getWidth()/2, fixed_y + 340);
+		
 		btnSubmit = new Button("Submit Offer");
 		btnSubmit.setSize(200, 30);
 		btnSubmit.setPosition((gcw/2) - btnSubmit.getWidth()/2 - 2, fixed_y + 380);
@@ -512,6 +568,12 @@ public class PlayGame_Trust extends BasicTWLGameState {
 		lGave = new Label("Gave: ");
 		lblGave = new Label(giveValue + " out of " + maxToGive);
 		lblGave.setTheme("labelright");
+		lKept = new Label("Kept: ");
+		lblKept = new Label((maxToGive-giveValue)+ " out of " + maxToGive);
+		lblKept.setTheme("labelright");
+		lReceivedBack = new Label("Received: ");
+		lblReceivedBack = new Label(returnValue + " out of " + maxToReturn);
+		lblReceivedBack.setTheme("labelright");
 		lProfit = new Label("Profit: ");
 		lblProfit = new Label("" + giveProfit);
 		lblProfit.setTheme("labelright");
@@ -536,16 +598,18 @@ public class PlayGame_Trust extends BasicTWLGameState {
 		lblNew2.setTheme("labelscoretotalright");
 
 		
-		DialogLayout.Group hLeftLabel1 = giveResultPanel.createParallelGroup(lGave, lProfit, lNew);
-		DialogLayout.Group hRightResult1 = giveResultPanel.createParallelGroup(lblGave, lblProfit, lblNew);
+		DialogLayout.Group hLeftLabel1 = giveResultPanel.createParallelGroup(lGave, lKept, lReceivedBack, lProfit, lNew);
+		DialogLayout.Group hRightResult1 = giveResultPanel.createParallelGroup(lblGave, lblKept, lblReceivedBack, lblProfit, lblNew);
 		
 		giveResultPanel.setHorizontalGroup(giveResultPanel.createParallelGroup()
 				.addGroup(giveResultPanel.createSequentialGroup(hLeftLabel1, hRightResult1)));
 		
 		giveResultPanel.setVerticalGroup(giveResultPanel.createSequentialGroup()
 				.addGap(100).addGroup(giveResultPanel.createParallelGroup(lGave, lblGave))
+				.addGap(30).addGroup(giveResultPanel.createParallelGroup(lKept, lblKept))
+				.addGap(30).addGroup(giveResultPanel.createParallelGroup(lReceivedBack, lblReceivedBack))
 				.addGap(30).addGroup(giveResultPanel.createParallelGroup(lProfit, lblProfit))
-				.addGap(110).addGroup(giveResultPanel.createParallelGroup(lNew, lblNew)));
+				.addGap(32).addGroup(giveResultPanel.createParallelGroup(lNew, lblNew)));
 		
 		
 		DialogLayout.Group hLeftLabel2 = returnResultPanel.createParallelGroup(lReceived, lReturned, lProfit2, lNew2);
@@ -557,8 +621,8 @@ public class PlayGame_Trust extends BasicTWLGameState {
 		returnResultPanel.setVerticalGroup(returnResultPanel.createSequentialGroup()
 				.addGap(100).addGroup(returnResultPanel.createParallelGroup(lReceived, lblReceived))
 				.addGap(30).addGroup(returnResultPanel.createParallelGroup(lReturned, lblReturned))
-				.addGap(30).addGroup(returnResultPanel.createParallelGroup(lProfit2, lblProfit2))
-				.addGap(62).addGroup(returnResultPanel.createParallelGroup(lNew2, lblNew2)));
+				.addGap(74).addGroup(returnResultPanel.createParallelGroup(lProfit2, lblProfit2))
+				.addGap(32).addGroup(returnResultPanel.createParallelGroup(lNew2, lblNew2)));
 		
 		
 	}
@@ -634,6 +698,7 @@ public class PlayGame_Trust extends BasicTWLGameState {
 		input = gc.getInput();
 		clock2 += delta;
 		clock3 += delta;
+		clock4 += delta;
 		timer2 -= delta;
 		overallTimer += delta;
 		overallState = HRRUClient.cs.getState();
@@ -718,35 +783,106 @@ public class PlayGame_Trust extends BasicTWLGameState {
 					lblYourTurn.setVisible(false);
 				}
 			}
+			if(gameState == 0)
+			{
+				lKeep.setVisible(true);
+				lGive.setVisible(true);
+				lChoose.setVisible(true);
+				lblKeep.setVisible(true);
+				lblGive.setVisible(true);
+				lblChoose.setVisible(true);
+				lKeep2.setVisible(false);
+				lReturn.setVisible(false);
+				lblKeep2.setVisible(false);
+				lblReturn.setVisible(false);
+				lblKeep.setText((maxToGive - vaBid.getValue()) + " / " + maxToGive);
+				lblGive.setText((vaBid.getValue()*multiplier) + " / " + (maxToGive*multiplier) );
+				lblChoose.setText((vaBid.getValue()) + " / " + maxToGive);
+			}
 			if(gameState == 1)
 			{
+				lKeep.setVisible(false);
+				lGive.setVisible(false);
+				lChoose.setVisible(false);
+				lblKeep.setVisible(false);
+				lblGive.setVisible(false);
+				lblChoose.setVisible(false);
+				lKeep2.setVisible(false);
+				lReturn.setVisible(false);
+				lblKeep2.setVisible(false);
+				lblReturn.setVisible(false);
 				// Player Give Turn, reset timer and wait for other player
+				lblSecond.setTheme("labelred");
+				lblSecond.setText("\n\nWaiting for " + otherPlayer.getName() + "...");
+				lblSecond.reapplyTheme();
 				overallTimer += timer;
-				timer = 50;
+				timer = 70;
 				timer2 = 999;
 				HRRUClient.cs.setGameState(2);
 			}
+			else if(gameState == 2)
+			{
+				if((clock4 % 2000) < 1000)
+				{
+					lblSecond.setTheme("labelred");
+					lblSecond.reapplyTheme();
+				}
+				else
+				{
+					lblSecond.setTheme("labelwhite");
+					lblSecond.reapplyTheme();
+				}
+			}
 			else if(gameState == 3)
 			{
-				timer = 7;
+				timer = 10;
+				lblSecond.setTheme("label");
+				lblSecond.reapplyTheme();
 				returnValue = player.getCurrentTrustScore().getPlayerReturnValue();
-				lblSecond.setText(playerReturnName + " returned " + returnValue + " points!");
+				lblSecond.setText("\n\n" + playerReturnName + " returned " + returnValue + " points!");
 				HRRUClient.cs.setGameState(4);
 			}
 		}
 		// Update if player is returning
 		else if(bPlayerReturn)
 		{
+			lKeep.setVisible(false);
+			lGive.setVisible(false);
+			lChoose.setVisible(false);
+			lblKeep.setVisible(false);
+			lblGive.setVisible(false);
+			lblChoose.setVisible(false);
+			if(gameState == 0)
+			{
+				lblFirst.setTheme("labelred");
+				lblFirst.reapplyTheme();
+				if((clock4 % 2000) < 1000)
+				{
+					lblFirst.setTheme("labelred");
+					lblFirst.reapplyTheme();
+				}
+				else
+				{
+					lblFirst.setTheme("labelwhite");
+					lblFirst.reapplyTheme();
+				}
+			}
 			if(gameState == 1)
 			{
+				lblFirst.setTheme("label");
+				lblFirst.reapplyTheme();
 				pShowRollBanner = true;
 				lblYourTurn.setVisible(true);
 				// Player Return turn
 				overallTimer += timer;
-				timer = 50;
+				timer = 70;
 				timer2 = 999;
 				enableChoices();
 				time_out = false;
+				lKeep2.setVisible(true);
+				lReturn.setVisible(true);
+				lblKeep2.setVisible(true);
+				lblReturn.setVisible(true);
 				HRRUClient.cs.setGameState(2);
 				giveValue = player.getCurrentTrustScore().getPlayerGiveValue();
 				giveValueFull = giveValue * multiplier;
@@ -755,8 +891,11 @@ public class PlayGame_Trust extends BasicTWLGameState {
 				lblFirst.setText(playerGiveName + " gave " + giveValue + " points!\n\n"
 						+ "This gives you " + giveValueFull + " points!\n\n" 
 						+ "How many points will you return?");
+				lblSecond.setText("Value for " + playerGiveName + "...");
+				
 			}
 			if(gameState == 2)
+			{
 				if(pShowRollBanner)
 				{
 					if(input.isMousePressed(Input.MOUSE_LEFT_BUTTON))
@@ -765,9 +904,16 @@ public class PlayGame_Trust extends BasicTWLGameState {
 						lblYourTurn.setVisible(false);
 					}
 				}
+				lblKeep2.setText(maxToReturn-vaBid.getValue() + " / " + maxToReturn);
+				lblReturn.setText(vaBid.getValue() + " / " + (maxToReturn) );
+			}
 			if(gameState == 3)
 			{
-				timer = 7;
+				lKeep2.setVisible(false);
+				lReturn.setVisible(false);
+				lblKeep2.setVisible(false);
+				lblReturn.setVisible(false);
+				timer = 10;
 				HRRUClient.cs.setGameState(4);
 			}
 			
@@ -778,15 +924,18 @@ public class PlayGame_Trust extends BasicTWLGameState {
 			if(timer < 0)
 			{
 			// 	Calculate variables and set new labels
-				giveProfit = returnValue - giveValue;
+				giveProfit = (returnValue) + (maxToGive - giveValue);
 				returnProfit = giveValueFull - returnValue;
 				lblGave.setText(giveValue + " / " + maxToGive);
+				lblKept.setText(""+ (maxToGive-giveValue) + " / " + maxToGive);
+				lblReceivedBack.setText(returnValue + " / " + maxToReturn);
 				lblProfit.setText("" + giveProfit);
 				lblNew.setText("" + (giveScore+giveProfit));
 				lblReceived.setText(giveValueFull + " / " + (maxToGive*multiplier));
 				lblReturned.setText(returnValue + " / " + maxToReturn);
 				lblProfit2.setText("" + (returnProfit));
 				lblNew2.setText("" + (returnScore+returnProfit));
+				
 				if(returnProfit>0)
 				{
 					returnResultPanel.setTheme("correcttrust-panel");
@@ -800,7 +949,7 @@ public class PlayGame_Trust extends BasicTWLGameState {
 			// 	Set new variables to finish
 				finished = true;
 				overallTimer += timer;
-				timer = 7;
+				timer = 10;
 				timer2 = 999;
 				clock2 = 0;
 				clock3 = 0;
@@ -808,12 +957,28 @@ public class PlayGame_Trust extends BasicTWLGameState {
 				full_start_counter = 0;
 				ticker = "";
 				start_message = "";
-				rootPane.removeAllChildren();
-				rootPane.add(giveResultPanel);
-				rootPane.add(returnResultPanel);
-			// 	Calculate new scores
+				// 	Calculate new scores
 				TrustScore trustScore = new TrustScore(playerGive, playerReturn, maxToGive, maxToReturn, giveValue, returnValue, multiplier, giveProfit, returnProfit);
-			// 	If Player1, update Player2's new score and add own result to list of results.
+				// Calculate correct panel to be displayed
+				if(playerGive == 1)
+				{
+					giveResultPanel.setPosition(
+				               (gcw/2 - giveResultPanel.getWidth()/2 - 220),
+				                (gch/2 - giveResultPanel.getHeight()/2));
+					returnResultPanel.setPosition(
+			               (gcw/2 - returnResultPanel.getWidth()/2 + 180),
+			                (gch/2 - returnResultPanel.getHeight()/2));
+				}
+				else
+				{
+					giveResultPanel.setPosition(
+				               (gcw/2 - giveResultPanel.getWidth()/2 + 180),
+				                (gch/2 - giveResultPanel.getHeight()/2));
+					returnResultPanel.setPosition(
+			               (gcw/2 - returnResultPanel.getWidth()/2 - 220),
+			                (gch/2 - returnResultPanel.getHeight()/2));
+				}
+				//	If Player1, update Player2's new score and add own result to list of results.
 				if(playerID == 1)
 				{
 					HRRUClient.cs.getP1().addTrustScore(trustScore);
@@ -842,6 +1007,17 @@ public class PlayGame_Trust extends BasicTWLGameState {
 						HRRUClient.cs.getP2().addScore(returnProfit);
 					}
 				}
+				btnYes.setVisible(false);
+				btnNo.setVisible(false);
+				lblConfirmation.setVisible(false);
+				questionDescription.setVisible(false);
+				firstPanel.setVisible(false);
+				secondPanel.setVisible(false);
+				vaBid.setVisible(false);
+				btnSubmit.setVisible(false);
+				lblConfirmation.setVisible(false);
+				rootPane.add(giveResultPanel);
+				rootPane.add(returnResultPanel);
 			// 	Sync message
 				syncMessage = new Packet00SyncMessage();
 				syncMessage.player = playerID;

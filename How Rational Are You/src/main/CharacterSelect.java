@@ -33,7 +33,7 @@ public class CharacterSelect extends BasicTWLGameState {
 	
 	boolean p1ShowRollBanner, p2ShowRollBanner;
 	private int gameState;
-	int clock;
+	int clock, clock2;
 	int player;
 	boolean picking, selected, p1chosen, p2chosen;
 	
@@ -41,7 +41,7 @@ public class CharacterSelect extends BasicTWLGameState {
 	int gch;
 	
 	int startx = 25;
-	int starty = 75;
+	int starty = 100;
 	
 	int currentx, selectx;
 	int currenty, selecty;
@@ -80,7 +80,8 @@ public class CharacterSelect extends BasicTWLGameState {
 		
 		mouseDown = false;
 		mouse = "no input";
-		clock = 200;
+		clock = 300;
+		clock2 = 0;
 		
 		currentx = -1;
 		selectx = -1;
@@ -93,7 +94,8 @@ public class CharacterSelect extends BasicTWLGameState {
 		selected = false;
 		
 		selectedCharacter = null;
-		
+
+		btnSelect.setTheme("importantbutton");
 		// Turn label
 		lblYourTurn = new Label();
 		lblYourTurn.setSize(800, 600);
@@ -112,7 +114,7 @@ public class CharacterSelect extends BasicTWLGameState {
 		else {
 			player = 2;
 			p2ShowRollBanner = true;
-			lStatus.setText("Waiting for " + p1name);
+			lStatus.setText("Waiting for " + p1name + ".");
 		}
 		HRRUClient.cs.getP1().setScore(1000);
 		HRRUClient.cs.getP2().setScore(1000);
@@ -134,7 +136,7 @@ public class CharacterSelect extends BasicTWLGameState {
 	{
 		if(player == 1)
 		{
-			lStatus.setText("Waiting for " + p2name);
+			lStatus.setText("Waiting for " + p2name + ".");
 			picking = false;
 			HRRUClient.cs.getP1().setPlayerCharacterID(selectedCharacter.getId());
 			HRRUClient.cs.setState(p1_charselect);
@@ -146,6 +148,8 @@ public class CharacterSelect extends BasicTWLGameState {
 			characterRequest.characterID = HRRUClient.cs.getP1().getPlayerCharacterID();
 			client.sendTCP(characterRequest);
 			
+			btnSelect.setTheme("choicebutton");
+			btnSelect.reapplyTheme();
 			btnSelect.setEnabled(false);
 			p1chosen = true;
 		}
@@ -162,6 +166,8 @@ public class CharacterSelect extends BasicTWLGameState {
 			characterRequest.characterID = HRRUClient.cs.getP2().getPlayerCharacterID();
 			client.sendTCP(characterRequest);
 			
+			btnSelect.setTheme("choicebutton");
+			btnSelect.reapplyTheme();
 			btnSelect.setEnabled(false);
 			p2chosen = true;
 		}
@@ -200,26 +206,29 @@ public class CharacterSelect extends BasicTWLGameState {
 		lP1Name = new Label("");
 		lP2Name= new Label("");
 
-		btnSelect = new Button("Select Character");
-		btnSelect.setTheme("choicebutton");
-		btnSelect.setPosition(450, 225);
+		btnSelect = new Button("Click to Select Character");
+		btnSelect.setTheme("importantbutton");
+		btnSelect.setPosition(450, 280);
 		btnSelect.setSize(300, 40);
         btnSelect.addCallback(new Runnable() {
             public void run() {
             	chooseCharacter();
             }
         });
-		lTitle.setPosition(30,40);
+
+		
+        lTitle.setPosition(30,40);
 		lTitle.setTheme("atarititle");
 		
-		lStatus.setPosition(50,80);
+		lStatus.setPosition(0,70);
 		lStatus.setTheme("atarisubtitle");
+		lStatus.setSize(800, 100);
 		
-		lSelCharacter.setPosition(540, 195);
+		lSelCharacter.setPosition(540, 250);
 		lSelCharacter.setTheme("atarisubtitle");
 
-		lP1Name.setPosition(540, 335);
-		lP2Name.setPosition(540, 405);
+		lP1Name.setPosition(540, 385);
+		lP2Name.setPosition(540, 455);
 		lP1Name.setTheme("atarisubtitle");
 		lP2Name.setTheme("atarisubtitle");
 	}
@@ -230,7 +239,7 @@ public class CharacterSelect extends BasicTWLGameState {
 		g.scale(2f, 2f);
 		gridSheet.setFilter(Image.FILTER_NEAREST);
 		player_character_bg.setFilter(Image.FILTER_NEAREST);
-		g.drawImage(player_character_bg, 225, 150);
+		g.drawImage(player_character_bg, 225, 175);
 		
 		for(int i = 0; i < 5; i++)
 			for(int j = 0; j < 5; j++)
@@ -244,7 +253,7 @@ public class CharacterSelect extends BasicTWLGameState {
 		if(selected)
 		{
 			g.drawImage(selectGrid, startx+selectx*37, starty+selecty*37);
-			g.drawImage(selectedCharacter.getCharacterImage(), 225, 75);
+			g.drawImage(selectedCharacter.getCharacterImage(), 225, 100);
 		}
 		
 		for(int i = 0; i < 5; i++)
@@ -255,13 +264,13 @@ public class CharacterSelect extends BasicTWLGameState {
 		{
 			g.drawImage(chosenGrid, startx+(characters[p1charid].getPositionx()*37), starty+(characters[p1charid].getPositiony()*37));
 			g.drawImage(characters[p1charid].getCharacterImage(), startx+characters[p1charid].getPositionx()*37, starty+characters[p1charid].getPositiony()*37);
-			g.drawImage(characters[p1charid].getCharacterImage(), 225, 150);
+			g.drawImage(characters[p1charid].getCharacterImage(), 225, 175);
 		}
 		if(p2chosen)
 		{
 			g.drawImage(chosenGrid, startx+(characters[p2charid].getPositionx()*37), starty+(characters[p2charid].getPositiony()*37));
 			g.drawImage(characters[p2charid].getCharacterImage(), startx+characters[p2charid].getPositionx()*37, starty+characters[p2charid].getPositiony()*37);
-			g.drawImage(characters[p2charid].getCharacterImage(), 225, 187);
+			g.drawImage(characters[p2charid].getCharacterImage(), 225, 212);
 		}
 	}
 
@@ -272,7 +281,7 @@ public class CharacterSelect extends BasicTWLGameState {
 		int ypos= Mouse.getY();
 		mouse = "xpos: " + xpos + "\nypos: " + ypos;
 		gameState = HRRUClient.cs.getState();
-		
+		clock2 += delta;
 		
 		if(gameState == serverlost)
 			sbg.enterState(0);
@@ -287,6 +296,8 @@ public class CharacterSelect extends BasicTWLGameState {
 		if(player == 1) {
 			if(p1ShowRollBanner)
 			{
+				lStatus.setTheme("statusgreen");
+				lStatus.reapplyTheme();
 				lblYourTurn.setVisible(true);
 				if(input.isMousePressed(Input.MOUSE_LEFT_BUTTON))
 				{
@@ -301,6 +312,8 @@ public class CharacterSelect extends BasicTWLGameState {
 		}
 		else if(player == 2) {
 			if(gameState == p1_charselect) {
+				lStatus.setTheme("statusgreen");
+				lStatus.reapplyTheme();
 				if(p2ShowRollBanner)
 				{
 					lblYourTurn.setVisible(true);
@@ -317,8 +330,10 @@ public class CharacterSelect extends BasicTWLGameState {
 			}
 		}
 		
-		if(picking) {
-			
+		if(picking) 
+		{
+			lStatus.setTheme("statusgreen");
+			lStatus.reapplyTheme();
 			btnSelect.setEnabled(true);
 			if((xpos>startx*2 && xpos < startx*2+(74*5)) && (ypos>80 && ypos<gch-starty*2)) {
 				currentx = (xpos-startx*2)/74;
@@ -340,6 +355,19 @@ public class CharacterSelect extends BasicTWLGameState {
 			if(player == 2 && selected) {
 				if(selectedCharacter.getId() == HRRUClient.cs.getP1().getPlayerCharacterID())
 					btnSelect.setEnabled(false);
+			}
+		}
+		else
+		{
+			if((clock2 % 2000) < 1000)
+			{
+				lStatus.setTheme("statuswhite");
+				lStatus.reapplyTheme();
+			}
+			else
+			{
+				lStatus.setTheme("statusred");
+				lStatus.reapplyTheme();
 			}
 		}
 		

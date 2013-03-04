@@ -29,6 +29,9 @@ public class Player {
 	private PrisonScore currentPrisonScore;
 	private ArrayList<PrisonScore> prisonScores;
 	
+	private UltimatumScore currentUltimatumScore;
+	private ArrayList<UltimatumScore> ultimatumScores;
+	
 	public Player(String name) throws SlickException
 	{
 		this.setName(name);
@@ -43,6 +46,8 @@ public class Player {
 		this.trustScores = new ArrayList<TrustScore>();
 		this.setCurrentPrisonScore(new PrisonScore(0,0,0,0,false,false));
 		this.prisonScores = new ArrayList<PrisonScore>();
+		this.setCurrentUltimatumScore(new UltimatumScore(0,0,0,0,0, false));
+		this.ultimatumScores = new ArrayList<UltimatumScore>();
 	}
 
 	public String getName() {
@@ -67,7 +72,7 @@ public class Player {
 	
 	public void updatePosition(){
 		this.position++;
-		if(this.position == 36)
+		if(this.position == 32)
 			this.position = 0;
 	}
 
@@ -184,6 +189,27 @@ public class Player {
 		this.prisonScores.add(prisonScore);
 	}
 
+	public UltimatumScore getCurrentUltimatumScore() {
+		return currentUltimatumScore;
+	}
+
+	public void setCurrentUltimatumScore(UltimatumScore currentUltimatumScore) {
+		this.currentUltimatumScore = currentUltimatumScore;
+	}
+
+	public ArrayList<UltimatumScore> getUltimatumScores() {
+		return ultimatumScores;
+	}
+
+	public void setUltimatumScores(ArrayList<UltimatumScore> ultimatumScores) {
+		this.ultimatumScores = ultimatumScores;
+	}
+	
+	public void addUltimatumScore(UltimatumScore ultimatumScore) {
+		this.ultimatumScores.add(ultimatumScore);
+	}
+
+	
 	
 
 }

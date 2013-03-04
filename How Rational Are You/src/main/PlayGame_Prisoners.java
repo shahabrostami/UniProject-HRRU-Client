@@ -199,7 +199,7 @@ public class PlayGame_Prisoners extends BasicTWLGameState {
 		// Reset variables
 		timeout = false;
 		clock2 = 0; clock3 = 0; timetaken = 0;
-		timer = 30;
+		timer = 50;
 		timer2 = 999;
 		overallTimer = 0;
 		playerReady = 0;
@@ -217,7 +217,27 @@ public class PlayGame_Prisoners extends BasicTWLGameState {
 		ticker = "";
 		tickerBoolean = true;
 		winString = "Choose wisely...";
-	
+		
+		// Retrieve player information
+				player1 = HRRUClient.cs.getP1();
+				player2 = HRRUClient.cs.getP2();
+				playerID = HRRUClient.cs.getPlayer();
+				System.out.println(playerID +" playerID");
+				if(playerID == 1)
+				{
+					player =  player1;
+					otherPlayer = player2;
+					otherPlayerID = 2;
+				}
+				else 
+				{
+					player =  player2;
+					otherPlayer = player1;
+					otherPlayerID = 1;
+				}
+				otherPlayerName = otherPlayer.getName();
+		
+		// description
 		descriptionModel.setHtml("<html><body><div><p style='text-align: center;'>"
 				+ "You and " + otherPlayerName + " can either "
 				+ "<a style='font-family: name;'>cooperate</a> or <a style='font-family: name;'>betray</a>.</p>"
@@ -243,26 +263,6 @@ public class PlayGame_Prisoners extends BasicTWLGameState {
 		HRRUClient.cs.setP2(player2);
 		HRRUClient.cs.setPlayer(1);
 		*/
-		
-		
-		// Retrieve player information
-		player1 = HRRUClient.cs.getP1();
-		player2 = HRRUClient.cs.getP2();
-		playerID = HRRUClient.cs.getPlayer();
-		System.out.println(playerID +" playerID");
-		if(playerID == 1)
-		{
-			player =  player1;
-			otherPlayer = player2;
-			otherPlayerID = 2;
-		}
-		else 
-		{
-			player =  player2;
-			otherPlayer = player1;
-			otherPlayerID = 1;
-		}
-		otherPlayerName = otherPlayer.getName();
 		
 		// Setup new item variables
 		btnYes.setVisible(false);
@@ -466,9 +466,9 @@ public class PlayGame_Prisoners extends BasicTWLGameState {
 				if(playerReady == 1)
 				{
 					if(playerID == 1)
-						g.drawString("FINISHEDs", 92, 19);
+						g.drawString("FINISHED", 92, 19);
 					else
-						g.drawString("FINISHEDs", 92, 61);
+						g.drawString("FINISHED", 92, 61);
 				}
 				if(otherPlayerReady == 1)
 				{
@@ -607,7 +607,7 @@ public class PlayGame_Prisoners extends BasicTWLGameState {
 		// Game finished
 		else if(gameState == 3)
 		{
-			timer = 8;
+			timer = 10;
 			timer2 = 999;
 			clock2 = 0;
 			clock3 = 0;

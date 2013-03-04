@@ -4,7 +4,6 @@ import org.newdawn.slick.*;
 
 public class NormalGridSquare implements GridSquare{
 	
-	private int tile_type = normalTile;
 	private Image tile_image;
 	
 	SpriteSheet sheet = new SpriteSheet("img/tileset/tile2.png", width,height);
@@ -22,8 +21,5 @@ public class NormalGridSquare implements GridSquare{
 		return tile_image;
 	}
 
-	public int getTileType() {
-		return tile_type;
-	}
 
 }

@@ -147,7 +147,7 @@ public class Main extends BasicTWLGameState {
 				enterState = 1;
 			}
 		});
-		btnHost.setTheme("choicebutton");
+		btnHost.setTheme("menubutton");
 		btnJoin = new Button("Join Server");
 		btnJoin.setSize(400, 30);
 		btnJoin.setPosition(gc.getWidth()/2-200, gc.getHeight()/2-60);
@@ -157,7 +157,7 @@ public class Main extends BasicTWLGameState {
 				enterState = 2;
 			}
 		});
-		btnJoin.setTheme("choicebutton");
+		btnJoin.setTheme("menubutton");
 		
 		
 		btnHT1 = new Button("1) Host Server Create");

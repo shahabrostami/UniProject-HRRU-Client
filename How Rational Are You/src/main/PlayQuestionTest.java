@@ -34,7 +34,7 @@ public class PlayQuestionTest extends BasicTWLGameState {
 	private final int cancelled = -2;
 	private final int play = 5;
 	private final int p1_turn = 7;
-	public final int question_points_amount = 100;
+	public final int question_points_amount = 50;
 	
 	public Client client;
 	DialogLayout choicePanel, questionPanel;
@@ -139,7 +139,7 @@ public class PlayQuestionTest extends BasicTWLGameState {
 			choices[i].setVisible(true);
 			choices[i].setEnabled(true);
 		}
-		currentAnswer = 0;
+		currentAnswer = -1;
 		lblConfirmation.setVisible(false);
 		btnYes.setVisible(false);
 		btnNo.setVisible(false);
@@ -163,6 +163,7 @@ public class PlayQuestionTest extends BasicTWLGameState {
 		disableGUI();
 		completeMessage = new Packet14QuestionComplete();
 		completeMessage.difficulty = question_difficulty;
+		completeMessage.choice = currentAnswer;
 		completeMessage.elapsedtime = 0;
 		completeMessage.player = playerID;
 		completeMessage.points = 0;
@@ -172,20 +173,20 @@ public class PlayQuestionTest extends BasicTWLGameState {
 		pointsAvailable = 0;
 		pointsGained = 0;
 		elapsedTime = 0;
-		elapsedTimeFixed = (25*question_difficulty) - timer;
+		elapsedTimeFixed = 80 - timer;
 		ready = true;
 		end = true;
 		if(currentAnswer == correctAnswer)
 		{
-			System.out.println(currentAnswer + "---" + correctAnswer);
 			completeMessage.elapsedtime = timer;
 			elapsedTime = timer; 
 			pointsAvailable = question_points_amount;
 			pointsGained = question_points_amount;
 			completeMessage.points = pointsGained;
+			completeMessage.choice = currentAnswer;
 			
-			pointsGained *= question_difficulty;
 			pointsGained += timer;
+			pointsGained *= question_difficulty;
 			completeMessage.correct = true;
 			completeMessage.overall = pointsGained;
 			player.addScore(pointsGained);
@@ -222,9 +223,9 @@ public class PlayQuestionTest extends BasicTWLGameState {
 		// Reset variables
 		otherPlayerReady=0;
 		win = false; end = false; time_out = false; finished = false; resume = false;
-		currentAnswer = 0;
+		currentAnswer = -1;
 		clock2 = 0; clock3 = 0;
-		timer = 25*question_difficulty;
+		timer = 4;
 		timer2 = 999;
 		elapsedTime = 0;
 		pointsAvailable = 0;
@@ -526,8 +527,8 @@ public class PlayQuestionTest extends BasicTWLGameState {
 		p1ResultPanel.setVerticalGroup(p1ResultPanel.createSequentialGroup()
 				.addGap(60).addWidget(lActivity)
 				.addGap(30).addGroup(p1ResultPanel.createParallelGroup(lPoints, lblPoints1))
-				.addGap(30).addGroup(p1ResultPanel.createParallelGroup(lDifficulty, lblDifficulty1))
 				.addGap(30).addGroup(p1ResultPanel.createParallelGroup(lTime, lblTime1))
+				.addGap(30).addGroup(p1ResultPanel.createParallelGroup(lDifficulty, lblDifficulty1))
 				.addGap(30).addGroup(p1ResultPanel.createParallelGroup(lOverall, lblOverall1))
 				.addGap(30).addGroup(p1ResultPanel.createParallelGroup(lNew, lblNew1)));
 		
@@ -543,8 +544,8 @@ public class PlayQuestionTest extends BasicTWLGameState {
 		p2ResultPanel.setVerticalGroup(p2ResultPanel.createSequentialGroup()
 				.addGap(60).addWidget(lActivity2)
 				.addGap(30).addGroup(p2ResultPanel.createParallelGroup(lPoints2, lblPoints2))
-				.addGap(30).addGroup(p2ResultPanel.createParallelGroup(lDifficulty2, lblDifficulty2))
 				.addGap(30).addGroup(p2ResultPanel.createParallelGroup(lTime2, lblTime2))
+				.addGap(30).addGroup(p2ResultPanel.createParallelGroup(lDifficulty2, lblDifficulty2))
 				.addGap(30).addGroup(p2ResultPanel.createParallelGroup(lOverall2, lblOverall2))
 				.addGap(30).addGroup(p2ResultPanel.createParallelGroup(lNew2, lblNew2)));
 	}
@@ -710,6 +711,7 @@ public class PlayQuestionTest extends BasicTWLGameState {
 					completeMessage.correct = false;
 					completeMessage.player = playerID;
 					completeMessage.points = 0;
+					completeMessage.choice = -1;
 					completeMessage.sessionID = HRRUClient.cs.getSessionID();
 					client.sendTCP(completeMessage);
 				}
@@ -748,7 +750,7 @@ public class PlayQuestionTest extends BasicTWLGameState {
 			if(otherPlayerReady == 1)
 			{
 				// Setup new UI
-				timer = 3; // should be 10
+				timer = 10; // should be 10
 				timer2 = 999;
 				clock2 = 0;
 				clock3 = 0;
@@ -786,12 +788,14 @@ public class PlayQuestionTest extends BasicTWLGameState {
 					otherPlayerResult = HRRUClient.cs.getP2().getActivityScore();
 					lblPoints2.setText("" + otherPlayerResult.getPoints());
 					
-					if(question_difficulty==1)
-						lblDifficulty2.setText("Easy X" + otherPlayerResult.getDifficulty());
-					else if(question_difficulty==2)
-						lblDifficulty2.setText("Medium X" + otherPlayerResult.getDifficulty());
-					else if(question_difficulty==3)
-						lblDifficulty2.setText("Hard X" +  otherPlayerResult.getDifficulty());
+					System.out.println("OTHER DIFF: " + otherPlayerResult.getDifficulty());
+					
+					if(otherPlayerResult.getDifficulty()==1)
+						lblDifficulty2.setText("Easy X1");
+					else if(otherPlayerResult.getDifficulty()==2)
+						lblDifficulty2.setText("Medium X2");
+					else if(otherPlayerResult.getDifficulty()==3)
+						lblDifficulty2.setText("Hard X3");
 					
 					lblOverall2.setText("" +  otherPlayerResult.getOverall());
 					lblTime2.setText("" +  otherPlayerResult.getElapsedtime());
@@ -817,12 +821,12 @@ public class PlayQuestionTest extends BasicTWLGameState {
 					otherPlayerResult = HRRUClient.cs.getP1().getActivityScore();
 					lblPoints1.setText("" + otherPlayerResult.getPoints());
 					
-					if(question_difficulty==1)
-						lblDifficulty1.setText("Easy X" + otherPlayerResult.getDifficulty());
-					else if(question_difficulty==2)
-						lblDifficulty1.setText("Medium X" + otherPlayerResult.getDifficulty());
-					else if(question_difficulty==3)
-						lblDifficulty1.setText("Hard X" +  otherPlayerResult.getDifficulty());
+					if(otherPlayerResult.getDifficulty()==1)
+						lblDifficulty1.setText("Easy X1");
+					else if(otherPlayerResult.getDifficulty()==2)
+						lblDifficulty1.setText("Medium X2");
+					else if(otherPlayerResult.getDifficulty()==3)
+						lblDifficulty1.setText("Hard X3");
 					
 					lblOverall1.setText("" +  otherPlayerResult.getOverall());
 					lblTime1.setText("" +  otherPlayerResult.getElapsedtime());
@@ -867,7 +871,10 @@ public class PlayQuestionTest extends BasicTWLGameState {
 			else if(otherPlayerReady == 0)
 			{
 				questionPanel.setVisible(true);
-				lblWaiting.setText( "You answered '" + choices[currentAnswer].getText() + "'\n" +"Waiting for " + otherPlayer.getName());
+				if(currentAnswer >= 0)
+					lblWaiting.setText("You answered '" + choices[currentAnswer].getText() + "'\n" +"Waiting for " + otherPlayer.getName());
+				else
+					lblWaiting.setText("You did not answer.");
 				lblWaiting.setVisible(true);
 			}
 		}

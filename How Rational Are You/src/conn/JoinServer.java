@@ -261,21 +261,21 @@ public class JoinServer extends BasicTWLGameState {
         btnBack = new Button("Back");
         btnCancel= new Button("Cancel");
         
-        btnReady.setTheme("choicebutton");
-        btnJoin.setTheme("choicebutton");
-        btnBack.setTheme("choicebutton");
-        btnCancel.setTheme("choicebutton");
+        btnReady.setTheme("menubutton");
+        btnJoin.setTheme("menubutton");
+        btnBack.setTheme("menubutton");
+        btnCancel.setTheme("menubutton");
         
         efName.addCallback(new Callback() {
             public void callback(int key) {
-                if(key == Event.KEY_RETURN) {
+                if(key == Event.KEY_RETURN || key == Event.KEY_TAB) {
                     efSessionID.requestKeyboardFocus();
                 }
             }
         });
         efSessionID.addCallback(new Callback() {
             public void callback(int key) {
-                if(key == Event.KEY_RETURN) {
+            	if(key == Event.KEY_RETURN || key == Event.KEY_TAB) {
                     efPassword.requestKeyboardFocus();
                 }
             }
@@ -284,6 +284,9 @@ public class JoinServer extends BasicTWLGameState {
             public void callback(int key) {
                 if(key == Event.KEY_RETURN) {
                     emulateLogin();
+                }
+                else if(key == Event.KEY_TAB) {
+                	btnReady.requestKeyboardFocus();
                 }
             }
         });

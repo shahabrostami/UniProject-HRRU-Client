@@ -9,6 +9,7 @@ import main.BasicFont;
 import main.HRRUClient;
 import main.Player;
 
+import org.lwjgl.input.Keyboard;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
@@ -251,14 +252,15 @@ public class HostServer extends BasicTWLGameState {
         
         efName.addCallback(new Callback() {
             public void callback(int key) {
-                if(key == Event.KEY_RETURN) {
+            	System.out.println(key); if(key == Event.KEY_RETURN || key == Event.KEY_TAB) {
+                
                     efPassword.requestKeyboardFocus();
                 }
             }
         });
         efPassword.addCallback(new Callback() {
-            public void callback(int key) {
-                if(key == Event.KEY_RETURN) {
+        	public void callback(int key) {
+                if(key == Event.KEY_RETURN ) {
                     emulateLogin();
                 }
             }
@@ -289,11 +291,11 @@ public class HostServer extends BasicTWLGameState {
             }
         });
         
-        btnStart.setTheme("choicebutton");
-        btnReady.setTheme("choicebutton");
-        btnJoin.setTheme("choicebutton");
-        btnBack.setTheme("choicebutton");
-        btnCancel.setTheme("choicebutton");
+        btnStart.setTheme("menubutton");
+        btnReady.setTheme("menubutton");
+        btnJoin.setTheme("menubutton");
+        btnBack.setTheme("menubutton");
+        btnCancel.setTheme("menubutton");
 
 	    hostPanel.setIncludeInvisibleWidgets(false);
         DialogLayout.Group hLabels = hostPanel.createParallelGroup(lName, lPassword);

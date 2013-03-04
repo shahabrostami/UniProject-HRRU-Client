@@ -128,7 +128,7 @@ public class PlayQuestion extends BasicTWLGameState{
 		backgroundx = 0;
 		backgroundx2 = -959;
 		
-		timer = 50*question_difficulty;
+		timer = 80;
 		timer2 = 999;
 	}
 	
@@ -366,7 +366,7 @@ public class PlayQuestion extends BasicTWLGameState{
 		question_difficulty = current_question.getDifficulty();
 		
 		currentAnswer = 0;
-		timer = 50*question_difficulty;
+		timer = 80;
 		timer2 = 999;
 		clock = 0;
 		clock2 = 0;

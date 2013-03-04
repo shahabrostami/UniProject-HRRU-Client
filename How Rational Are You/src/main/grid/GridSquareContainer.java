@@ -16,17 +16,17 @@ public class GridSquareContainer {
 		this.y = y;
 		this.tile_type = tileType;
 		
-		if(this.tile_type == GridSquare.normalTile)
+		if(this.tile_type == GridSquare.easyTile)
 		{
-			gridSquare = new NormalGridSquare();
+			gridSquare = new QuestionGridSquare(GridSquare.easyTile);
 		}
-		else if(this.tile_type == GridSquare.questionTile)
+		else if(this.tile_type == GridSquare.mediumTile)
 		{
-			gridSquare = new QuestionGridSquare();
+			gridSquare = new QuestionGridSquare(GridSquare.mediumTile);
 		}
-		else if(this.tile_type == GridSquare.puzzleTile)
+		else if(this.tile_type == GridSquare.hardTile)
 		{
-			gridSquare = new PuzzleGridSquare();
+			gridSquare = new QuestionGridSquare(GridSquare.hardTile);
 		}
 		else if(this.tile_type == GridSquare.gameTile)
 		{

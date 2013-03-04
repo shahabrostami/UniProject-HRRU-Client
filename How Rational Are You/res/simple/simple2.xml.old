@@ -39,6 +39,39 @@
 --><themes>
 	
     <include filename="cursors.xml"/>
+    <images file="importantbuttonbg.png">
+        <area name="importantbg-1" xywh="0,160,300,40"/>
+        <select name="important.button">
+            <area if="pressed" xywh="0,80,300,40"/>
+            <area if="selected" xywh="0,80,300,40"/>
+            <area if="hover" xywh="0,40,300,40"/>
+            <animation timeSource="hover">
+                <frame duration="100" ref="importantbg-1"/>
+                <frames duration="100" count="9" xywh="0,200,300,40" offsety="40"/>
+            </animation>
+        
+        
+        </select>
+    </images>
+    <images file="importantbutton2bg.png">
+        <area name="importantbg2-1" xywh="0,310,300,90"/>
+        <select name="importantroll.button">
+            <area if="pressed" xywh="0,580,300,90"/>
+            <area if="selected" xywh="0,40,300,90"/>
+            <area if="hover" xywh="0,130,300,90"/>
+            <animation timeSource="hover">
+                <frame duration="100" ref="importantbg2-1"/>
+                <frames duration="100" count="9" xywh="0,310,300,90" offsety="90"/>
+            </animation>
+        
+        
+        </select>
+    </images>
+    <images file="statusbanner.png">
+        <area name="status-background" xywh="*"/>
+    </images>
+
+
     <images file="chat.png" format="RGBA" filter="linear">
         <area name="tooltip.background" border="3" xywh="1,24,7,7" splitx="L3,R3" splity="T3,B3"/>
         <area name="choice.norm.background" border="3" xywh="1,32,7,7" splitx="L3,R3" splity="T3,B3"/>
@@ -73,6 +106,23 @@
             <area if="hover" xywh="9,32,7,7" tint="#FFFFFF" splitx="L3,R3" splity="T3,B3"/>
             <area xywh="1,32,7,7" splitx="L3,R3" splity="T3,B3"/>
         </select>
+        <select name="menu.button">
+            <area if="pressed" xywh="17,40,7,7" splitx="L3,R3" splity="T3,B3"/>
+            <area if="selected" xywh="17,40,7,7" splitx="L3,R3" splity="T3,B3"/>
+            <area if="hover" xywh="9,40,7,7" tint="#FFFFFF" splitx="L3,R3" splity="T3,B3"/>
+            <area xywh="1,40,7,7" splitx="L3,R3" splity="T3,B3"/>
+        </select>
+        <area name="important.button1" xywh="1,40,7,7" splitx="L3,R3" splity="T3,B3" border="3"/>
+        <area name="important.button2" xywh="9,40,7,7" splitx="L3,R3" splity="T3,B3" border="3"/>
+        <area name="important.button3" xywh="17,40,7,7" splitx="L3,R3" splity="T3,B3" border="3"/>
+        <area name="important.button4" xywh="25,40,7,7" splitx="L3,R3" splity="T3,B3" border="3"/>
+        <area name="important.button5" xywh="33,40,7,7" splitx="L3,R3" splity="T3,B3" border="3"/>
+        <area name="important.button6" xywh="41,40,7,7" splitx="L3,R3" splity="T3,B3" border="3"/>
+        <area name="important.button7" xywh="49,40,7,7" splitx="L3,R3" splity="T3,B3" border="3"/>
+        <area name="important.button8" xywh="57,40,7,7" splitx="L3,R3" splity="T3,B3" border="3"/>
+    
+    
+    
         <select name="vscrollbar.thumb.background">
             <area splity="4,5" tint="#FF0000" if="pressed" xywh="16,17,7,10"/>
             <area splity="4,5" tint="#5A5A5A" if="hover" xywh="16,17,7,10"/>
@@ -355,9 +405,14 @@
 
         <alias name="colorselector.cursor" ref="-selH"/>
     </images>
+
     <images file="yourturn.png">
         <area name="yourturn-background" xywh="*"/>
     </images>
+    <images file="yourwait.png">
+        <area name="yourwait-background" xywh="*"/>
+    </images>
+
 
     <images file="rollpanelbg.png">
         <area name="rollpanel.background" xywh="*"/>
@@ -394,10 +449,10 @@
         <area name="incorrectbid-background" xywh="*" border="60,20,20,20"/>
     </images>
     <images file="firsttrustpanel.png">
-        <area name="firsttrust.background" xywh="*" border="20,210,10,10"/>
+        <area name="firsttrust.background" xywh="*" border="10,210,10,10"/>
     </images>
     <images file="secondtrustpanel.png">
-        <area name="secondtrust.background" xywh="*" border="20,210,10,10"/>
+        <area name="secondtrust.background" xywh="*" border="10,210,10,10"/>
     </images>
     <images file="incorrectturst-background.png">
         <area name="incorrecttrust-background" xywh="*" border="20"/>
@@ -415,18 +470,38 @@
 
     <images file="betray.png">
         <select name="betray-background">
-            <area xywh="320,0,318,239" if="hover"/>
-            <area xywh="639,0,317,239" if="selected"/>
+            <area xywh="638,0,319,239" if="pressed"/>
+            <area xywh="319,0,319,239" if="hover"/>
             <area xywh="0,0,319,239"/>
         </select>
     </images>
     <images file="cooperate.png">
         <select name="cooperate-background">
+            <area xywh="638,0,319,239" if="pressed"/>
             <area xywh="319,0,319,239" if="hover"/>
-            <area xywh="639,0,318,239" if="selected"/>
             <area xywh="0,0,319,239"/>
         </select>
     </images>
+    <images file="accept.png">
+        <select name="accept-background">
+            <area xywh="638,0,319,239" if="pressed"/>
+            <area xywh="319,0,319,239" if="hover"/>
+            <area xywh="0,0,319,239"/>
+        </select>
+    </images>
+    <images file="reject.png">
+        <select name="reject-background">
+            <area xywh="638,0,319,239" if="pressed"/>
+            <area xywh="319,0,319,239" if="hover"/>
+            <area xywh="0,0,319,239"/>
+        </select>
+    </images>
+
+
+    <images file="ultpanel.png">
+        <area name="ultpanel.background" xywh="*" border="75,0,20,0"/>
+    </images>
+
 
 
 
@@ -472,6 +547,10 @@
     
     </fontDef>
     <fontDef name="atarititle" filename="atarititle.fnt" color="white"/>
+    <fontDef name="redatari14" filename="redatari14.fnt" color="white"/>
+    <fontDef name="greenatari14" filename="greenatari14.fnt" color="white"/>
+
+
 
 
     <fontDef name="atarisubtitle" filename="atarisubtitle.fnt" color="white">
@@ -481,6 +560,8 @@
     
     </fontDef>
     <fontDef name="atariblue10" filename="atariblue10.fnt" color="white"/>
+    <fontDef name="atarigreen10" filename="atarigreen10.fnt" color="white"/>
+
 
     <fontDef name="scoreatari12" filename="scoreatari12.fnt" color="white"/>
     <fontDef name="scoreatari12r" filename="scoreatari12r.fnt" color="white"/>
@@ -494,6 +575,8 @@
         <fontParam if="hover"/>
     
     </fontDef>
+    <fontDef name="whiteatari142" filename="whiteatari142.fnt" color="white"/>
+
 
     <fontDef name="atarigreen16" filename="atarigreen16.fnt" color="white">
         <fontParam if="disabled" color="gray"/>
@@ -515,6 +598,8 @@
         <fontParam if="hover"/>
     
     </fontDef>
+    <fontDef name="questionatari16red" filename="questionatari16red.fnt" color="white"/>
+
 
     <fontDef name="itematari16" filename="itematari16.fnt">
         <fontParam if="disabled" color="gray"/>
@@ -578,6 +663,24 @@
         <param name="maxHeight"><int>0</int></param>
     </theme>
 
+    <theme name="labelred" ref="-defaults" allowWildcard="true">
+        <param name="font"><font>redatari14</font></param>
+        <param name="minWidth"><int>0</int></param>
+        <param name="maxWidth"><int>0</int></param>
+        <param name="minHeight"><int>0</int></param>
+        <param name="maxHeight"><int>0</int></param>
+        <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
+    </theme>
+
+    <theme name="labelgreen" ref="-defaults" allowWildcard="true">
+        <param name="font"><font>greenatari14</font></param>
+        <param name="minWidth"><int>0</int></param>
+        <param name="maxWidth"><int>0</int></param>
+        <param name="minHeight"><int>0</int></param>
+        <param name="maxHeight"><int>0</int></param>
+        <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
+    </theme>
+
     <theme name="labelyourturn" ref="-defaults" allowWildcard="true">
         <param name="font"><font>label</font></param>
         <param name="minWidth"><int>0</int></param>
@@ -585,6 +688,15 @@
         <param name="minHeight"><int>600</int></param>
         <param name="maxHeight"><int>0</int></param>
         <param name="background"><image>yourturn-background</image></param>
+    </theme>
+
+    <theme name="labelyourwait" ref="-defaults" allowWildcard="true">
+        <param name="font"><font>label</font></param>
+        <param name="minWidth"><int>0</int></param>
+        <param name="maxWidth"><int>800</int></param>
+        <param name="minHeight"><int>600</int></param>
+        <param name="maxHeight"><int>0</int></param>
+        <param name="background"><image>yourwait-background</image></param>
     </theme>
 
     <theme name="title" ref="-defaults" allowWildcard="true">
@@ -595,13 +707,33 @@
         <param name="maxHeight"><int>0</int></param>
     </theme>
 
-    <theme name="scoreatarititle" ref="-defaults" allowWildcard="true">
+    <theme name="statuswhite" ref="-defaults" allowWildcard="true">
         <param name="font"><font>whiteatari14</font></param>
         <param name="minWidth"><int>0</int></param>
         <param name="maxWidth"><int>0</int></param>
         <param name="minHeight"><int>0</int></param>
         <param name="maxHeight"><int>0</int></param>
-        <param name="background"><image>tooltip.background</image></param>
+        <param name="background"><image>status-background</image></param>
+        <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
+    </theme>
+
+    <theme name="statusred" ref="-defaults" allowWildcard="true">
+        <param name="font"><font>redatari14</font></param>
+        <param name="minWidth"><int>0</int></param>
+        <param name="maxWidth"><int>0</int></param>
+        <param name="minHeight"><int>0</int></param>
+        <param name="maxHeight"><int>0</int></param>
+        <param name="background"><image>status-background</image></param>
+        <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
+    </theme>
+
+    <theme name="statusgreen" ref="-defaults" allowWildcard="true">
+        <param name="font"><font>greenatari14</font></param>
+        <param name="minWidth"><int>0</int></param>
+        <param name="maxWidth"><int>0</int></param>
+        <param name="minHeight"><int>0</int></param>
+        <param name="maxHeight"><int>0</int></param>
+        <param name="background"><image>status-background</image></param>
         <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
     </theme>
 
@@ -693,6 +825,16 @@
         <param name="textAlignment"><enum type="alignment">LEFT</enum></param>
     </theme>
 
+    <theme name="questionatari16red" ref="-defaults" allowWildcard="true">
+        <param name="font"><font>questionatari16red</font></param>
+        <param name="minWidth"><int>0</int></param>
+        <param name="maxWidth"><int>0</int></param>
+        <param name="minHeight"><int>0</int></param>
+        <param name="maxHeight"><int>0</int></param>
+        <param name="background"><image>none</image></param>
+        <param name="textAlignment"><enum type="alignment">LEFT</enum></param>
+    </theme>
+
     <theme name="itematari16" ref="-defaults" allowWildcard="true">
         <param name="font"><font>itematari16</font></param>
         <param name="minWidth"><int>400</int></param>
@@ -756,8 +898,44 @@
         <param name="maxHeight"><int>60</int></param>
     </theme>
     
+    <theme name="menubutton" ref="-defaults" allowWildcard="true">
+        <param name="background"><image>menu.button</image></param>
+        <param name="border"><border>background.border</border></param>
+        <param name="font"><font>label</font></param>
+        <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
+        <param name="minWidth"><int>0</int></param>
+        <param name="maxWidth"><int>600</int></param>
+        <param name="minHeight"><int>20</int></param>
+        <param name="inputMap"><inputMap>-defaultInputMap</inputMap></param>
+        <param name="maxHeight"><int>60</int></param>
+    </theme>
+    
+    <theme name="importantbutton" ref="-defaults" allowWildcard="true">
+        <param name="background"><image>importantroll.button</image></param>
+        <param name="border"><border>background.border</border></param>
+        <param name="font"><font>label</font></param>
+        <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
+        <param name="minWidth"><int>0</int></param>
+        <param name="maxWidth"><int>600</int></param>
+        <param name="minHeight"><int>20</int></param>
+        <param name="inputMap"><inputMap>-defaultInputMap</inputMap></param>
+        <param name="maxHeight"><int>60</int></param>
+    </theme>
+    
     <theme name="rollbutton" ref="-defaults" allowWildcard="true">
         <param name="background"><image>choice.button</image></param>
+        <param name="border"><border>background.border</border></param>
+        <param name="font"><font>scoretotal12</font></param>
+        <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
+        <param name="minWidth"><int>0</int></param>
+        <param name="maxWidth"><int>600</int></param>
+        <param name="minHeight"><int>0</int></param>
+        <param name="inputMap"><inputMap>-defaultInputMap</inputMap></param>
+        <param name="maxHeight"><int>150</int></param>
+    </theme>
+    
+    <theme name="importantrollbutton" ref="-defaults" allowWildcard="true">
+        <param name="background"><image>importantroll.button</image></param>
         <param name="border"><border>background.border</border></param>
         <param name="font"><font>scoretotal12</font></param>
         <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
@@ -781,6 +959,28 @@
     
     <theme name="cooperatebutton" ref="-defaults" allowWildcard="true">
         <param name="background"><image>cooperate-background</image></param>
+        <param name="border"><border>background.border</border></param>
+        <param name="font"><font>whiteatari14</font></param>
+        <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
+        <param name="minWidth"><int>0</int></param>
+        <param name="maxWidth"><int>319</int></param>
+        <param name="minHeight"><int>0</int></param>
+        <param name="maxHeight"><int>239</int></param>
+    </theme>
+    
+    <theme name="acceptbutton" ref="-defaults" allowWildcard="true">
+        <param name="background"><image>accept-background</image></param>
+        <param name="border"><border>background.border</border></param>
+        <param name="font"><font>whiteatari14</font></param>
+        <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
+        <param name="minWidth"><int>0</int></param>
+        <param name="maxWidth"><int>319</int></param>
+        <param name="minHeight"><int>0</int></param>
+        <param name="maxHeight"><int>239</int></param>
+    </theme>
+    
+    <theme name="rejectbutton" ref="-defaults" allowWildcard="true">
+        <param name="background"><image>reject-background</image></param>
         <param name="border"><border>background.border</border></param>
         <param name="font"><font>whiteatari14</font></param>
         <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
@@ -876,6 +1076,42 @@
             <param name="font"><font>scoretotal12</font></param>
             <param name="textAlignment"><enum type="alignment">RIGHT</enum></param>
         </theme>
+    </theme>
+
+    <theme name="ult-panel" ref="-defaults" allowWildcard="true">
+                    <param name="background"><image>ultpanel.background</image></param>
+                    <param name="border"><border>background.border</border></param>
+        <param name="defaultGap"><dimension>5,5</dimension></param>
+        <param name="smallGap"><dimension>8,8</dimension></param>
+        <param name="mediumGap"><dimension>10,10</dimension></param>
+        <param name="largeGap"><dimension>15,15</dimension></param>
+        <param name="namedGaps"><map/></param>
+        <param name="textAlignment"><enum type="alignment">FILL</enum></param>
+        <param name="font"><font>whiteatari14</font></param>
+        <theme name="label" ref="-defaults">
+            <param name="font"><font>whiteatari14</font></param>
+            <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
+        </theme>
+        <theme name="labelright" ref="-defaults">
+            <param name="font"><font>whiteatari14</font></param>
+            <param name="textAlignment"><enum type="alignment">RIGHT</enum></param>
+        </theme>
+        <theme name="labelmiddle" ref="-defaults">
+            <param name="font"><font>whiteatari14</font></param>
+            <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
+        </theme>
+        <theme name="labelscoretotal" ref="-defaults">
+            <param name="font"><font>scoretotal12</font></param>
+            <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
+        </theme>
+        <theme name="labelscoretotalright" ref="-defaults">
+            <param name="font"><font>scoretotal12</font></param>
+            <param name="textAlignment"><enum type="alignment">RIGHT</enum></param>
+        </theme>
+        <param name="maxHeight"><int>0</int></param>
+        <param name="minHeight"><int>0</int></param>
+        <param name="maxWidth"><int>0</int></param>
+        <param name="minWidth"><int>0</int></param>
     </theme>
 
     <theme name="correctbid-panel" ref="-defaults" allowWildcard="true">
@@ -979,6 +1215,15 @@
             <param name="font"><font>scoretotal12</font></param>
             <param name="textAlignment"><enum type="alignment">RIGHT</enum></param>
         </theme>
+        <theme name="labelwhite" ref="-defaults" allowWildcard="true">
+            <param name="font"><font>questionatari16</font></param>
+            <param name="minWidth"><int>0</int></param>
+            <param name="maxWidth"><int>0</int></param>
+            <param name="minHeight"><int>0</int></param>
+            <param name="maxHeight"><int>0</int></param>
+            <param name="background"><image>none</image></param>
+            <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
+        </theme>
     </theme>
 
     <theme name="incorrecttrust-panel" ref="-defaults" allowWildcard="true">
@@ -1011,6 +1256,15 @@
         <theme name="labelscoretotalright" ref="-defaults">
             <param name="font"><font>scoretotal12</font></param>
             <param name="textAlignment"><enum type="alignment">RIGHT</enum></param>
+        </theme>
+        <theme name="labelwhite" ref="-defaults" allowWildcard="true">
+            <param name="font"><font>questionatari16</font></param>
+            <param name="minWidth"><int>0</int></param>
+            <param name="maxWidth"><int>0</int></param>
+            <param name="minHeight"><int>0</int></param>
+            <param name="maxHeight"><int>0</int></param>
+            <param name="background"><image>none</image></param>
+            <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
         </theme>
     </theme>
 
@@ -1129,6 +1383,20 @@
         <param name="maxHeight"><int>0</int></param>
     </theme>
 
+    <theme name="backgroundlayout" ref="-defaults" allowWildcard="true">
+                    <param name="background"><image>none</image></param>
+                    <param name="border"><border>background.border</border></param>
+        <param name="defaultGap"><dimension>5,5</dimension></param>
+        <param name="smallGap"><dimension>8,8</dimension></param>
+        <param name="mediumGap"><dimension>10,10</dimension></param>
+        <param name="largeGap"><dimension>15,15</dimension></param>
+        <param name="namedGaps"><map/></param>
+        <param name="minWidth"><int>0</int></param>
+        <param name="maxWidth"><int>0</int></param>
+        <param name="minHeight"><int>0</int></param>
+        <param name="maxHeight"><int>0</int></param>
+    </theme>
+
     <theme name="roll-panel" ref="-defaults" allowWildcard="true">
                     <param name="background"><image>rollpanel.background</image></param>
                     <param name="border"><border>background.border</border></param>
@@ -1186,14 +1454,36 @@
         <param name="maxHeight"><int>100</int></param>
         <param name="font"><font>questionatari16</font></param>
         <theme name="label" ref="-defaults">
-            <param name="font"><font>atariblue10</font></param>
+            <param name="font"><font>atarigreen10</font></param>
             <param name="textAlignment"><enum type="alignment">LEFT</enum></param>
         </theme>
         <theme name="labelreceived" ref="-defaults">
             <param name="font"><font>scoretotal12</font></param>
             <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
         </theme>
+        <theme name="labelright" ref="-defaults">
+            <param name="font"><font>whiteatari14</font></param>
+            <param name="textAlignment"><enum type="alignment">RIGHT</enum></param>
+        </theme>
+        <theme name="labelscoretotalright" ref="-defaults">
+            <param name="font"><font>scoretotal12</font></param>
+            <param name="textAlignment"><enum type="alignment">RIGHT</enum></param>
+        </theme>
+        <theme name="labelscoretotal" ref="-defaults">
+            <param name="font"><font>scoreatari12</font></param>
+            <param name="textAlignment"><enum type="alignment">LEFT</enum></param>
+        </theme>
+        <theme name="labelwhite" ref="-defaults" allowWildcard="true">
+            <param name="font"><font>whiteatari142</font></param>
+            <param name="minWidth"><int>0</int></param>
+            <param name="maxWidth"><int>0</int></param>
+            <param name="minHeight"><int>0</int></param>
+            <param name="maxHeight"><int>0</int></param>
+            <param name="background"><image>none</image></param>
+            <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
+        </theme>
     </theme>
+
 
     <theme name="secondtrust-panel" ref="-defaults" allowWildcard="true">
                     <param name="background"><image>secondtrust.background</image></param>
@@ -1209,14 +1499,36 @@
         <param name="maxHeight"><int>100</int></param>
         <param name="font"><font>questionatari16</font></param>
         <theme name="label" ref="-defaults">
-            <param name="font"><font>atariblue10</font></param>
+            <param name="font"><font>atarigreen10</font></param>
             <param name="textAlignment"><enum type="alignment">LEFT</enum></param>
         </theme>
         <theme name="labelreceived" ref="-defaults">
             <param name="font"><font>scoretotal12</font></param>
             <param name="textAlignment"><enum type="alignment">LEFT</enum></param>
         </theme>
+        <theme name="labelscoretotalright" ref="-defaults">
+            <param name="font"><font>scoretotal12</font></param>
+            <param name="textAlignment"><enum type="alignment">RIGHT</enum></param>
+        </theme>
+        <theme name="labelscoretotal" ref="-defaults">
+            <param name="font"><font>scoreatari12</font></param>
+            <param name="textAlignment"><enum type="alignment">LEFT</enum></param>
+        </theme>
+        <theme name="labelwhite" ref="-defaults" allowWildcard="true">
+            <param name="font"><font>whiteatari142</font></param>
+            <param name="minWidth"><int>0</int></param>
+            <param name="maxWidth"><int>0</int></param>
+            <param name="minHeight"><int>0</int></param>
+            <param name="maxHeight"><int>0</int></param>
+            <param name="background"><image>none</image></param>
+            <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
+        </theme>
     </theme>
+    <theme name="labelright" ref="-defaults">
+        <param name="font"><font>whiteatari14</font></param>
+        <param name="textAlignment"><enum type="alignment">RIGHT</enum></param>
+    </theme>
+
 
     <theme name="item-panel" ref="-defaults" allowWildcard="true">
                     <param name="background"><image>item.background</image></param>

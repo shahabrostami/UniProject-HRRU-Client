@@ -58,6 +58,8 @@ public class Connection {
 		kryo.register(Packet19TrustSecond.class);
 		kryo.register(Packet20SendPrison.class);
 		kryo.register(Packet21EndPrison.class);
+		kryo.register(Packet22PropUlt.class);
+		kryo.register(packet23DecUlt.class);
 		kryo.register(int[].class);
 	}
 	

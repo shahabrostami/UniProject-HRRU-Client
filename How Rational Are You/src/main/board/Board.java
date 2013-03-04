@@ -11,8 +11,8 @@ public class Board {
 	
 	private int shiftx;
 	private int shifty;
-	private int middlex = HRRUClient.resX/2 + 150;
-	private int middley = HRRUClient.resY/2 + 50;
+	private int middlex = 600/2 + 150;
+	private int middley = 450/2 + 50;
 	
 	public GridSquareContainer[] gridSquares;
 	private int counter = 0;
@@ -31,10 +31,9 @@ public class Board {
 		gridSquares = new GridSquareContainer[size];
 		
 		int[] tileOrder = HRRUClient.cs.getBoard();
-		/*
+		
 		for(int i = 0; i < size; i++)
-			tileOrder[i] = 1;
-			*/
+			System.out.println(tileOrder[i]);
 		
 		// create board grid
 		for(int row1 = 0; row1 < scale-1; row1++)

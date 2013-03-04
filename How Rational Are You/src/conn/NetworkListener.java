@@ -44,7 +44,6 @@ public class NetworkListener extends Listener{
 	}
 	
 	public void received(Connection c, Object o){
-		Log.set(Log.LEVEL_TRACE);
 		if(o instanceof Packet00SyncMessage)
 		{
 			HRRUClient.cs.setSync(true);
@@ -192,6 +191,14 @@ public class NetworkListener extends Listener{
 				HRRUClient.cs.setSecondary_value(((Packet13Play)o).secondary_value);
 				HRRUClient.cs.setThird_value(((Packet13Play)o).third_value);
 			}
+			else if(activity == 3 && activity_id == 4)
+			{
+				int secondary_id = ((Packet13Play)o).secondary_id;
+				int secondary_value = ((Packet13Play)o).secondary_value;
+				System.out.println(secondary_id + "-" + secondary_value + "-");
+				HRRUClient.cs.setSecondary_id(((Packet13Play)o).secondary_id);
+				HRRUClient.cs.setSecondary_value(((Packet13Play)o).secondary_value);
+			}
 			HRRUClient.cs.setState(play);
 			System.out.println(activity);
 			System.out.println(activity_id);
@@ -200,6 +207,7 @@ public class NetworkListener extends Listener{
 		if(o instanceof Packet14QuestionComplete)
 		{
 			int player = ((Packet14QuestionComplete)o).player;
+			int choice = ((Packet14QuestionComplete)o).choice;
 			int question_difficulty = ((Packet14QuestionComplete)o).difficulty;
 			int elapsedtime = ((Packet14QuestionComplete)o).elapsedtime;
 			int points = ((Packet14QuestionComplete)o).points;
@@ -213,16 +221,19 @@ public class NetworkListener extends Listener{
 			otherPlayerResult.setPoints(points);
 			otherPlayerResult.setOverall(overall);
 			otherPlayerResult.setCorrect(correct);
+			otherPlayerResult.setChoice(choice);
 			
 			if(player == 1)
 			{
-				HRRUClient.cs.getP1().setReady(1);
+				System.out.println("done");
 				HRRUClient.cs.getP1().setActivityScore(otherPlayerResult);
+				HRRUClient.cs.getP1().setReady(1);
 			}
 			else
 			{
-				HRRUClient.cs.getP2().setReady(1);
+				System.out.println("done");
 				HRRUClient.cs.getP2().setActivityScore(otherPlayerResult);
+				HRRUClient.cs.getP2().setReady(1);
 			}
 		}
 		if(o instanceof Packet15PuzzleComplete)
@@ -346,6 +357,35 @@ public class NetworkListener extends Listener{
 		}
 		if(o instanceof Packet21EndPrison)
 		{
+			HRRUClient.cs.setGameState(3);
+		}
+		if(o instanceof Packet22PropUlt)
+		{
+			int player = HRRUClient.cs.getPlayer();
+			int playerPropValue = ((Packet22PropUlt)o).playerPropValue;
+			int playerDecValue = ((Packet22PropUlt)o).playerDecValue;
+			if(player==1)
+			{
+				HRRUClient.cs.getP1().getCurrentUltimatumScore().setPlayerPropValue(playerPropValue);
+				HRRUClient.cs.getP1().getCurrentUltimatumScore().setPlayerDecValue(playerDecValue);
+			}
+			if(player==2)
+			{
+				HRRUClient.cs.getP2().getCurrentUltimatumScore().setPlayerPropValue(playerPropValue);
+				HRRUClient.cs.getP2().getCurrentUltimatumScore().setPlayerDecValue(playerDecValue);
+			}
+			System.out.println("nice");
+			HRRUClient.cs.setGameState(1);
+		}
+		if(o instanceof packet23DecUlt)
+		{
+			int player = HRRUClient.cs.getPlayer();
+			boolean success = ((packet23DecUlt)o).success;
+			if(player==1)
+				HRRUClient.cs.getP1().getCurrentUltimatumScore().setSuccess(success);
+			if(player==2)
+				HRRUClient.cs.getP2().getCurrentUltimatumScore().setSuccess(success);
+			System.out.println("nice");
 			HRRUClient.cs.setGameState(3);
 		}
 	}

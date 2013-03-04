@@ -4,6 +4,7 @@ public class ActivityScore {
 
 	private int activity;
 	private int activity_id;
+	private int choice;
 	private int points;
 	private int difficulty;
 	private int elapsedtime;
@@ -74,6 +75,14 @@ public class ActivityScore {
 
 	public void setActivity_id(int activity_id) {
 		this.activity_id = activity_id;
+	}
+
+	public int getChoice() {
+		return choice;
+	}
+
+	public void setChoice(int choice) {
+		this.choice = choice;
 	}
 
 

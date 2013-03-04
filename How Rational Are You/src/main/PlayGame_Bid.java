@@ -192,7 +192,7 @@ public class PlayGame_Bid extends BasicTWLGameState {
 		amountWon = 0;
 		maximumBid = 0;
 		clock2 = 0; clock3 = 0;
-		timer = 30;
+		timer = 60;
 		timer2 = 999;
 		overallTimer = 0;
 		otherPlayerBid = 0;
@@ -246,8 +246,8 @@ public class PlayGame_Bid extends BasicTWLGameState {
 		// setup description
 		descriptionModel.setHtml("<html><body><div><p style='text-align: center;'>"
 				+ "You and " + otherPlayer.getName() + " are both "
-				+ "<a style='font-family: name;'>bidding</a> for the item using your points.</p>"
-				+ "<p style='margin-top: 10px; text-align: center;'>The player with the highest <a style='font-family: name;'>bid</a> wins the item for the cost of their winning bid.</p>"
+				+ "<a style='font-family: name;'>bidding</a> for the item using your <a style='font-family: name;'>points</a>.</p>"
+				+ "<p style='margin-top: 10px; text-align: center;'>The player with the <a style='font-family: name;'>highest bid</a> wins the item for the <a style='font-family: name;'>cost of their winning bid.</a></p>"
 				+ "<p style='margin-top: 10px; text-align: center;'>The highest bidder will then win the <a style='font-family: name;'>value</a> of the item in <a style='font-family: name;'>points!</a></p>" 
 				+ "</div></body></html>");
 		
@@ -384,11 +384,11 @@ public class PlayGame_Bid extends BasicTWLGameState {
 		btnYes.setTheme("choicebutton");
 		btnNo.setTheme("choicebutton");
 		
-		lblConfirmation.setPosition((gcw/2) - lblConfirmation.getWidth()/2, fixed_y + 330);
-		btnYes.setPosition((gcw/2) - 310, 550);
-		btnNo.setPosition((gcw/2) + 10, 550);
-		btnYes.setSize(300, 30);
-		btnNo.setSize(300, 30);
+		lblConfirmation.setPosition((gcw/2) - lblConfirmation.getWidth()/2, fixed_y + 320);
+		btnYes.setPosition((gcw/2) - 152, fixed_y + 340);
+		btnNo.setPosition((gcw/2) - 152, fixed_y + 370);
+		btnYes.setSize(300, 25);
+		btnNo.setSize(300, 25);
 		
 		btnYes.addCallback(new Runnable() {
             public void run() {
@@ -704,9 +704,10 @@ public class PlayGame_Bid extends BasicTWLGameState {
 					winCheck = biddingScore.isWin();
 					playerWon = biddingScore.getPlayerWon();
 					amountWon = biddingScore.getAmountWon();
+					winString = "No one won the item!";
 					if(winCheck)
 					{
-						winString = "You won " + amountWon + "!";
+						winString = "You won " + amountWon + " points!";
 						p1ResultPanel.setTheme("correctbid-panel");
 						p2ResultPanel.setTheme("incorrectbid-panel");
 						lblBid.setText("" + currentBid);
