@@ -108,7 +108,7 @@
         </select>
         <select name="menu.button">
             <area if="pressed" xywh="17,40,7,7" splitx="L3,R3" splity="T3,B3"/>
-            <area if="selected" xywh="17,40,7,7" splitx="L3,R3" splity="T3,B3"/>
+            <area if="selected" xywh="41,40,7,7" splitx="L3,R3" splity="T3,B3"/>
             <area if="hover" xywh="9,40,7,7" tint="#FFFFFF" splitx="L3,R3" splity="T3,B3"/>
             <area xywh="1,40,7,7" splitx="L3,R3" splity="T3,B3"/>
         </select>
@@ -501,6 +501,22 @@
     <images file="ultpanel.png">
         <area name="ultpanel.background" xywh="*" border="75,0,20,0"/>
     </images>
+    <images file="trustpanelstats.png">
+        <area name="trustpanelstats.background" xywh="*" border="50,30,30,30"/>
+    </images>
+    <images file="coopbetraypanelstats.png">
+        <area name="coopbetraypanelstats.background" xywh="*" border="50,30,30,30"/>
+    </images>
+    <images file="bidpanelstats.png">
+        <area name="bidpanelstats.background" xywh="*" border="20,30,30,30"/>
+    </images>
+    <images file="ultimatumpanelstats.png">
+        <area name="ultpanelstats.background" xywh="*" border="50,30,30,30"/>
+    </images>
+
+
+
+
 
 
 
@@ -518,7 +534,7 @@
         <area name="q7.png" xywh="*"/>
     </images>
     <images file="verdict.png">
-        <area name="verdict.background" xywh="*" border="270,70,20,170"/>
+        <area name="verdict.background" xywh="*" border="270,10,20,170"/>
     </images>
 
     
@@ -779,6 +795,16 @@
         <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
     </theme>
 
+    <theme name="labelscoretotalleft" ref="-defaults" allowWildcard="true">
+        <param name="font"><font>scoretotal12</font></param>
+        <param name="minWidth"><int>0</int></param>
+        <param name="maxWidth"><int>0</int></param>
+        <param name="minHeight"><int>0</int></param>
+        <param name="maxHeight"><int>0</int></param>
+        <param name="background"><image>none</image></param>
+        <param name="textAlignment"><enum type="alignment">LEFT</enum></param>
+    </theme>
+
     <theme name="questionatari8" ref="-defaults" allowWildcard="true">
         <param name="font"><font>questionatari8</font></param>
         <param name="minWidth"><int>0</int></param>
@@ -797,6 +823,26 @@
         <param name="maxHeight"><int>0</int></param>
         <param name="background"><image>none</image></param>
         <param name="textAlignment"><enum type="alignment">LEFT</enum></param>
+    </theme>
+
+    <theme name="questionatari9l" ref="-defaults" allowWildcard="true">
+        <param name="font"><font>questionatari9y</font></param>
+        <param name="minWidth"><int>0</int></param>
+        <param name="maxWidth"><int>0</int></param>
+        <param name="minHeight"><int>0</int></param>
+        <param name="maxHeight"><int>0</int></param>
+        <param name="background"><image>none</image></param>
+        <param name="textAlignment"><enum type="alignment">LEFT</enum></param>
+    </theme>
+
+    <theme name="questionatari9r" ref="-defaults" allowWildcard="true">
+        <param name="font"><font>questionatari9y</font></param>
+        <param name="minWidth"><int>0</int></param>
+        <param name="maxWidth"><int>0</int></param>
+        <param name="minHeight"><int>0</int></param>
+        <param name="maxHeight"><int>0</int></param>
+        <param name="background"><image>none</image></param>
+        <param name="textAlignment"><enum type="alignment">RIGHT</enum></param>
     </theme>
 
     <theme name="questionatari8i" ref="-defaults" allowWildcard="true">
@@ -914,6 +960,18 @@
         <param name="maxHeight"><int>60</int></param>
     </theme>
     
+    <theme name="verdictbutton" ref="-defaults" allowWildcard="true">
+        <param name="background"><image>menu.button</image></param>
+        <param name="border"><border>background.border</border></param>
+        <param name="font"><font>label</font></param>
+        <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
+        <param name="minWidth"><int>0</int></param>
+        <param name="maxWidth"><int>120</int></param>
+        <param name="minHeight"><int>20</int></param>
+        <param name="inputMap"><inputMap>-defaultInputMap</inputMap></param>
+        <param name="maxHeight"><int>50</int></param>
+    </theme>
+    
     <theme name="importantbutton" ref="-defaults" allowWildcard="true">
         <param name="background"><image>importantroll.button</image></param>
         <param name="border"><border>background.border</border></param>
@@ -924,6 +982,17 @@
         <param name="minHeight"><int>20</int></param>
         <param name="inputMap"><inputMap>-defaultInputMap</inputMap></param>
         <param name="maxHeight"><int>60</int></param>
+    </theme>
+    
+    <theme name="acceptbutton" ref="-defaults" allowWildcard="true">
+        <param name="background"><image>accept-background</image></param>
+        <param name="border"><border>background.border</border></param>
+        <param name="font"><font>whiteatari14</font></param>
+        <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
+        <param name="minWidth"><int>0</int></param>
+        <param name="maxWidth"><int>319</int></param>
+        <param name="minHeight"><int>0</int></param>
+        <param name="maxHeight"><int>239</int></param>
     </theme>
     
     <theme name="rollbutton" ref="-defaults" allowWildcard="true">
@@ -963,17 +1032,6 @@
     
     <theme name="cooperatebutton" ref="-defaults" allowWildcard="true">
         <param name="background"><image>cooperate-background</image></param>
-        <param name="border"><border>background.border</border></param>
-        <param name="font"><font>whiteatari14</font></param>
-        <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
-        <param name="minWidth"><int>0</int></param>
-        <param name="maxWidth"><int>319</int></param>
-        <param name="minHeight"><int>0</int></param>
-        <param name="maxHeight"><int>239</int></param>
-    </theme>
-    
-    <theme name="acceptbutton" ref="-defaults" allowWildcard="true">
-        <param name="background"><image>accept-background</image></param>
         <param name="border"><border>background.border</border></param>
         <param name="font"><font>whiteatari14</font></param>
         <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
@@ -1530,6 +1588,17 @@
             <param name="background"><image>none</image></param>
             <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
         </theme>
+        <theme name="verdictbutton" ref="-defaults" allowWildcard="true">
+            <param name="background"><image>menu.button</image></param>
+            <param name="border"><border>background.border</border></param>
+            <param name="font"><font>label</font></param>
+            <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
+            <param name="minWidth"><int>0</int></param>
+            <param name="maxWidth"><int>100</int></param>
+            <param name="minHeight"><int>20</int></param>
+            <param name="inputMap"><inputMap>-defaultInputMap</inputMap></param>
+            <param name="maxHeight"><int>50</int></param>
+        </theme>
     </theme>
 
 
@@ -1605,6 +1674,62 @@
         <param name="maxWidth"><int>220</int></param>
         <param name="minHeight"><int>0</int></param>
         <param name="maxHeight"><int>435</int></param>
+    </theme>
+
+    <theme name="trustgamestat-panel" ref="-defaults" allowWildcard="true">
+                    <param name="background"><image>trustpanelstats.background</image></param>
+                    <param name="border"><border>background.border</border></param>
+        <param name="defaultGap"><dimension>5,5</dimension></param>
+        <param name="smallGap"><dimension>8,8</dimension></param>
+        <param name="mediumGap"><dimension>10,10</dimension></param>
+        <param name="largeGap"><dimension>15,15</dimension></param>
+        <param name="namedGaps"><map/></param>
+        <param name="minWidth"><int>0</int></param>
+        <param name="maxWidth"><int>700</int></param>
+        <param name="minHeight"><int>0</int></param>
+        <param name="maxHeight"><int>350</int></param>
+    </theme>
+
+    <theme name="coopbetraygamestat-panel" ref="-defaults" allowWildcard="true">
+                    <param name="background"><image>coopbetraypanelstats.background</image></param>
+                    <param name="border"><border>background.border</border></param>
+        <param name="defaultGap"><dimension>5,5</dimension></param>
+        <param name="smallGap"><dimension>8,8</dimension></param>
+        <param name="mediumGap"><dimension>10,10</dimension></param>
+        <param name="largeGap"><dimension>15,15</dimension></param>
+        <param name="namedGaps"><map/></param>
+        <param name="minWidth"><int>0</int></param>
+        <param name="maxWidth"><int>700</int></param>
+        <param name="minHeight"><int>0</int></param>
+        <param name="maxHeight"><int>350</int></param>
+    </theme>
+
+    <theme name="bidgamestat-panel" ref="-defaults" allowWildcard="true">
+                    <param name="background"><image>bidpanelstats.background</image></param>
+                    <param name="border"><border>background.border</border></param>
+        <param name="defaultGap"><dimension>5,5</dimension></param>
+        <param name="smallGap"><dimension>8,8</dimension></param>
+        <param name="mediumGap"><dimension>10,10</dimension></param>
+        <param name="largeGap"><dimension>15,15</dimension></param>
+        <param name="namedGaps"><map/></param>
+        <param name="minWidth"><int>0</int></param>
+        <param name="maxWidth"><int>700</int></param>
+        <param name="minHeight"><int>0</int></param>
+        <param name="maxHeight"><int>350</int></param>
+    </theme>
+
+    <theme name="ultgamestat-panel" ref="-defaults" allowWildcard="true">
+                    <param name="background"><image>ultpanelstats.background</image></param>
+                    <param name="border"><border>background.border</border></param>
+        <param name="defaultGap"><dimension>5,5</dimension></param>
+        <param name="smallGap"><dimension>8,8</dimension></param>
+        <param name="mediumGap"><dimension>10,10</dimension></param>
+        <param name="largeGap"><dimension>15,15</dimension></param>
+        <param name="namedGaps"><map/></param>
+        <param name="minWidth"><int>0</int></param>
+        <param name="maxWidth"><int>700</int></param>
+        <param name="minHeight"><int>0</int></param>
+        <param name="maxHeight"><int>350</int></param>
     </theme>
 
     <theme name="puzzlestat-panel" ref="-defaults" allowWildcard="true">

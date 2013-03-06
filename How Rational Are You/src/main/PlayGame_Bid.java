@@ -287,6 +287,7 @@ public class PlayGame_Bid extends BasicTWLGameState {
         		.addGap(60).addWidget(lItemValue)
         		.addWidget(lblItemValue));
         
+        lblConfirmation.setPosition((gcw/2) - lblConfirmation.getWidth()/2, fixed_y + 320);
         // Setup bidding GUI
 		vaBid.setMinMaxValue(0, maximumBid);
 		vaBid.setValue(0);
@@ -800,9 +801,9 @@ public class PlayGame_Bid extends BasicTWLGameState {
 						biddingResult = new BiddingScore(item_id, itemValue, currentBid, otherPlayerBid, playerWon, 0, winCheck);
 					}
 					if(playerID == 1)
-						HRRUClient.cs.getP2().addBiddingScore(biddingResult);
-					else
 						HRRUClient.cs.getP1().addBiddingScore(biddingResult);
+					else
+						HRRUClient.cs.getP2().addBiddingScore(biddingResult);
 			
 					syncMessage = new Packet00SyncMessage();
 					syncMessage.player = playerID;

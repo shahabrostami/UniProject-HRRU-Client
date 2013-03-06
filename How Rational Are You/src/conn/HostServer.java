@@ -85,7 +85,7 @@ public class HostServer extends BasicTWLGameState {
 		clock = 300;
         rootPane.removeAllChildren();
         hostPanel.setTheme("login-panel");
-
+        rootPane.isFocusKeyEnabled();
         efName.setSize(100,20);
         lName.setLabelFor(efName);
 
@@ -206,7 +206,7 @@ public class HostServer extends BasicTWLGameState {
 		assert rootPane == null : "RootPane already created";
 
 		RootPane rp = new RootPane(this);
-    
+		rp.setFocusKeyEnabled(true);
 		rp.setTheme("");
 		rp.getOrCreateActionMap().addMapping(this);
 		return rp;
@@ -350,7 +350,6 @@ public class HostServer extends BasicTWLGameState {
 			sbg.enterState(0);
 			back = false;
 		}
-		
 		state = HRRUClient.cs.getState();
 		
 		// full message ticker

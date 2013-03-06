@@ -138,7 +138,7 @@ public class Main extends BasicTWLGameState {
 		});
 		*/
 		// setup gui variables
-		btnHost = new Button("Host Server");
+		btnHost = new Button("Host Game");
 		btnHost.setSize(400, 30);
 		btnHost.setPosition(gc.getWidth()/2-200, gc.getHeight()/2-95);
 		btnHost.addCallback(new Runnable() {
@@ -148,7 +148,7 @@ public class Main extends BasicTWLGameState {
 			}
 		});
 		btnHost.setTheme("menubutton");
-		btnJoin = new Button("Join Server");
+		btnJoin = new Button("Join Game");
 		btnJoin.setSize(400, 30);
 		btnJoin.setPosition(gc.getWidth()/2-200, gc.getHeight()/2-60);
 		btnJoin.addCallback(new Runnable() {

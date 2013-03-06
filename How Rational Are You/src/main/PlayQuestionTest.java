@@ -211,7 +211,7 @@ public class PlayQuestionTest extends BasicTWLGameState {
 		questions = question_list.getQuestion_list();
 		question_list.getNumberOfQuestions();
 		
-		current_question_id = HRRUClient.cs.getActivity_id();
+		current_question_id = 16; // HRRUClient.cs.getActivity_id();
 		current_question = questions[current_question_id];
 
 		current_choices = current_question.getChoices();
@@ -225,7 +225,7 @@ public class PlayQuestionTest extends BasicTWLGameState {
 		win = false; end = false; time_out = false; finished = false; resume = false;
 		currentAnswer = -1;
 		clock2 = 0; clock3 = 0;
-		timer = 4;
+		timer = 8;
 		timer2 = 999;
 		elapsedTime = 0;
 		pointsAvailable = 0;
@@ -750,7 +750,7 @@ public class PlayQuestionTest extends BasicTWLGameState {
 			if(otherPlayerReady == 1)
 			{
 				// Setup new UI
-				timer = 10; // should be 10
+				timer = 5; // should be 10
 				timer2 = 999;
 				clock2 = 0;
 				clock3 = 0;

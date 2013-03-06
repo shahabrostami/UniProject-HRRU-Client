@@ -63,7 +63,7 @@ public class Play extends BasicTWLGameState {
     private final int play_trustgame = 8;
     private final int play_prisongame = 9;
     private final int play_ultgame = 10;
-	private final int statistics = 15;
+	private final int verdict = 15;
 	
 	// states: 0 = idle, 1 = rolling, 2 = navigate board
 	private int state, gameState;
@@ -141,23 +141,17 @@ public class Play extends BasicTWLGameState {
 			}
 			
 			
-			TrustScore list;
-			if(!(player.getTrustScores().isEmpty()))
+			BiddingScore list;
+			if(!(player.getBiddingScores().isEmpty()))
 			{
-				for(int i = 0; i < player.getTrustScores().size(); i++)
+				for(int i = 0; i < player.getBiddingScores().size(); i++)
 				{
-					list = player.getTrustScores().get(i);
-					System.out.println(list.getMaxToGive());
-					System.out.println(list.getMaxToReturn());
-					System.out.println(list.getMultiplier());
-					System.out.println(list.getPlayerGive());
-					System.out.println(list.getPlayerReturn());
-					System.out.println(list.getPlayerReturnProfit());
-					System.out.println(list.getPlayerReturnValue());
+					list = player.getBiddingScores().get(i);
+					System.out.println(list.getAmountWon());
 				}
 			}
 			
-			*/
+			 */
 		}
 		else {
 			p2ShowRollBanner = true;
@@ -393,17 +387,16 @@ public class Play extends BasicTWLGameState {
 		sbg.addState(new PlayGame_Trust(play_trustgame));
 		sbg.addState(new PlayGame_Prisoners(play_prisongame));
 		sbg.addState(new PlayGame_Ultimatum(play_ultgame));
-		sbg.addState(new Statistics(statistics));
 		//sbg.addState(new PlayPuzzle(play_puzzle, puzzle_list));
 		//sbg.addState(new PlayPuzzle(9));
 		//sbg.addState(new PlayGame(10));
-
+		// UN DO THIS LATER
 		sbg.getState(play_question).init(gc, sbg);
 		sbg.getState(play_bidgame).init(gc, sbg);
 		sbg.getState(play_trustgame).init(gc, sbg);
 		sbg.getState(play_prisongame).init(gc, sbg);
 		sbg.getState(play_ultgame).init(gc, sbg);
-		sbg.getState(statistics).init(gc, sbg);
+		
 		//sbg.getState(play_puzzle).init(gc, sbg);
 		
 		lStatus.setPosition(305, 10);
@@ -464,7 +457,11 @@ public class Play extends BasicTWLGameState {
 		else 
 		
 		if(timer <0)
-			sbg.enterState(15);
+		{
+			sbg.addState(new Verdict(verdict));
+			sbg.getState(verdict).init(gc, sbg);
+			sbg.enterState(verdict);
+		}
 		
 		if(state == 0)
 		{

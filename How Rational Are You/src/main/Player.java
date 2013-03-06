@@ -11,6 +11,7 @@ public class Player {
 	private String name;
 	private int score;
 	private int position;
+	private int totalRolled;
 	private int ready;
 	private int playerCharacterID;
 	private Character playerCharacter;
@@ -32,12 +33,19 @@ public class Player {
 	private UltimatumScore currentUltimatumScore;
 	private ArrayList<UltimatumScore> ultimatumScores;
 	
+	private BiddingScoreResult biddingScoreResult;
+	private PrisonerScoreResult prisonerScoreResult;
+	private TrustScoreResult trustScoreResult;
+	private UltScoreResult ultScoreResult;
+	private QuestionScoreResult questionScoreResult;
+	
 	public Player(String name) throws SlickException
 	{
 		this.setName(name);
 		this.setScore(0);
 		this.setReady(0);
 		this.setPosition(0);
+		this.setTotalRolled(0);
 		this.currentActivityScore = new ActivityScore(0,0,0,0,0, false);
 		this.activityScores = new ArrayList<ActivityScore>();
 		this.currentBiddingScore = new BiddingScore(0,0,0, false);
@@ -48,6 +56,9 @@ public class Player {
 		this.prisonScores = new ArrayList<PrisonScore>();
 		this.setCurrentUltimatumScore(new UltimatumScore(0,0,0,0,0, false));
 		this.ultimatumScores = new ArrayList<UltimatumScore>();
+		this.biddingScoreResult = new BiddingScoreResult(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+		this.prisonerScoreResult = new PrisonerScoreResult(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+		this.ultScoreResult = new UltScoreResult(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
 	}
 
 	public String getName() {
@@ -72,11 +83,13 @@ public class Player {
 	
 	public void updatePosition(){
 		this.position++;
+		this.totalRolled++;
 		if(this.position == 32)
 			this.position = 0;
 	}
 
 	public void setPosition(int position) {
+		this.totalRolled += position;
 		this.position += position;
 	}
 
@@ -209,7 +222,53 @@ public class Player {
 		this.ultimatumScores.add(ultimatumScore);
 	}
 
+	public BiddingScoreResult getBiddingScoreResult() {
+		return biddingScoreResult;
+	}
+
+	public void setBiddingScoreResult(BiddingScoreResult biddingScoreResult) {
+		this.biddingScoreResult = biddingScoreResult;
+	}
+
+	public PrisonerScoreResult getPrisonerScoreResult() {
+		return prisonerScoreResult;
+	}
+
+	public void setPrisonerScoreResult(PrisonerScoreResult prisonerScoreResult) {
+		this.prisonerScoreResult = prisonerScoreResult;
+	}
+
+	public TrustScoreResult getTrustScoreResult() {
+		return trustScoreResult;
+	}
+
+	public void setTrustScoreResult(TrustScoreResult trustScoreResult) {
+		this.trustScoreResult = trustScoreResult;
+	}
+
+	public UltScoreResult getUltScoreResult() {
+		return ultScoreResult;
+	}
+
+	public void setUltScoreResult(UltScoreResult ultScoreResult) {
+		this.ultScoreResult = ultScoreResult;
+	}
 	
+	public QuestionScoreResult getQuestionScoreResult() {
+		return questionScoreResult;
+	}
+
+	public void setQuestionScoreResult(QuestionScoreResult questionScoreResult) {
+		this.questionScoreResult = questionScoreResult;
+	}
+
+	public int getTotalRolled() {
+		return totalRolled;
+	}
+
+	public void setTotalRolled(int totalRolled) {
+		this.totalRolled = totalRolled;
+	}
 	
 
 }

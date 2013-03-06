@@ -14,14 +14,17 @@ import TWLSlick.BasicTWLGameState;
 import TWLSlick.RootPane;
 import de.matthiasmann.twl.utils.PNGDecoder;
 import de.matthiasmann.twl.Alignment;
+import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.DialogLayout;
 import de.matthiasmann.twl.Label;
 
-public class Statistics extends BasicTWLGameState {
+public class QuestionStatistics extends BasicTWLGameState {
 
 	public Client client;
 	DialogLayout questionPanel, puzzlePanel, gamePanel;
+	Button btnBack;
 	
+	private int enterState;
 	int gcw;
 	int gch;
 	
@@ -43,6 +46,7 @@ public class Statistics extends BasicTWLGameState {
 	private ArrayList<ActivityScore> mediumActivityScores;
 	private ArrayList<ActivityScore> hardActivityScores;
 	
+	// Question Statistics
 	private int noOfEasyQuestions;
 	private int noOfEasyQCorrect;
 	private int easyQTimeBonusAvg;
@@ -71,41 +75,30 @@ public class Statistics extends BasicTWLGameState {
 	private int totalQPointsAvg;
 	private double totalQPointsOverall;
 	
+	private double questionScoreTotal;
+	
 
-	private int player;
+	private int playerID;
 	private int playerScore;
 	
-	public Statistics(int main) {
+	void reset() {
+		// Reset Question result variables
+	    noOfEasyQuestions = 0; easyQTimeBonusAvg = 0; easyQTimeBonusOverall = 0; easyQPointsAvg = 0; easyQPointsOverall = 0;
+	    noOfMediumQuestions = 0; mediumQTimeBonusAvg = 0; mediumQTimeBonusOverall = 0; mediumQPointsAvg = 0; mediumQPointsOverall = 0;
+	    noOfHardQuestions = 0; hardQTimeBonusAvg = 0; hardQTimeBonusOverall = 0; hardQPointsAvg = 0; hardQPointsOverall = 0;
+		noOfTotalQuestions = 0; totalQTimeBonusAvg = 0; totalQTimeBonusOverall = 0; totalQPointsAvg = 0; totalQPointsOverall = 0;
+	}
+	
+	public QuestionStatistics(int main) {
 		client = HRRUClient.conn.getClient();
 	}
 
 	@Override
 	public void enter(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		super.enter(gc, sbg);
-		
-		/*
-		HRRUClient.cs.setP1(new Player("derp"));
-		ActivityScore activityScore = new ActivityScore(1, 100, 2, 30, 130, true);
-		activityScore.setActivity_id(1);
-		HRRUClient.cs.getP1().addActivityScore(activityScore);
-		
-		activityScore = new ActivityScore(1, 100, 3, 30, 330, true);
-		activityScore.setActivity_id(2);
-		HRRUClient.cs.getP1().addActivityScore(activityScore);
-		
-		activityScore = new ActivityScore(3, 100, 3, 50, 150, true);
-		activityScore.setActivity_id(3);
-		HRRUClient.cs.getP1().addActivityScore(activityScore);
-		
-		activityScore = new ActivityScore(3, 0, 1, 0, 0, false);
-		activityScore.setActivity_id(5);
-		HRRUClient.cs.getP1().addActivityScore(activityScore);
-		
-		activityScores = HRRUClient.cs.getP1().getActivityScores();
-		*/
-		
-		player = HRRUClient.cs.getPlayer();
-		if(player == 1)
+		enterState = 0;
+		playerID = HRRUClient.cs.getPlayer();
+		if(playerID == 1)
 		{
 			playerScore = HRRUClient.cs.getP1().getScore();
 			activityScores = HRRUClient.cs.getP1().getActivityScores();
@@ -116,130 +109,10 @@ public class Statistics extends BasicTWLGameState {
 			activityScores = HRRUClient.cs.getP2().getActivityScores();
 		}
 		
-		// Reset Question result variables
-	    noOfEasyQuestions = 0;
-		easyQTimeBonusAvg = 0;
-		easyQTimeBonusOverall = 0;
-		easyQPointsAvg = 0;
-		easyQPointsOverall = 0;
-		
-		noOfMediumQuestions = 0;
-		mediumQTimeBonusAvg = 0;
-		mediumQTimeBonusOverall = 0;
-		mediumQPointsAvg = 0;
-		mediumQPointsOverall = 0;
-		
-		noOfHardQuestions = 0;
-		hardQTimeBonusAvg = 0;
-		hardQTimeBonusOverall = 0;
-		hardQPointsAvg = 0;
-		hardQPointsOverall = 0;
-		
-		noOfTotalQuestions = 0;
-		totalQTimeBonusAvg = 0;
-		totalQTimeBonusOverall = 0;
-		totalQPointsAvg = 0;
-		totalQPointsOverall = 0;
-		
-		// Calculate Question statistics
-		for(int i = 0; i < activityScores.size(); i++)
-		{
-			// Calculate Total statistics
-			noOfTotalQuestions++;
-			activityScore = activityScores.get(i);
-			totalQTimeBonusOverall += activityScore.getElapsedtime();
-			totalQPointsOverall += activityScore.getOverall();
-			if(activityScore.getCorrect())
-				noOfTotalQCorrect++;
-			
-			// Calculate Easy statistics
-			if(activityScore.getDifficulty() == 1)
-			{
-				noOfEasyQuestions++; 
-				easyQTimeBonusOverall += activityScore.getElapsedtime();
-				easyQPointsOverall += activityScore.getOverall();
-				if(activityScore.getCorrect())
-					noOfEasyQCorrect++;
-			}
-			// Calculate Medium statistics
-			else if(activityScore.getDifficulty() == 2)
-			{
-				noOfMediumQuestions++; 
-				mediumQTimeBonusOverall += activityScore.getElapsedtime();
-				mediumQPointsOverall += activityScore.getOverall();
-				if(activityScore.getCorrect())
-					noOfMediumQCorrect++;
-			}
-			// Calculate Hard statistics
-			else if(activityScore.getDifficulty() == 3)
-			{
-				noOfHardQuestions++; 
-				hardQTimeBonusOverall += activityScore.getElapsedtime();
-				hardQPointsOverall += activityScore.getOverall();
-				if(activityScore.getCorrect())
-					noOfHardQCorrect++;
-			}
-		}
-		// Calculate Average statistics
-		if(noOfEasyQuestions > 0)
-		{
-			easyQPointsAvg = (int) (easyQPointsOverall / noOfEasyQuestions + 0.5);
-			easyQTimeBonusAvg = (int) (easyQTimeBonusOverall / noOfEasyQuestions + 0.5);
-		}
-		if(noOfMediumQuestions > 0)
-		{
-			mediumQPointsAvg = (int) (mediumQPointsOverall / noOfMediumQuestions + 0.5);
-			mediumQTimeBonusAvg = (int) (mediumQTimeBonusOverall / noOfMediumQuestions + 0.5);
-		}
-		if(noOfHardQuestions > 0)
-		{
-			hardQPointsAvg = (int) (hardQPointsOverall / noOfHardQuestions + 0.5);
-			hardQTimeBonusAvg = (int) (hardQTimeBonusOverall / noOfHardQuestions + 0.5);
-		}
-		if(noOfTotalQuestions > 0)
-		{
-			totalQPointsAvg = (int) (totalQPointsOverall / noOfTotalQuestions + 0.5);
-			totalQTimeBonusAvg = (int) (totalQTimeBonusOverall / noOfTotalQuestions + 0.5);
-		}
-		
-		// Create Question UI
-		lQAmountR.setText("" + noOfTotalQuestions);
-		
-		lQEasy.setText("Easy: " + noOfEasyQuestions + " Questions");
-		lQEasyR.setText("");
-		lQEasyCorrectR.setText("" + noOfEasyQCorrect + "/" + noOfEasyQuestions);
-		lQEasyTimeBonusAvgR.setText("" + easyQTimeBonusAvg);
-		lQEasyTimeBonusOverallR.setText("" + (int)easyQTimeBonusOverall); 
-		lQEasyPointsAvgR.setText("" + easyQPointsAvg); 
-		lQEasyPointsOverallR.setText("" + (int)easyQPointsOverall);
-		
-		lQMedium.setText("Medium: " + noOfMediumQuestions + " Questions");
-		lQMediumR.setText("");
-		lQMediumCorrectR.setText("" + noOfMediumQCorrect + "/" + noOfMediumQuestions);
-		lQMediumTimeBonusAvgR.setText("" + mediumQTimeBonusAvg);
-		lQMediumTimeBonusOverallR.setText("" + (int)mediumQTimeBonusOverall); 
-		lQMediumPointsAvgR.setText("" + mediumQPointsAvg); 
-		lQMediumPointsOverallR.setText("" + (int)mediumQPointsOverall);
-        
-		lQHard.setText("Hard: " + noOfHardQuestions + " Questions");
-		lQHardR.setText("");
-		lQHardCorrectR.setText("" + noOfHardQCorrect + "/" + noOfHardQuestions);
-		lQHardTimeBonusAvgR.setText("" + hardQTimeBonusAvg);
-		lQHardTimeBonusOverallR.setText("" + (int)hardQTimeBonusOverall); 
-		lQHardPointsAvgR.setText("" + hardQPointsAvg); 
-		lQHardPointsOverallR.setText("" + (int)hardQPointsOverall);
-		
-		lQTotal.setText("Total: " + noOfTotalQuestions + " Questions");
-		lQTotalR.setText("");
-		lQTotalCorrectR.setText("" + noOfTotalQCorrect + "/" + noOfTotalQuestions);
-		lQTotalTimeBonusAvgR.setText("" + totalQTimeBonusAvg);
-		lQTotalTimeBonusOverallR.setText("" + (int)totalQTimeBonusOverall); 
-		lQTotalPointsAvgR.setText("" + totalQPointsAvg); 
-		lQTotalPointsOverallR.setText("" + (int)totalQPointsOverall);
-		
+		rootPane.removeAllChildren();
 		rootPane.add(questionPanel);
 		rootPane.add(puzzlePanel);
-		rootPane.add(gamePanel);
+		rootPane.add(btnBack);
 		rootPane.setTheme("");
 	}
 
@@ -258,20 +131,26 @@ public class Statistics extends BasicTWLGameState {
 		gcw = gc.getWidth();
 		gch = gc.getHeight();
 		
+		btnBack = new Button("Back");
+		btnBack.setSize(700, 30);
+		btnBack.setPosition(50,550);
+		btnBack.addCallback(new Runnable() {
+			@Override
+			public void run() {
+				enterState = 1;
+			}
+		});
+		btnBack.setTheme("menubutton");
+		
 		questionPanel = new DialogLayout();
         questionPanel.setTheme("questionstat-panel");
         questionPanel.setSize(220,435);
-        questionPanel.setPosition(20,100);
+        questionPanel.setPosition(20,50);
         
         puzzlePanel = new DialogLayout();
         puzzlePanel.setTheme("puzzlestat-panel");
         puzzlePanel.setSize(220,435);
         puzzlePanel.setPosition(280,100);
-        
-        gamePanel = new DialogLayout();
-        gamePanel.setTheme("gamestat-panel");
-        gamePanel.setSize(220,435);
-        gamePanel.setPosition(540,100);
         
 		lQAmount = new Label("Number of Questions: ");
 		lQAmountR = new Label("");
@@ -395,8 +274,8 @@ public class Statistics extends BasicTWLGameState {
 		
 		lQTotalPointsOverall = new Label("Points Total: ");
 		lQTotalPointsOverallR = new Label("");
-		lQTotalPointsOverall.setTheme("questionatari8r");
-		lQTotalPointsOverallR.setTheme("questionatari8r");
+		lQTotalPointsOverall.setTheme("questionatari8");
+		lQTotalPointsOverallR.setTheme("questionatari8");
 		
 		 DialogLayout.Group hQLeft = questionPanel.createParallelGroup(lQAmount, lQEasy, lQMedium, lQHard, lQTotal);
 	        DialogLayout.Group hQRight = questionPanel.createParallelGroup(lQAmountR, lQEasyR, lQMediumR, lQHardR, lQTotalR);
@@ -405,17 +284,19 @@ public class Statistics extends BasicTWLGameState {
 	        		lQEasyCorrect, lQEasyTimeBonusAvg, lQEasyTimeBonusOverall, lQEasyPointsAvg, lQEasyPointsOverall, 
 	        		lQMediumCorrect, lQMediumTimeBonusAvg, lQMediumTimeBonusOverall, lQMediumPointsAvg, lQMediumPointsOverall,
 	        		lQHardCorrect, lQHardTimeBonusAvg, lQHardTimeBonusOverall, lQHardPointsAvg, lQHardPointsOverall,
-	        		lQTotalCorrect, lQTotalTimeBonusAvg, lQTotalTimeBonusOverall, lQTotalPointsAvg, lQTotalPointsOverall);
+	        		lQTotalCorrect, lQTotalTimeBonusAvg, lQTotalTimeBonusOverall, lQTotalPointsAvg);
 	        
 	        DialogLayout.Group hQEasyRight = questionPanel.createParallelGroup(
 	        		lQEasyCorrectR, lQEasyTimeBonusAvgR, lQEasyTimeBonusOverallR, lQEasyPointsAvgR, lQEasyPointsOverallR,
 	        		lQMediumCorrectR, lQMediumTimeBonusAvgR, lQMediumTimeBonusOverallR, lQMediumPointsAvgR, lQMediumPointsOverallR,
 	        		lQHardCorrectR, lQHardTimeBonusAvgR, lQHardTimeBonusOverallR, lQHardPointsAvgR, lQHardPointsOverallR,
-	        		lQTotalCorrectR, lQTotalTimeBonusAvgR, lQTotalTimeBonusOverallR, lQTotalPointsAvgR, lQTotalPointsOverallR);
+	        		lQTotalCorrectR, lQTotalTimeBonusAvgR, lQTotalTimeBonusOverallR, lQTotalPointsAvgR);
 	        
 	        questionPanel.setHorizontalGroup(questionPanel.createParallelGroup()
 	        		.addGroup(questionPanel.createSequentialGroup(hQLeft, hQRight))
-	        		.addGroup(questionPanel.createSequentialGroup(hQEasyLeft, hQEasyRight)));
+	        		.addGroup(questionPanel.createSequentialGroup(hQEasyLeft, hQEasyRight))
+	        		.addGap(5).addWidget(lQTotalPointsOverall)
+	        		.addGap(5).addWidget(lQTotalPointsOverallR));
 	        
 	        questionPanel.setVerticalGroup(questionPanel.createSequentialGroup()
 	        		.addGroup(questionPanel.createParallelGroup(lQAmount, lQAmountR))
@@ -446,7 +327,157 @@ public class Statistics extends BasicTWLGameState {
 	        		.addGap(5).addGroup(questionPanel.createParallelGroup(lQTotalTimeBonusAvg, lQTotalTimeBonusAvgR))
 	        		.addGap(5).addGroup(questionPanel.createParallelGroup(lQTotalTimeBonusOverall, lQTotalTimeBonusOverallR))
 	        		.addGap(5).addGroup(questionPanel.createParallelGroup(lQTotalPointsAvg, lQTotalPointsAvgR))
-	        		.addGap(5).addGroup(questionPanel.createParallelGroup(lQTotalPointsOverall, lQTotalPointsOverallR)));
+	        		.addGap(15).addWidget(lQTotalPointsOverall)
+	        		.addGap(5).addWidget(lQTotalPointsOverallR));
+			
+			// RESET VARIABLES
+			reset();
+			// set player variable
+			playerID = HRRUClient.cs.getPlayer();
+			if(playerID == 1)
+			{
+				playerScore = HRRUClient.cs.getP1().getScore();
+				activityScores = HRRUClient.cs.getP1().getActivityScores();
+			}
+			else
+			{
+				playerScore = HRRUClient.cs.getP2().getScore();
+				activityScores = HRRUClient.cs.getP2().getActivityScores();
+			}
+			///////////////////////
+			////question scores////
+			///////////////////////
+			for(int i = 0; i < activityScores.size(); i++)
+			{
+				// Calculate Total statistics
+				noOfTotalQuestions++;
+				activityScore = activityScores.get(i);
+				totalQTimeBonusOverall += activityScore.getElapsedtime();
+				totalQPointsOverall += activityScore.getOverall();
+				if(activityScore.getCorrect())
+					noOfTotalQCorrect++;
+				
+				// Calculate Easy statistics
+				if(activityScore.getDifficulty() == 1)
+				{
+					noOfEasyQuestions++; 
+					easyQTimeBonusOverall += activityScore.getElapsedtime();
+					easyQPointsOverall += activityScore.getOverall();
+					if(activityScore.getCorrect())
+						noOfEasyQCorrect++;
+				}
+				// Calculate Medium statistics
+				else if(activityScore.getDifficulty() == 2)
+				{
+					noOfMediumQuestions++; 
+					mediumQTimeBonusOverall += activityScore.getElapsedtime();
+					mediumQPointsOverall += activityScore.getOverall();
+					if(activityScore.getCorrect())
+						noOfMediumQCorrect++;
+				}
+				// Calculate Hard statistics
+				else if(activityScore.getDifficulty() == 3)
+				{
+					noOfHardQuestions++; 
+					hardQTimeBonusOverall += activityScore.getElapsedtime();
+					hardQPointsOverall += activityScore.getOverall();
+					if(activityScore.getCorrect())
+						noOfHardQCorrect++;
+				}
+			}
+			// Calculate Average statistics
+			if(noOfEasyQuestions > 0)
+			{
+				easyQPointsAvg = (int) (easyQPointsOverall / noOfEasyQuestions + 0.5);
+				easyQTimeBonusAvg = (int) (easyQTimeBonusOverall / noOfEasyQuestions + 0.5);
+			}
+			if(noOfMediumQuestions > 0)
+			{
+				mediumQPointsAvg = (int) (mediumQPointsOverall / noOfMediumQuestions + 0.5);
+				mediumQTimeBonusAvg = (int) (mediumQTimeBonusOverall / noOfMediumQuestions + 0.5);
+			}
+			if(noOfHardQuestions > 0)
+			{
+				hardQPointsAvg = (int) (hardQPointsOverall / noOfHardQuestions + 0.5);
+				hardQTimeBonusAvg = (int) (hardQTimeBonusOverall / noOfHardQuestions + 0.5);
+			}
+			if(noOfTotalQuestions > 0)
+			{
+				totalQPointsAvg = (int) (totalQPointsOverall / noOfTotalQuestions + 0.5);
+				totalQTimeBonusAvg = (int) (totalQTimeBonusOverall / noOfTotalQuestions + 0.5);
+			}
+			
+			// Create Question UI
+			lQAmountR.setText("" + noOfTotalQuestions);
+			
+			lQEasy.setText("Easy: " + noOfEasyQuestions + " Questions");
+			lQEasyR.setText("");
+			lQEasyCorrectR.setText("" + noOfEasyQCorrect + "/" + noOfEasyQuestions);
+			lQEasyTimeBonusAvgR.setText("" + easyQTimeBonusAvg);
+			lQEasyTimeBonusOverallR.setText("" + (int)easyQTimeBonusOverall); 
+			lQEasyPointsAvgR.setText("" + easyQPointsAvg); 
+			lQEasyPointsOverallR.setText("" + (int)easyQPointsOverall);
+			
+			lQMedium.setText("Medium: " + noOfMediumQuestions + " Questions");
+			lQMediumR.setText("");
+			lQMediumCorrectR.setText("" + noOfMediumQCorrect + "/" + noOfMediumQuestions);
+			lQMediumTimeBonusAvgR.setText("" + mediumQTimeBonusAvg);
+			lQMediumTimeBonusOverallR.setText("" + (int)mediumQTimeBonusOverall); 
+			lQMediumPointsAvgR.setText("" + mediumQPointsAvg); 
+			lQMediumPointsOverallR.setText("" + (int)mediumQPointsOverall);
+	        
+			lQHard.setText("Hard: " + noOfHardQuestions + " Questions");
+			lQHardR.setText("");
+			lQHardCorrectR.setText("" + noOfHardQCorrect + "/" + noOfHardQuestions);
+			lQHardTimeBonusAvgR.setText("" + hardQTimeBonusAvg);
+			lQHardTimeBonusOverallR.setText("" + (int)hardQTimeBonusOverall); 
+			lQHardPointsAvgR.setText("" + hardQPointsAvg); 
+			lQHardPointsOverallR.setText("" + (int)hardQPointsOverall);
+			
+			lQTotal.setText("Total: " + noOfTotalQuestions + " Questions");
+			lQTotalR.setText("");
+			lQTotalCorrectR.setText("" + noOfTotalQCorrect + "/" + noOfTotalQuestions);
+			lQTotalTimeBonusAvgR.setText("" + totalQTimeBonusAvg);
+			lQTotalTimeBonusOverallR.setText("" + (int)totalQTimeBonusOverall); 
+			lQTotalPointsAvgR.setText("" + totalQPointsAvg); 
+			if(noOfTotalQuestions > 0)
+				lQTotalPointsOverallR.setText("" + (int)totalQPointsOverall + " of your " + playerScore + " (" + (int)((totalQPointsOverall/playerScore)*100+0.5) + "%)");
+
+			
+			QuestionScoreResult questionScoreResult =
+					new QuestionScoreResult(
+							noOfEasyQuestions, 
+							noOfEasyQCorrect, 
+							easyQTimeBonusAvg,
+							easyQTimeBonusOverall, 
+							easyQPointsAvg, 
+							easyQPointsOverall, 
+							noOfMediumQuestions, 
+							noOfMediumQCorrect, 
+							mediumQTimeBonusAvg,
+							mediumQTimeBonusOverall, 
+							mediumQPointsAvg, 
+							mediumQPointsOverall,
+							noOfHardQuestions, 
+							noOfHardQCorrect, 
+							hardQTimeBonusAvg,
+							hardQTimeBonusOverall,
+							hardQPointsAvg,
+							hardQPointsOverall, 
+							noOfTotalQuestions, 
+							noOfTotalQCorrect,
+							totalQTimeBonusAvg, 
+							totalQTimeBonusOverall, 
+							totalQPointsAvg, 
+							totalQPointsOverall);
+			
+			if(noOfTotalQuestions > 0)
+				questionScoreResult.setPercentage((int)((totalQPointsOverall/playerScore)*100+0.5));
+			
+			if(playerID == 1)
+				HRRUClient.cs.getP1().setQuestionScoreResult(questionScoreResult);
+			else
+				HRRUClient.cs.getP2().setQuestionScoreResult(questionScoreResult);
 	}
 
 	@Override
@@ -455,12 +486,13 @@ public class Statistics extends BasicTWLGameState {
 
 	@Override
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
-	
+		if(enterState == 1)
+			sbg.enterState(15);
 	}
 
 	@Override
 	public int getID() {
-		return 15;
+		return 17;
 	}
 
 }

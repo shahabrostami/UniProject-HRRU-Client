@@ -34,21 +34,22 @@ public class QuestionList {
 		
 		while((strLine = br.readLine()) != null)
 		{
+			// parse the question id
 			strLine = br.readLine();
 			question_id = Integer.parseInt(strLine);
-			
+			// number of answers
 			strLine = br.readLine();
 			number_of_answers = Integer.parseInt(strLine);
-			
+			// id of answer in list supplied
 			strLine = br.readLine();
 			answer = Integer.parseInt(strLine);
-			
+			// difficulty level of question
 			strLine = br.readLine();
 			difficulty = Integer.parseInt(strLine);
-			
+			// read question file
 			strLine = br.readLine();
 			file = strLine;
-			
+			// parase in the choices of answers
 			choices = new String[number_of_answers];
 			for(int i = 0; i < number_of_answers; i++)
 			{

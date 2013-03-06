@@ -963,20 +963,20 @@ public class PlayGame_Trust extends BasicTWLGameState {
 				if(playerGive == 1)
 				{
 					giveResultPanel.setPosition(
-				               (gcw/2 - giveResultPanel.getWidth()/2 - 220),
-				                (gch/2 - giveResultPanel.getHeight()/2));
+				               (gcw/2 - 155 - 220),
+				                (gch/2 - 155));
 					returnResultPanel.setPosition(
-			               (gcw/2 - returnResultPanel.getWidth()/2 + 180),
-			                (gch/2 - returnResultPanel.getHeight()/2));
+			               (gcw/2 - 155 + 180),
+			                (gch/2 - 155));
 				}
 				else
 				{
 					giveResultPanel.setPosition(
-				               (gcw/2 - giveResultPanel.getWidth()/2 + 180),
-				                (gch/2 - giveResultPanel.getHeight()/2));
+				               (gcw/2 - 155 + 180),
+				                (gch/2 - 155));
 					returnResultPanel.setPosition(
-			               (gcw/2 - returnResultPanel.getWidth()/2 - 220),
-			                (gch/2 - returnResultPanel.getHeight()/2));
+			               (gcw/2 - 155 - 220),
+			                (gch/2 - 155));
 				}
 				//	If Player1, update Player2's new score and add own result to list of results.
 				if(playerID == 1)
