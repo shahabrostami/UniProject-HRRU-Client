@@ -4,6 +4,10 @@ import main.item.Item;
 
 public class QuestionScoreResult {
 
+	private final int easyPoints = 50;
+	private final int mediumPoints = 100;
+	private final int hardPoints = 150;
+	
 	private int noOfEasyQuestions;
 	private int noOfEasyQCorrect;
 	private int easyQTimeBonusAvg;
@@ -31,6 +35,8 @@ public class QuestionScoreResult {
 	private double totalQTimeBonusOverall;
 	private int totalQPointsAvg;
 	private double totalQPointsOverall;
+	
+	private int pointsAvailable;
 	
 	private double percentage; 
 	
@@ -85,6 +91,7 @@ public class QuestionScoreResult {
 		this.totalQPointsAvg = totalQPointsAvg; 
 		this.totalQPointsOverall = totalQPointsOverall;
 		this.percentage = 0;
+		this.setPointsAvailable((noOfEasyQuestions * easyPoints) + (noOfMediumQuestions * mediumPoints) + (noOfHardQuestions * hardPoints) + (40*noOfTotalQuestions));
 	}
 	
 	public double getPercentage() {
@@ -117,5 +124,13 @@ public class QuestionScoreResult {
 
 	public void setNoOfTotalQCorrect(int noOfTotalQCorrect) {
 		this.noOfTotalQCorrect = noOfTotalQCorrect;
+	}
+
+	public int getPointsAvailable() {
+		return pointsAvailable;
+	}
+
+	public void setPointsAvailable(int pointsAvailable) {
+		this.pointsAvailable = pointsAvailable;
 	}
 }

@@ -9,6 +9,13 @@ a {
     color: blue;
 }
 
+p.answer {
+	margin-top: 3em;
+    margin-left: auto;
+    margin-right: auto;
+    font-family: small;
+    color: white;
+}
 p {
     margin-top: 3em;
     margin-left: auto;

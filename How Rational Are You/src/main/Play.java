@@ -13,6 +13,12 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.state.transition.EmptyTransition;
+import org.newdawn.slick.state.transition.FadeInTransition;
+import org.newdawn.slick.state.transition.FadeOutTransition;
+import org.newdawn.slick.state.transition.HorizontalSplitTransition;
+import org.newdawn.slick.state.transition.SelectTransition;
+
 import com.esotericsoftware.kryonet.Client;
 
 import TWLSlick.BasicTWLGameState;
@@ -37,7 +43,6 @@ public class Play extends BasicTWLGameState {
 	private Board board;
 	private Dice dice;
 	private QuestionList question_list;
-	private PuzzleList puzzle_list;
 	private int playerID;
 	private int sessionID;
 	private boolean currentPlayer;
@@ -276,7 +281,6 @@ public class Play extends BasicTWLGameState {
 		
 		try {
 			question_list = new QuestionList("Question.txt");
-			puzzle_list = new PuzzleList("Puzzle.txt");
 		} catch (NumberFormatException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -382,7 +386,7 @@ public class Play extends BasicTWLGameState {
 				.addGap(60).addGroup(backgroundLayout.createParallelGroup(lblBackground, tBackground0, tBackground1,tBackground2,tBackground3,tBackground4,tBackground5)));
         
         
-		sbg.addState(new PlayQuestionTest(play_question, question_list));
+		sbg.addState(new PlayQuestion(play_question, question_list));
 		sbg.addState(new PlayGame_Bid(play_bidgame));
 		sbg.addState(new PlayGame_Trust(play_trustgame));
 		sbg.addState(new PlayGame_Prisoners(play_prisongame));
@@ -460,7 +464,7 @@ public class Play extends BasicTWLGameState {
 		{
 			sbg.addState(new Verdict(verdict));
 			sbg.getState(verdict).init(gc, sbg);
-			sbg.enterState(verdict);
+			sbg.enterState(verdict, new FadeOutTransition(), new FadeInTransition());
 		}
 		
 		if(state == 0)
@@ -672,16 +676,16 @@ public class Play extends BasicTWLGameState {
 				if(otherPlayerTile == 3 || currentTile == 3)
 				{
 					if(activity_id == 1)
-						sbg.enterState(play_bidgame);
+						sbg.enterState(play_bidgame, new FadeOutTransition(), new EmptyTransition());
 					if(activity_id == 2)
-						sbg.enterState(play_trustgame);
+						sbg.enterState(play_trustgame, new FadeOutTransition(), new EmptyTransition());
 					if(activity_id == 3)
-						sbg.enterState(play_prisongame);
+						sbg.enterState(play_prisongame, new FadeOutTransition(), new EmptyTransition());
 					if(activity_id == 4)
-						sbg.enterState(play_ultgame);
+						sbg.enterState(play_ultgame, new FadeOutTransition(), new EmptyTransition());
 				}
 				else
-					sbg.enterState(play_question);
+					sbg.enterState(play_question, new FadeOutTransition(), new EmptyTransition());
 			}
 		}
 	}

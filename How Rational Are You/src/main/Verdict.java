@@ -11,33 +11,49 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.state.transition.BlobbyTransition;
+import org.newdawn.slick.state.transition.Transition;
 
 import com.esotericsoftware.kryonet.Client;
 
 import TWLSlick.BasicTWLGameState;
 import TWLSlick.RootPane;
+import de.matthiasmann.twl.textarea.HTMLTextAreaModel;
 import de.matthiasmann.twl.utils.PNGDecoder;
 import de.matthiasmann.twl.Alignment;
 import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.DialogLayout;
 import de.matthiasmann.twl.Label;
+import de.matthiasmann.twl.TextArea;
 
 public class Verdict extends BasicTWLGameState {
 
+	// Verdict GUI
 	public Client client;
 	DialogLayout questionPanel, puzzlePanel, gamePanel;
+	TextArea summaryDescription;
+	HTMLTextAreaModel summaryDescriptionModel;
+	Label lblFinish;
+	private int finishTimer = 3;
 	private final int number_of_achievements = 6;
 	private ResultPercentage[] resultPercentages = new ResultPercentage[number_of_achievements];
+	private String[] rankDescriptions = new String[6];
 	
+	// constant variables
 	int gcw;
 	int gch;
 	int clock;
-	boolean done, enter;
+	boolean done, enter, finishLabelShown;
 	private final int questionstats = 17;
 	private final int bidstats = 20;
 	private final int prisonerstats = 21;
 	private final int truststats = 22;
 	private final int ultstats = 23;
+	
+	// overall results variables
+	int overallPointsAvailable;
+	double rankPercentage;
+	String message1, message2, message3, message4;
 	
 	// Ticker variables
 	private int titleFontSize = 60;
@@ -50,6 +66,7 @@ public class Verdict extends BasicTWLGameState {
 	private boolean tickerBoolean = true;
 	private int clock3, clock2 = 0;
 	
+	// percentage variables
 	boolean win, highRoller;
 	private int bidderPercentage;
 	private int coopPercentage;
@@ -63,7 +80,7 @@ public class Verdict extends BasicTWLGameState {
 	Button btnQuestion, btnGame, btnScoreboard, btnEnd;
 	
 	// Achievement Images
-	Image imgBetray, imgHighBidder, imgCoop, imgKnowledge, imgQuick;
+	Image imgNone, imgBetray, imgHighBidder, imgCoop, imgKnowledge, imgQuick;
 	Image imgRoller, imgSlow, imgWinner, imgLose;
 	Image ach1, ach2, ach3;
 	
@@ -120,8 +137,6 @@ public class Verdict extends BasicTWLGameState {
 		trustScore = new TrustScore(2, 1, 200, 600, 100, 150, 3, 250, 150);
 		HRRUClient.cs.getP1().addTrustScore(trustScore);
 		
-		trustScore = new TrustScore(2, 1, 100, 300, 50, 75, 3, 125, 75);
-		HRRUClient.cs.getP1().addTrustScore(trustScore);
 		
 		PrisonScore prisonScore = new PrisonScore(0, 0, 0, 0, true, true);
 		HRRUClient.cs.getP1().addPrisonScore(prisonScore);
@@ -159,18 +174,17 @@ public class Verdict extends BasicTWLGameState {
 		if(playerID == 1)
 		{
 			player = HRRUClient.cs.getP1();
-			otherPlayer = HRRUClient.cs.getP2();
 			playerScore = HRRUClient.cs.getP1().getScore();
+			otherPlayer = HRRUClient.cs.getP2();
 			otherPlayerScore = HRRUClient.cs.getP2().getScore();
 		}
 		else
 		{
 			player = HRRUClient.cs.getP2();
-			otherPlayer = HRRUClient.cs.getP1();
 			playerScore = HRRUClient.cs.getP2().getScore();
-			otherPlayerScore = HRRUClient.cs.getP2().getScore();
+			otherPlayer = HRRUClient.cs.getP1();
+			otherPlayerScore = HRRUClient.cs.getP1().getScore();
 		}
-	
 		
 		if(!enter)
 		{
@@ -189,51 +203,130 @@ public class Verdict extends BasicTWLGameState {
 			{
 				win = true;
 				ach1 = imgWinner;
+				message1 = "Congratulations, you won!\n";
 			}
 			else
 			{
 				win = false;
 				ach1 = imgLose;
+				message1 = "Sorry, you've lost!\n";
 			}
+			
+			// Calculate percentages and achievements
 			BiddingScoreResult biddingScore = player.getBiddingScoreResult();
+			QuestionScoreResult questionScore = player.getQuestionScoreResult();
+			PrisonerScoreResult prisonScore = player.getPrisonerScoreResult();
+			UltScoreResult ultimatumScore = player.getUltScoreResult();
+			TrustScoreResult trustScore = player.getTrustScoreResult();
+			
 			if((biddingScore.getBsItemValueTotalL() + biddingScore.getBsItemValueTotalW()) > 0)
-				bidderPercentage =  (int) (((biddingScore.getBsPlayerBidTotalL() + biddingScore.getBsPlayerBidTotalL()) /
-					(biddingScore.getBsItemValueTotalL() + biddingScore.getBsItemValueTotalW())) + 0.5 * 100);
+				bidderPercentage =  (int) ((((biddingScore.getBsPlayerBidTotalL() + biddingScore.getBsPlayerBidTotalL()) /
+					(biddingScore.getBsItemValueTotalL() + biddingScore.getBsItemValueTotalW())) * 100) + 0.5);
 			
 			if(player.getTotalRolled() > otherPlayer.getTotalRolled())
 				highRoller = true;
 			
-			QuestionScoreResult questionScore = player.getQuestionScoreResult();
 			if(questionScore.getNoOfTotalQuestions()>0)
 			{
-				fastPercentage = (int) (questionScore.getTotalQTimeBonusOverall() / (questionScore.getNoOfTotalQuestions() * 80) + 0.5 * 100);
+				fastPercentage = (int) (((questionScore.getTotalQTimeBonusOverall() / (questionScore.getNoOfTotalQuestions() * 80)) * 100) + 0.5);
 				slowPercentage = (int) (100 -  fastPercentage);
-				knowledgePercentage = questionScore.getNoOfTotalQCorrect() / questionScore.getNoOfTotalQuestions();
+				knowledgePercentage = questionScore.getNoOfTotalQCorrect() / questionScore.getNoOfTotalQuestions() * 100;
 			}
 			
-			PrisonerScoreResult prisonScore = player.getPrisonerScoreResult();
 			if(prisonScore.getNoOfPrisonScores() > 0)
 			{
-				coopPercentage = prisonScore.getNoOfPrisonScoreCoop() / prisonScore.getNoOfPrisonScores();
-				betrayPercentage = 100 - coopPercentage;
+				coopPercentage = (int) ((prisonScore.getNoOfPrisonScoreCoop() / prisonScore.getNoOfPrisonScores()  * 100) + 0.5);
+				betrayPercentage = (int) ((prisonScore.getNoOfPrisonScoreBetray() / prisonScore.getNoOfPrisonScores()  * 100) + 0.5);
 			}
-			
-			resultPercentages[0] = new ResultPercentage("bid", imgHighBidder, bidderPercentage);
-			resultPercentages[1] = new ResultPercentage("fast", imgQuick, fastPercentage);
-			resultPercentages[2] = new ResultPercentage("slow", imgSlow, slowPercentage);
-			resultPercentages[3] = new ResultPercentage("knowledge", imgKnowledge, knowledgePercentage);
-			resultPercentages[4] = new ResultPercentage("coop", imgCoop, coopPercentage);
-			resultPercentages[5] = new ResultPercentage("betray", imgBetray, betrayPercentage);
+			resultPercentages[0] = new ResultPercentage("bid", imgHighBidder, bidderPercentage, "\nYou're a bit of a high bidder, you tend to bid above 50% during the bidding games.");
+			resultPercentages[1] = new ResultPercentage("fast", imgQuick, fastPercentage, "\nYou respond to questions very quickly, on average, in under 40% of the time you have available.");
+			resultPercentages[2] = new ResultPercentage("slow", imgSlow, slowPercentage, "\nYou respond to questions quite slowly, on average, you use over 60% of the time you have available.");
+			resultPercentages[3] = new ResultPercentage("knowledge", imgKnowledge, knowledgePercentage, "\nYou seem very kowledgeable, you've gotten over 70% of your questions correct.");
+			resultPercentages[4] = new ResultPercentage("coop", imgCoop, coopPercentage, "\nYou prefer to cooperate rather than betray.");
+			resultPercentages[5] = new ResultPercentage("betray", imgBetray, betrayPercentage, "\nYou prefer to betray rather than cooperate.");
 			
 			Arrays.sort(resultPercentages);
 			
 			ach2 = resultPercentages[0].getImgRank();
+			message3 = resultPercentages[0].getAchievementDescription();
+			message4 = resultPercentages[1].getAchievementDescription();
+				
+				
 			ach3 = resultPercentages[1].getImgRank();
-			
-			if(ach3 == null)
+			if(resultPercentages[1].getPercentage() < 50)
+			{
 				ach3 = imgRoller;
+				message4 = "You seemed quite lucky, achieving a number of high rolls! But that doesn't really matter too much.";
+			}
+			if(ach3 == null)
+			{
+				ach3 = imgRoller;
+				message4 = "You seemed quite lucky, achieving a number of high rolls! But that doesn't really matter too much.";
+			}
+			
+			if(resultPercentages[0].getPercentage() == 0)
+			{
+				ach2 = imgNone;
+				ach3 = imgNone;
+				message3 = "";
+				message4 = "";
+			}
+			if(resultPercentages[1].getPercentage() == 0)
+			{
+				ach3 = imgNone;
+				message4 = "";
+			}
+			
+			// Calculate player Rank
+			overallPointsAvailable = biddingScore.getPointsAvailable() + questionScore.getPointsAvailable() 
+					+ prisonScore.getPointsAvailable() + ultimatumScore.getPointsAvailable() + trustScore.getPointsAvailable();
+			if(overallPointsAvailable == 0 || (playerScore-1000 <= 0))
+				rankPercentage = 0;
+			else
+				rankPercentage = (((playerScore-1000) / overallPointsAvailable) * 100);
+			
+			if(rankPercentage > 95)
+			{
+				message2 = rankDescriptions[0];
+				playerRank = 0;
+			}
+			else if(rankPercentage > 80)
+			{
+				message2 = rankDescriptions[1];
+				playerRank = 1;
+			}
+			else if(rankPercentage > 60)
+			{
+				message2 = rankDescriptions[2];
+				playerRank = 2;
+			}
+			else if(rankPercentage > 40)
+			{
+				message2 = rankDescriptions[3];
+				playerRank = 3;
+			}
+			else if(rankPercentage > 10)
+			{
+				message2 = rankDescriptions[4];
+				playerRank = 4;
+			}
+			else
+			{
+				message2 = rankDescriptions[5];
+				playerRank = 5;
+			}
+			
+			// Calculate summary message
+		
+			summaryDescriptionModel.setHtml("<p>" + message1 + "</p><p>" + message2 + "</p><p>" + message3 + "</p><p>" + message4 + "</p>");
+			
 			enter = true;
 		}
+		verdictPanel.setVisible(false);
+		btnQuestion.setVisible(false);
+		btnGame.setVisible(false);
+		btnScoreboard.setVisible(false);
+		btnEnd.setVisible(false);
 		// Create Question UI
 		rootPane.removeAllChildren();
 		rootPane.add(verdictPanel);
@@ -241,8 +334,8 @@ public class Verdict extends BasicTWLGameState {
 		rootPane.add(btnGame);
 		rootPane.add(btnScoreboard);
 		rootPane.add(btnEnd);
+		rootPane.add(lblFinish);
 		rootPane.setTheme("");
-		
 	}
 
 	@Override
@@ -266,7 +359,7 @@ public class Verdict extends BasicTWLGameState {
 		HRRUClient.cs.setP2(player);
 		HRRUClient.cs.setPlayer(1);
 		*/
-		
+		finishLabelShown = false;
 		enter = false;
 		// GUI
 		btnQuestion = new Button("Question\nFeedback");
@@ -330,6 +423,7 @@ public class Verdict extends BasicTWLGameState {
 		titleFont = new BasicFont(loadTitleFont);
 		
 		// setup achievement images
+		imgNone = new Image("achievement/achievement_none.png");
 		imgBetray = new Image("achievement/achievement_betrayer.png");
 		imgHighBidder = new Image("achievement/achievement_coin.png");
 		imgCoop = new Image("achievement/achievement_coop.png");
@@ -356,29 +450,48 @@ public class Verdict extends BasicTWLGameState {
 		ranks[5] = rankE;
 		rankLetter = rankE;
 		
+		rankDescriptions[0] = "You achieved highest rank: SUPER. You've demonstrated an exceptionally high level of rational and logical thinking!";
+		rankDescriptions[1] = "\nGreat Job! You've demonstrated a very high level of rational and logical thinking!";
+		rankDescriptions[2] = "\nGood Job! You've demonstrated an above average level of rational and logical thinking!";
+		rankDescriptions[3] = "\nNot bad... You've demonstrated an  average level of rational and logical thinking!";
+		rankDescriptions[4] = "\nYou can do better... You've demonstrated a below average level of rational and logical thinking, however this could be becuase of the other player, maybe try against someone else?";
+		rankDescriptions[5] = "\nHmm... the results weren't very promising. According to the results you've demonstrated a low level of rational and logical thinking, however this could be becuase of the other player, maybe try against someone else?";
+		
+		
 		verdictPanel = new DialogLayout();
 		verdictPanel.setPosition(50,100);
-		verdictPanel.setSize(701-170-10, 462-270-20);
+		verdictPanel.setSize(701-245-20, 462-255-20);
 		verdictPanel.setTheme("verdict-panel");
 		
-		/*
+		summaryDescriptionModel = new HTMLTextAreaModel();
+		summaryDescription = new TextArea(summaryDescriptionModel);
+		summaryDescription.setPosition(0, 0);
+		summaryDescription.setSize(700,300);
+		summaryDescription.setTheme("verdicttextarea");
+		
+		lblFinish = new Label("The Game has Ended. \n\n Your Results Will Appear in ... " + finishTimer);
+		lblFinish.setTheme("statuswhite");
+		lblFinish.setPosition(0, 250);
+		lblFinish.setSize(800, 100);
 		verdictPanel.setHorizontalGroup(verdictPanel.createParallelGroup()
-				.addGroup(verdictPanel.createSequentialGroup(btnQStats, btnGStats, btnFeedback, btnEnd)));
+				.addWidget(summaryDescription));
 		
 		verdictPanel.setVerticalGroup(verdictPanel.createParallelGroup()
-				.addGroup(verdictPanel.createParallelGroup(btnQStats, btnGStats, btnFeedback, btnEnd)));
-				*/
+				.addWidget(summaryDescription));
 	}
 
 	@Override
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
 		g.drawImage(new Image("simple/questionbg.png"), 0, 0);
-		g.drawImage(ach1, ach1_x, ach1_y);
-		g.drawImage(ach2, ach2_x, ach2_y);
-		g.drawImage(ach3, ach3_x, ach3_y);
-		g.drawImage(rankLetter, 525, 355);
-		g.setFont(titleFont.get());
-		g.drawString("> " + start_message + "" + ticker, 30, 25);
+		if(finishLabelShown)
+		{
+			g.drawImage(ach1, ach1_x, ach1_y);
+			g.drawImage(ach2, ach2_x, ach2_y);
+			g.drawImage(ach3, ach3_x, ach3_y);
+			g.drawImage(rankLetter, 525, 355);
+			g.setFont(titleFont.get());
+			g.drawString("> " + start_message + "" + ticker, 30, 25);
+		}
 	}
 
 	@Override
@@ -388,6 +501,16 @@ public class Verdict extends BasicTWLGameState {
 		clock3 += delta;
 		clock2 += delta;
 		
+		// has the finish label been shown
+		if(finishLabelShown)
+		{
+			verdictPanel.setVisible(true);
+			btnQuestion.setVisible(true);
+			btnGame.setVisible(true);
+			btnScoreboard.setVisible(true);
+			btnEnd.setVisible(true);
+			lblFinish.setVisible(false);
+		}
 		// full message ticker
 		if(clock3 > 100){
 			if(full_start_counter < full_start_message.length()) {
@@ -398,6 +521,13 @@ public class Verdict extends BasicTWLGameState {
 		}
 		// ticker symbol
 		if(clock2>999) {
+			if(!finishLabelShown)
+			{
+				finishTimer--;
+				lblFinish.setText("The Game has Ended. \n\n Your Results Will Appear in ... " + finishTimer);
+				if(finishTimer == 0)
+					finishLabelShown = true;
+			}
 			clock2-=1000;
 			if(tickerBoolean) {
 				ticker = "|";

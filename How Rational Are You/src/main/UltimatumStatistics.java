@@ -439,7 +439,7 @@ public class UltimatumStatistics extends BasicTWLGameState {
 				usAvg = usTotal / noOfUltimatumScores;
 				
 				lNoOfUltimatumScores.setText("" + noOfUltimatumScores);
-				lTotal.setText("" + (int) usTotal + " of your " + playerScore + " (" + (int)((usTotal/playerScore)*100+0.5) + "%)");
+				lTotal.setText("" + (int) usTotal);
 				lAvg.setText("" + (int) usAvg);
 			}
 		// 	Prop Text
@@ -483,7 +483,10 @@ public class UltimatumStatistics extends BasicTWLGameState {
 				usTotal);
 		
 		if(noOfUltimatumScores > 0)
-			ultScoreResult.setPercentage((int)((usTotal/playerScore)*100+0.5));
+		{
+			ultScoreResult.setPercentage((int)((usTotal/(playerScore-1000))*100+0.5));
+			lTotal.setText("" + (int) usTotal + " (" + (int)(((usTotal/(playerScore-1000))*100+0.5)) +  "% of your score)");
+		}
 		
 		if(playerID == 1)
 			HRRUClient.cs.getP1().setUltScoreResult(ultScoreResult);

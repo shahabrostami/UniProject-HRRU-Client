@@ -1,6 +1,12 @@
 package main;
 
+import java.awt.Font;
+import java.awt.FontFormatException;
+import java.io.IOException;
 import java.util.ArrayList;
+
+import main.textpage.AnswerPage.AnswerPageFrame;
+import main.textpage.TextPage.TextPageFrame;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -12,6 +18,7 @@ import com.esotericsoftware.kryonet.Client;
 
 import TWLSlick.BasicTWLGameState;
 import TWLSlick.RootPane;
+import de.matthiasmann.twl.ResizableFrame.ResizableAxis;
 import de.matthiasmann.twl.utils.PNGDecoder;
 import de.matthiasmann.twl.Alignment;
 import de.matthiasmann.twl.Button;
@@ -21,12 +28,31 @@ import de.matthiasmann.twl.Label;
 public class QuestionStatistics extends BasicTWLGameState {
 
 	public Client client;
-	DialogLayout questionPanel, puzzlePanel, gamePanel;
+	DialogLayout questionPanel;
 	Button btnBack;
 	
 	private int enterState;
 	int gcw;
 	int gch;
+	
+	// Answer variables
+	AnswerPageFrame textpageframe;
+	private int current_question_id;
+	private QuestionList question_list;
+	private Question[] questions;
+	private Question current_question;
+	private String current_filename;
+	
+	// Ticker variables
+	private int titleFontSize = 60;
+	private Font loadFont, loadTitleFont;
+	private BasicFont titleFont;
+	private String start_message = "";
+	private String full_start_message = "QUESTION FEEDBACK...";
+	private int full_start_counter = 0;
+	private String ticker = "";
+	private boolean tickerBoolean = true;
+	private int clock3, clock2 = 0;
 	
 	// Questions UI
 	Label lQAmount, lQEasy, lQEasyCorrect, lQEasyTimeBonusAvg, lQEasyTimeBonusOverall, lQEasyPointsAvg, lQEasyPointsOverall;
@@ -97,6 +123,9 @@ public class QuestionStatistics extends BasicTWLGameState {
 	public void enter(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		super.enter(gc, sbg);
 		enterState = 0;
+
+		rootPane.removeAllChildren();
+		// set player variables
 		playerID = HRRUClient.cs.getPlayer();
 		if(playerID == 1)
 		{
@@ -109,10 +138,30 @@ public class QuestionStatistics extends BasicTWLGameState {
 			activityScores = HRRUClient.cs.getP2().getActivityScores();
 		}
 		
-		rootPane.removeAllChildren();
+		// RESET VARIABLES
+		start_message = "";
+		full_start_message = "QUESTION FEEDBACK...";
+		full_start_counter = 0;
+		ticker = "";
+		tickerBoolean = true;
+		clock2 = 0;
+		clock3 = 0;
+		
+		// answer question
+		current_question = questions[activityScores.get(0).getActivity_id()];
+		current_filename = current_question.getAnswerFile();
+		
+		textpageframe = new AnswerPageFrame(current_filename);
+		textpageframe.setPosition(280, 80);
+		textpageframe.setDraggable(false);
+		textpageframe.setResizableAxis(ResizableAxis.NONE);
+		textpageframe.setTheme("textpageframeanswer");
+		textpageframe.setSize(500, 435);
+
+		
 		rootPane.add(questionPanel);
-		rootPane.add(puzzlePanel);
 		rootPane.add(btnBack);
+		rootPane.add(textpageframe);
 		rootPane.setTheme("");
 	}
 
@@ -131,9 +180,21 @@ public class QuestionStatistics extends BasicTWLGameState {
 		gcw = gc.getWidth();
 		gch = gc.getHeight();
 		
+		// font variables
+		try {
+			loadFont = java.awt.Font.createFont(java.awt.Font.TRUETYPE_FONT,
+					      org.newdawn.slick.util.ResourceLoader.getResourceAsStream("font/visitor2.ttf"));
+		} catch (FontFormatException e) {
+				e.printStackTrace();
+		} catch (IOException e) {
+				e.printStackTrace();
+		}
+		loadTitleFont = loadFont.deriveFont(Font.BOLD,titleFontSize);
+		titleFont = new BasicFont(loadTitleFont);
+		
 		btnBack = new Button("Back");
 		btnBack.setSize(700, 30);
-		btnBack.setPosition(50,550);
+		btnBack.setPosition(50,565);
 		btnBack.addCallback(new Runnable() {
 			@Override
 			public void run() {
@@ -145,12 +206,7 @@ public class QuestionStatistics extends BasicTWLGameState {
 		questionPanel = new DialogLayout();
         questionPanel.setTheme("questionstat-panel");
         questionPanel.setSize(220,435);
-        questionPanel.setPosition(20,50);
-        
-        puzzlePanel = new DialogLayout();
-        puzzlePanel.setTheme("puzzlestat-panel");
-        puzzlePanel.setSize(220,435);
-        puzzlePanel.setPosition(280,100);
+        questionPanel.setPosition(20,80);
         
 		lQAmount = new Label("Number of Questions: ");
 		lQAmountR = new Label("");
@@ -440,8 +496,7 @@ public class QuestionStatistics extends BasicTWLGameState {
 			lQTotalTimeBonusAvgR.setText("" + totalQTimeBonusAvg);
 			lQTotalTimeBonusOverallR.setText("" + (int)totalQTimeBonusOverall); 
 			lQTotalPointsAvgR.setText("" + totalQPointsAvg); 
-			if(noOfTotalQuestions > 0)
-				lQTotalPointsOverallR.setText("" + (int)totalQPointsOverall + " of your " + playerScore + " (" + (int)((totalQPointsOverall/playerScore)*100+0.5) + "%)");
+			lQTotalPointsOverallR.setText("" + (int)totalQPointsOverall);
 
 			
 			QuestionScoreResult questionScoreResult =
@@ -472,22 +527,68 @@ public class QuestionStatistics extends BasicTWLGameState {
 							totalQPointsOverall);
 			
 			if(noOfTotalQuestions > 0)
-				questionScoreResult.setPercentage((int)((totalQPointsOverall/playerScore)*100+0.5));
+			{
+				questionScoreResult.setPercentage((int)((totalQPointsOverall/(playerScore-1000))*100+0.5));
+				lQTotalPointsOverallR.setText("" + (int) totalQPointsOverall + " (" + (int)((totalQPointsOverall/(playerScore-1000))*100+0.5) +  "% of your score)");
+			}
+			
 			
 			if(playerID == 1)
 				HRRUClient.cs.getP1().setQuestionScoreResult(questionScoreResult);
 			else
 				HRRUClient.cs.getP2().setQuestionScoreResult(questionScoreResult);
+			
+			
+			// Sort answer panel
+			try {
+				question_list = new QuestionList("Question.txt");
+			} catch (NumberFormatException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			questions = question_list.getQuestion_list();		
 	}
 
 	@Override
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
+		g.drawImage(new Image("simple/questionbg.png"), 0, 0);
+		g.setFont(titleFont.get());
+		g.drawString("> " + start_message + "" + ticker, 50, 25);
 	}
 
 	@Override
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
 		if(enterState == 1)
 			sbg.enterState(15);
+		clock3 += delta;
+		clock2 += delta;
+		// full message ticker
+		if(clock3 > 100){
+			if(full_start_counter < full_start_message.length())
+			{
+				start_message += full_start_message.substring(full_start_counter, full_start_counter+1);
+				full_start_counter++;
+				clock3-=100;
+			}
+		}
+		// ticker symbol
+		if(clock2>999)
+		{
+			clock2-=1000;
+			if(tickerBoolean) 
+			{
+				ticker = "|";
+				tickerBoolean = false;
+			}
+			else
+			{
+				ticker = "";
+				tickerBoolean = true;
+			}
+		}
 	}
 
 	@Override

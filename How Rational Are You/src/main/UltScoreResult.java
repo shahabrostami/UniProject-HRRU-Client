@@ -13,6 +13,7 @@ public class UltScoreResult {
 	private double usOverallValueTotalD, usPlayerPropTotalD, usPlayerDecTotalD;
 	private int usAvg, usTotal;
 	private double percentage;
+	private int pointsAvailable;
 	
 	public UltScoreResult(
 			int noOfUltimatumScores,
@@ -55,6 +56,7 @@ public class UltScoreResult {
 		this.usAvg = usAvg;
 		this.usTotal = usTotal;
 		this.percentage = 0;
+		this.setPointsAvailable((int) ((usOverallValueTotalP + usOverallValueTotalD) / noOfUltimatumScores + 0.5));
 	}
 	public double getPercentage() {
 		return percentage;
@@ -62,5 +64,11 @@ public class UltScoreResult {
 	
 	public void setPercentage(double percentage) {
 		this.percentage = percentage;
+	}
+	public int getPointsAvailable() {
+		return pointsAvailable;
+	}
+	public void setPointsAvailable(int pointsAvailable) {
+		this.pointsAvailable = pointsAvailable;
 	}
 }

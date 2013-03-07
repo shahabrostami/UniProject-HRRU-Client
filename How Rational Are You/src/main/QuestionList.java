@@ -27,7 +27,7 @@ public class QuestionList {
 		question_list = new Question[number_of_questions];
 		
 		int question_id, number_of_answers, answer, difficulty;
-		String file;
+		String file, answerFile;
 		String choices[];
 		Question new_question;
 		counter = 0;
@@ -49,6 +49,9 @@ public class QuestionList {
 			// read question file
 			strLine = br.readLine();
 			file = strLine;
+			// read question file
+			strLine = br.readLine();
+			answerFile = strLine;
 			// parase in the choices of answers
 			choices = new String[number_of_answers];
 			for(int i = 0; i < number_of_answers; i++)
@@ -57,7 +60,7 @@ public class QuestionList {
 				System.out.println(strLine);
 				choices[i] = strLine;
 			}
-			new_question = new Question(question_id, number_of_answers, answer, difficulty, file, choices);
+			new_question = new Question(question_id, number_of_answers, answer, difficulty, file, answerFile, choices);
 			question_list[counter] = new_question;
 			counter++;
 		}

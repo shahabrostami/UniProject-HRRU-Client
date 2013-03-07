@@ -24,7 +24,7 @@ public class Connection {
 		register();
 
 		try{
-			client.connect(5000, "2.27.42.249", 9991);
+			client.connect(5000, "2.27.4.246", 9991);
 			HRRUClient.ConnectionSuccessful = true;
 		} catch (IOException e) {
 			e.printStackTrace();

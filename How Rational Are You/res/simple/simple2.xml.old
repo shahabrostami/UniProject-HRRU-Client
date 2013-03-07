@@ -108,7 +108,7 @@
         </select>
         <select name="menu.button">
             <area if="pressed" xywh="17,40,7,7" splitx="L3,R3" splity="T3,B3"/>
-            <area if="selected" xywh="17,40,7,7" splitx="L3,R3" splity="T3,B3"/>
+            <area if="selected" xywh="41,40,7,7" splitx="L3,R3" splity="T3,B3"/>
             <area if="hover" xywh="9,40,7,7" tint="#FFFFFF" splitx="L3,R3" splity="T3,B3"/>
             <area xywh="1,40,7,7" splitx="L3,R3" splity="T3,B3"/>
         </select>
@@ -534,7 +534,7 @@
         <area name="q7.png" xywh="*"/>
     </images>
     <images file="verdict.png">
-        <area name="verdict.background" xywh="*" border="270,10,20,170"/>
+        <area name="verdict.background" xywh="*" border="255,20,20,245"/>
     </images>
 
     
@@ -2299,6 +2299,25 @@
         <param name="maxWidth"><int>730</int></param>
         <param name="maxHeight"><int>200</int></param>
     </theme>
+
+    <theme name="textpageframeanswer" ref="resizableframe">
+        <param name="background"><image>none</image></param>
+
+        <theme name="fpscounter" ref="-defaults">
+            <param name="tooltip"><string>Current FPS</string></param>
+        </theme>
+
+        <theme name="textframe" ref="resizableframe">
+            <theme name="scrollpane" ref="scrollpane">
+                <param name="border"><border>background.border</border></param>
+                <param name="background"><image>none</image></param>
+            </theme>
+            <param name="background"><image>none</image></param>
+        </theme>
+        <param name="font"><font>questionatari8</font></param>
+        <param name="maxWidth"><int>500</int></param>
+        <param name="maxHeight"><int>565</int></param>
+    </theme>
 	
 	<theme name="textarea" ref="-defaults">
                     <param name="fonts"><map>
@@ -2309,6 +2328,10 @@
                         <param name="big"><fontDef filename="questionatari12.fnt" color="#FFFFFF"/></param>
                         <param name="code"><fontDef filename="scoretotal12.fnt"/></param>
                         <param name="codeBold"><fontDef filename="questionatari12.fnt"/></param>
+                <param name="name"><fontDef filename="scoretotal12.fnt"/></param>
+                <param name="red"><fontDef filename="questionatari16red.fnt"/></param>
+                <param name="green"><fontDef filename="greenatari14.fnt"/></param>
+                <param name="small"><fontDef filename="questionatari8.fnt" color="white"/></param>
                     </map></param>
                     <param name="images"><map>
                         <param name="frame"><image>evilframe.background</image></param>
@@ -2354,6 +2377,26 @@
             </map>
         </param>
         <param name="font"><font>whiteatari14</font></param>
+        <param name="background"><image>none</image></param>
+        <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
+    </theme>
+
+    <theme name="verdicttextarea" ref="-defaults">
+        <param name="images">
+            <map>
+            </map>
+        </param>
+        <param name="fonts">
+            <map>
+                <param name="default"><font>questionatari8</font></param>
+                <param name="big"><font>questionatari9y</font></param>
+            
+                <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
+                <param name="highlight"><font>questionatari9y</font></param>
+                <param name="name"><font>questionatari9y</font></param>
+            </map>
+        </param>
+        <param name="font"><font>questionatari8</font></param>
         <param name="background"><image>none</image></param>
         <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
     </theme>

@@ -12,6 +12,7 @@ public class BiddingScoreResult {
 	private int itemValueW, playerBidW, otherPlayerBidW, amountWonW;
 	private int itemValueL, playerBidL, otherPlayerBidL, amountWonL;
 	private double percentage;
+	private int pointsAvailable;
 	
 	public BiddingScoreResult(
 			int noOfBidScores,
@@ -70,6 +71,7 @@ public class BiddingScoreResult {
 		this.otherPlayerBidL = otherPlayerBidL;
 		this.amountWonL = amountWonL;
 		this.percentage = 0;
+		this.setPointsAvailable((bsItemValueTotalL + bsItemValueTotalW)/2);
 	}
 
 	public double getPercentage() {
@@ -110,5 +112,13 @@ public class BiddingScoreResult {
 
 	public void setBsItemValueTotalL(int bsItemValueTotalL) {
 		this.bsItemValueTotalL = bsItemValueTotalL;
+	}
+
+	public int getPointsAvailable() {
+		return pointsAvailable;
+	}
+
+	public void setPointsAvailable(int pointsAvailable) {
+		this.pointsAvailable = pointsAvailable;
 	}
 }

@@ -23,7 +23,7 @@ public class TextPage {
 
     public static class TextPageFrame extends ResizableFrame {
         private final HTMLTextAreaModel textAreaModel;
-        private final TextArea textArea;
+        public final TextArea textArea;
         private final ScrollPane scrollPane;
         private Timer timer;
         private int size;

@@ -497,7 +497,7 @@ public class PrisonerStatistics extends BasicTWLGameState {
 			}
 			psTotal = psCTotal + psBTotal;
 			psAvg = (int) (psTotal / noOfPrisonScores);
-			lTotalProfit.setText(""+ (int) psTotal + " of your " + playerScore + " (" + (int)((psTotal/playerScore)*100+0.5) + "%)");
+			lTotalProfit.setText(""+ (int) psTotal);
 		}
 		
 		lNoOfPrisonScoreCB.setText("" + noOfPrisonScoreCB);
@@ -551,7 +551,10 @@ public class PrisonerStatistics extends BasicTWLGameState {
 				psBTotal);
 		
 		if(noOfPrisonScores > 0)
-			prisonerScoreResult.setPercentage((int)((psTotal/playerScore)*100+0.5));
+		{
+			prisonerScoreResult.setPercentage((int)((psTotal/(playerScore-1000))*100+0.5));
+			lTotalProfit.setText("" + (int) psTotal + " (" + (int)((psTotal/(playerScore-1000))*100+0.5) +  "% of your score)");
+		}
 		
 		if(playerID == 1)
 			HRRUClient.cs.getP1().setPrisonerScoreResult(prisonerScoreResult);

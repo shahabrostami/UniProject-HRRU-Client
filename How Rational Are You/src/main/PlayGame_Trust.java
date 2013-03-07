@@ -19,6 +19,11 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.state.transition.EmptyTransition;
+import org.newdawn.slick.state.transition.FadeInTransition;
+import org.newdawn.slick.state.transition.FadeOutTransition;
+import org.newdawn.slick.state.transition.RotateTransition;
+import org.newdawn.slick.state.transition.SelectTransition;
 import org.newdawn.slick.util.ResourceLoader;
 
 
@@ -64,6 +69,9 @@ public class PlayGame_Trust extends BasicTWLGameState {
 	Label lProfit, lProfit2, lblProfit, lblProfit2;
 	Label lNew, lNew2, lblNew, lblNew2;
 	Label lblYourTurn;
+	EmptyTransition emptyTransition;
+    RotateTransition rotateTransition;
+    SelectTransition selectTransition;
 	
 	int gcw;
 	int gch;
@@ -407,6 +415,10 @@ public class PlayGame_Trust extends BasicTWLGameState {
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		gcw = gc.getWidth();
 		gch = gc.getHeight();
+		rotateTransition = new RotateTransition();
+		selectTransition = new SelectTransition();
+		emptyTransition = new EmptyTransition();
+		
 		// Set up images
 		scorebackground = new Image("simple/playerscorebackground.png");
 		background = new Image("simple/questionbg.png");
@@ -439,7 +451,7 @@ public class PlayGame_Trust extends BasicTWLGameState {
 		// Setup Game GUI
 		questionDescriptionModel = new HTMLTextAreaModel();
 		questionDescription = new TextArea(questionDescriptionModel);
-		questionDescription.setPosition(50, 140);
+		questionDescription.setPosition(50, 100);
 		questionDescription.setSize(700,300);
 		questionDescription.setTheme("trusttextarea");
 		
@@ -835,7 +847,7 @@ public class PlayGame_Trust extends BasicTWLGameState {
 			}
 			else if(gameState == 3)
 			{
-				timer = 10;
+				timer = 7;
 				lblSecond.setTheme("label");
 				lblSecond.reapplyTheme();
 				returnValue = player.getCurrentTrustScore().getPlayerReturnValue();
@@ -913,7 +925,7 @@ public class PlayGame_Trust extends BasicTWLGameState {
 				lReturn.setVisible(false);
 				lblKeep2.setVisible(false);
 				lblReturn.setVisible(false);
-				timer = 10;
+				timer = 7;
 				HRRUClient.cs.setGameState(4);
 			}
 			
@@ -949,7 +961,7 @@ public class PlayGame_Trust extends BasicTWLGameState {
 			// 	Set new variables to finish
 				finished = true;
 				overallTimer += timer;
-				timer = 10;
+				timer = 7;
 				timer2 = 999;
 				clock2 = 0;
 				clock3 = 0;
@@ -1037,7 +1049,7 @@ public class PlayGame_Trust extends BasicTWLGameState {
 					HRRUClient.cs.setSync(false);
 					HRRUClient.cs.setGameState(0);
 					HRRUClient.cs.setState(p1_turn);
-					sbg.enterState(play);
+					sbg.enterState(play, new FadeOutTransition(), new FadeInTransition());
 				}
 		}
 	}

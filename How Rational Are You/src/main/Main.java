@@ -8,6 +8,16 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.state.transition.BlobbyTransition;
+import org.newdawn.slick.state.transition.CombinedTransition;
+import org.newdawn.slick.state.transition.CrossStateTransition;
+import org.newdawn.slick.state.transition.EmptyTransition;
+import org.newdawn.slick.state.transition.FadeInTransition;
+import org.newdawn.slick.state.transition.FadeOutTransition;
+import org.newdawn.slick.state.transition.HorizontalSplitTransition;
+import org.newdawn.slick.state.transition.RotateTransition;
+import org.newdawn.slick.state.transition.SelectTransition;
+import org.newdawn.slick.state.transition.VerticalSplitTransition;
 
 import com.esotericsoftware.kryonet.Client;
 
@@ -43,7 +53,10 @@ public class Main extends BasicTWLGameState {
 	EditField efSessionID;
 	Button btnJT1, btnJT2;
 	Button btnRetry;
-	
+	HorizontalSplitTransition horizontalSplitTransition;
+    EmptyTransition emptyTransition;
+    SelectTransition selectTransition;
+    
 	// Ticker variables
 	private int titleFontSize = 60;
 	private Font loadFont, loadTitleFont;
@@ -124,7 +137,9 @@ public class Main extends BasicTWLGameState {
 		
 		lConnection = new Label("");
 		lConnection.setPosition(gc.getWidth()/2-100, gc.getHeight()/2-125);
-		
+		horizontalSplitTransition = new HorizontalSplitTransition();
+	    emptyTransition = new EmptyTransition();
+	    selectTransition = new SelectTransition();
 		/*
 		btnRetry = new Button("Retry Server");
 		
@@ -158,7 +173,6 @@ public class Main extends BasicTWLGameState {
 			}
 		});
 		btnJoin.setTheme("menubutton");
-		
 		
 		btnHT1 = new Button("1) Host Server Create");
 		btnHT1.setSize(200, 20);

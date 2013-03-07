@@ -14,6 +14,7 @@ public class PrisonerScoreResult {
 	private int psPlayerProfitBB, psOtherPlayerProfitBB;
 	private int psCAvg, psAvg, psBAvg;
 	private double psTotal, psCTotal, psBTotal;
+	private int pointsAvailable;
 	
 	private double percentage;
 	
@@ -40,8 +41,9 @@ public class PrisonerScoreResult {
 			double psCTotal, 
 			double psBTotal)
 	{
-		this.setNoOfPrisonScores(this.setNoOfPrisonScoreCoop(noOfPrisonScoreCoop));
-				this.noOfPrisonScoreBetray = noOfPrisonScoreBetray;
+				this.setNoOfPrisonScores(noOfPrisonScores);
+				this.setNoOfPrisonScoreCoop(noOfPrisonScoreCoop);
+				this.setNoOfPrisonScoreBetray(noOfPrisonScoreBetray);
 				this.noOfPrisonScoreCC =  noOfPrisonScoreCC;
 				this.noOfPrisonScoreCB =  noOfPrisonScoreCB;
 				this.noOfPrisonScoreBC =  noOfPrisonScoreBC;
@@ -61,6 +63,7 @@ public class PrisonerScoreResult {
 				this.psCTotal = psCTotal;
 				this.psBTotal = psBTotal;
 				this.percentage = 0;
+				this.setPointsAvailable((noOfPrisonScores * 150));
 	}
 	public double getPercentage() {
 		return percentage;
@@ -81,6 +84,18 @@ public class PrisonerScoreResult {
 	}
 	public void setNoOfPrisonScores(int noOfPrisonScores) {
 		this.noOfPrisonScores = noOfPrisonScores;
+	}
+	public int getPointsAvailable() {
+		return pointsAvailable;
+	}
+	public void setPointsAvailable(int pointsAvailable) {
+		this.pointsAvailable = pointsAvailable;
+	}
+	public int getNoOfPrisonScoreBetray() {
+		return noOfPrisonScoreBetray;
+	}
+	public void setNoOfPrisonScoreBetray(int noOfPrisonScoreBetray) {
+		this.noOfPrisonScoreBetray = noOfPrisonScoreBetray;
 	}
 }
 

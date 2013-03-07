@@ -18,6 +18,11 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.state.transition.EmptyTransition;
+import org.newdawn.slick.state.transition.FadeInTransition;
+import org.newdawn.slick.state.transition.FadeOutTransition;
+import org.newdawn.slick.state.transition.RotateTransition;
+import org.newdawn.slick.state.transition.SelectTransition;
 import org.newdawn.slick.util.ResourceLoader;
 
 
@@ -123,6 +128,10 @@ public class PlayGame_Bid extends BasicTWLGameState {
 	
 	Packet16SendBid playerBid;
 	Packet00SyncMessage syncMessage;
+	
+	EmptyTransition emptyTransition;
+    RotateTransition rotateTransition;
+    SelectTransition selectTransition;
 	
 	public PlayGame_Bid(int main) {
 		client = HRRUClient.conn.getClient();
@@ -324,6 +333,9 @@ public class PlayGame_Bid extends BasicTWLGameState {
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		gcw = gc.getWidth();
 		gch = gc.getHeight();
+		rotateTransition = new RotateTransition();
+		selectTransition = new SelectTransition();
+		emptyTransition = new EmptyTransition();
 		// Set up images
 		scorebackground = new Image("simple/playerscorebackground.png");
 		background = new Image("simple/questionbg.png");
@@ -467,8 +479,6 @@ public class PlayGame_Bid extends BasicTWLGameState {
 		p2ResultPanel.setVerticalGroup(p2ResultPanel.createSequentialGroup()
 				.addGap(30).addGroup(p2ResultPanel.createParallelGroup(lBid2, lblBid2))
 				.addGroup(p2ResultPanel.createParallelGroup(lAmountWon2, lblAmountWon2)));
-		
-		
 	}
 
 	@Override
@@ -822,7 +832,7 @@ public class PlayGame_Bid extends BasicTWLGameState {
 				System.out.println("Time Subtract" + (overallTimer));
 				HRRUClient.cs.setSync(false);
 				HRRUClient.cs.setState(p1_turn);
-				sbg.enterState(play);
+				sbg.enterState(play, new FadeOutTransition(), new FadeInTransition());
 			}
 		}
 	}

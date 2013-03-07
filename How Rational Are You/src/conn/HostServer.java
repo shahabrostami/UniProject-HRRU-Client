@@ -9,11 +9,16 @@ import main.BasicFont;
 import main.HRRUClient;
 import main.Player;
 
-import org.lwjgl.input.Keyboard;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.state.transition.EmptyTransition;
+import org.newdawn.slick.state.transition.FadeInTransition;
+import org.newdawn.slick.state.transition.FadeOutTransition;
+import org.newdawn.slick.state.transition.HorizontalSplitTransition;
+import org.newdawn.slick.state.transition.RotateTransition;
+import org.newdawn.slick.state.transition.SelectTransition;
 
 import com.esotericsoftware.kryonet.Client;
 
@@ -426,7 +431,7 @@ public class HostServer extends BasicTWLGameState {
 			lStatus.setText("Game Starting in " + (clock/100+1) + "...");
 			if(clock<0)
 			{
-				sbg.enterState(4);
+				sbg.enterState(4, new FadeOutTransition(), new FadeInTransition());
 			}
 		}
 		if(p2ready == true)

@@ -1,176 +1,581 @@
 package main;
- 
-
-import org.newdawn.slick.*;
-import org.newdawn.slick.state.*;
-
-import org.lwjgl.input.Mouse;
-
-import TWLSlick.BasicTWLGameState;
 
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.io.IOException;
-import java.util.Random;
 
-public class PlayQuestion extends BasicTWLGameState{
+import main.textpage.TextPage.TextPageFrame;
+
+import org.lwjgl.input.Mouse;
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
+import org.newdawn.slick.SlickException;
+import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.state.transition.EmptyTransition;
+import org.newdawn.slick.state.transition.FadeInTransition;
+import org.newdawn.slick.state.transition.FadeOutTransition;
+import org.newdawn.slick.state.transition.RotateTransition;
+import org.newdawn.slick.state.transition.SelectTransition;
+
+import com.esotericsoftware.kryonet.Client;
+
+import conn.Packet.*;
+
+import TWLSlick.BasicTWLGameState;
+import TWLSlick.RootPane;
+import de.matthiasmann.twl.Button;
+import de.matthiasmann.twl.DialogLayout;
+import de.matthiasmann.twl.Label;
+import de.matthiasmann.twl.TextArea;
+import de.matthiasmann.twl.ResizableFrame.ResizableAxis;
+import de.matthiasmann.twl.textarea.SimpleTextAreaModel;
+
+public class PlayQuestion extends BasicTWLGameState {
 	
-	public String mouse = "No input yet!";
+	private int gameState;
+	private final int serverlost = -4;
+	private final int cancelled = -2;
+	private final int play = 5;
+	private final int p1_turn = 7;
+	public final int question_points_amount = 50;
+	
+	public Client client;
+	DialogLayout choicePanel, questionPanel;
+	EmptyTransition emptyTransition;
+    RotateTransition rotateTransition;
+    SelectTransition selectTransition;
+    
+	int gcw;
+	int gch;
+	String mouse;
+	
+	Image scorebackground;
+	
+	private int playerID;
+	private int otherPlayerID;
+	private Player player;
+	private Player otherPlayer;
+	private Player player1;
+	private Player player2;
+	private int playerScore;
+	private int playerScore2;
+	private String playerName;
+	private int currentAnswer;
+	private int otherPlayerReady;
+	private ActivityScore playerResult;
+	private ActivityScore otherPlayerResult;
+	private int elapsedTime = 0;
+	private int elapsedTimeFixed = 0;
+	private int pointsAvailable = 0;
+	private int pointsGained = 0;
+	boolean ready = false;
 	
 	private int current_question_id;
 	private QuestionList question_list;
 	private Question[] questions;
 	private Question current_question;
 	private String[] current_choices;
-	private int noOfAnswers;
 	private int correctAnswer;
 	private int question_difficulty;
-	private int no_of_questions;
+	private int amountOfAnswers;
+	private String FILE_NAME;
+	private String start_message = "";
+	private String full_start_message = "Here's your question...";
+	private int full_start_counter = 0;
+	private String ticker = "";
+	private boolean tickerBoolean = true;
 	
-	private Font loadFont, loadMainFont, loadQuestionFont, loadQuestionBoldFont, loadTimerFont, loadTimerMFont;
-	private BasicFont mainFont, questionFont, questionSelectedFont, timerFont, timerMFont;
+	private int header_x = 330;
+	private int header_y = 50;
+	private int timer_x = 600;
+	private int timer_y = 550;
 	
-	private int mainFontSize = 36;
+	private int mainFontSize = 24;
+	private int titleFontSize = 36;
 	private int questionFontSize = 26;
 	private int timerFontSize = 40;
 	private int timerMFontSize = 18;
 	
-	private int choice_x = 100;
-	private int choice_y = 400;
-	private int description_x = 100;
-	private int description_y = 200;
-	private int timer_x = 560;
-	private int timer_y = 520;
-	private int header_x = 100;
-	private int header_y = 100;
-	private int answer_x = 180;	
-	private int answer_y = 300;
+	private Font loadFont, loadMainFont, loadTitleFont, loadQuestionFont, loadTimerFont, loadTimerMFont;
+	private BasicFont mainFont, titleFont, readyFont, questionFont, timerFont, timerMFont;;
 	
-	private String full_question_description;
-	private String start_message = "";
-	private String full_start_message = "";
-	private int full_start_counter = 0;
-	private String ticker = "";
-	private boolean tickerBoolean = true;
-
-	private String currentPlayer;
+	private int clock2,clock3,timer,timer2,overallTimer = 0;
+	private boolean end, win, time_out, finished, resume = false;
 	
-	private int backgroundx,backgroundx2 = 0;
-	private int clock,clock2,clock3,timer,timer2 = 0;
-	private int currentAnswer = 0;
-	private boolean confirmation, end, win, time_out = false;
-	private int confirmation_selected = 0;
-	private int question_check_counter;
-	private int points = 0;
-	private Random rand = new Random();
+	TextPageFrame textpageframe;
+	DialogLayout p1ResultPanel, p2ResultPanel;
 	
-	public PlayQuestion(int state, QuestionList ql){	
+	Label lActivity, lTitle, lPoints, lDifficulty, lTime, lOverall, lNew;
+	Label lActivity2, lPoints2, lDifficulty2, lTime2, lOverall2, lNew2;
+	Label lblPoints1, lblDifficulty1, lblTime1, lblOverall1, lblNew1;
+	Label lblPoints2, lblDifficulty2, lblTime2, lblOverall2, lblNew2;
+	
+	Label lblConfirmation, lblWaiting;
+	Button choices[];
+	Button btnYes, btnNo;
+	
+	DialogLayout.Group hBtn[], hBtnYes, hBtnNo, hQuestion, hLblConfirmation;
+	String description;
+	
+	Packet00SyncMessage syncMessage;
+	Packet14QuestionComplete completeMessage;
+	
+	public PlayQuestion(int state, QuestionList ql) {
+		client = HRRUClient.conn.getClient();
 		this.question_list = ql;
 	}
 	
-	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException{
-		// Initialize question list
+	void disableChoices()
+	{
+		for(int i = 0; i < amountOfAnswers; i++)
+		{
+			choices[i].setVisible(false);
+			choices[i].setEnabled(false);
+		}
+		lblConfirmation.setVisible(true);
+		btnYes.setVisible(true);
+		btnNo.setVisible(true);
+	}
+	
+	void enableChoices()
+	{
+		for(int i = 0; i < amountOfAnswers; i++)
+		{
+			choices[i].setVisible(true);
+			choices[i].setEnabled(true);
+		}
+		currentAnswer = -1;
+		lblConfirmation.setVisible(false);
+		btnYes.setVisible(false);
+		btnNo.setVisible(false);
+	}
+	
+	void disableGUI()
+	{
+		choicePanel.setVisible(false);
+		questionPanel.setVisible(false);
+	}
+	
+	void emulateChoice(int choice)
+	{
+		disableChoices();
+		lblConfirmation.setText("Is your answer: \n'" + choices[choice].getText() + "' ?");
+		currentAnswer = choice;
+	}
+	
+	void emulateYes()
+	{
+		disableGUI();
+		completeMessage = new Packet14QuestionComplete();
+		completeMessage.difficulty = question_difficulty;
+		completeMessage.choice = currentAnswer;
+		completeMessage.elapsedtime = 0;
+		completeMessage.player = playerID;
+		completeMessage.points = 0;
+		completeMessage.overall = 0;
+		completeMessage.correct = false;
+		completeMessage.sessionID = HRRUClient.cs.getSessionID();
+		pointsAvailable = 0;
+		pointsGained = 0;
+		elapsedTime = 0;
+		elapsedTimeFixed = 80 - timer;
+		ready = true;
+		end = true;
+		if(currentAnswer == correctAnswer)
+		{
+			completeMessage.elapsedtime = timer;
+			elapsedTime = timer; 
+			pointsAvailable = question_points_amount;
+			pointsGained = question_points_amount;
+			completeMessage.points = pointsGained;
+			completeMessage.choice = currentAnswer;
+			
+			pointsGained += timer;
+			pointsGained *= question_difficulty;
+			completeMessage.correct = true;
+			completeMessage.overall = pointsGained;
+			player.addScore(pointsGained);
+			win = true;
+		}
+		else
+		{
+			win = false;
+		}
+		
+		client.sendTCP(completeMessage);
+	}
+
+	@Override
+	public void enter(GameContainer gc, StateBasedGame sbg) throws SlickException {
+		super.enter(gc, sbg);
+		rootPane.removeAllChildren();
+		choicePanel.removeAllChildren();
+		questionPanel.removeAllChildren();
+		
+		// Set up question variables
+		questions = question_list.getQuestion_list();
+		
+		current_question_id = 2; //HRRUClient.cs.getActivity_id();
+		current_question = questions[current_question_id];
+
+		current_choices = current_question.getChoices();
+		FILE_NAME = current_question.getFile();
+		amountOfAnswers = current_question.getAmountOfAnswers();
+		correctAnswer = current_question.getAnswer();
+		question_difficulty = current_question.getDifficulty();
+		
+		// Reset variables
+		otherPlayerReady=0;
+		win = false; end = false; time_out = false; finished = false; resume = false;
+		currentAnswer = -1;
+		clock2 = 0; clock3 = 0;
+		timer = 80;
+		timer2 = 999;
+		elapsedTime = 0;
+		pointsAvailable = 0;
+		pointsGained = 0;
+		elapsedTimeFixed = 0;
+		overallTimer = 0;
+		
+		start_message = "";
+		full_start_message = "Here's your question...";
+		full_start_counter = 0;
+		ticker = "";
+		tickerBoolean = true;
+		
+		// Retrieve player information
+		player1 = HRRUClient.cs.getP1();
+		player2 = HRRUClient.cs.getP2();
+		playerID = HRRUClient.cs.getPlayer();
+		
+		if(playerID == 1)
+		{
+			player =  player1;
+			otherPlayer = player2;
+			otherPlayerID = 2;
+		}
+		else 
+		{
+			player =  player2;
+			otherPlayer = player1;
+			otherPlayerID = 1;
+		}
+		
+		playerName = player.getName();
+		playerScore = player.getScore();
+		playerScore2 = otherPlayer.getScore();
+		
+		choicePanel.setTheme("choices-panel");   
+		
+		textpageframe = new TextPageFrame(FILE_NAME);
+		textpageframe.setSize(700, 300);
+		textpageframe.setDraggable(false);
+		textpageframe.setResizableAxis(ResizableAxis.NONE);
+		textpageframe.setTheme("textpageframe");
+		
+		hQuestion = questionPanel.createSequentialGroup().addWidget(textpageframe);
+		
+		questionPanel.setHorizontalGroup(questionPanel.createParallelGroup()
+				.addGroup(hQuestion));	
+		questionPanel.setVerticalGroup(questionPanel.createSequentialGroup()
+				.addWidgets(textpageframe));
+		
+		hBtn = new DialogLayout.Group[amountOfAnswers];
+		choices = new Button[amountOfAnswers];
+		
+		for(int i = 0; i < amountOfAnswers; i++)
+		{
+			choices[i] = new Button();
+			choices[i].setSize(500, 30);
+			choices[i].setTheme("choicebutton");
+			hBtn[i] =  choicePanel.createSequentialGroup().addWidget(choices[i]);
+		}
+		// Re-add previous widgets
+		hLblConfirmation = choicePanel.createSequentialGroup().addWidget(lblConfirmation);
+		hBtnYes = choicePanel.createSequentialGroup().addWidget(btnYes);
+		hBtnNo = choicePanel.createSequentialGroup().addWidget(btnNo);
+		// Create Dialog Layout
+		choicePanel.setHorizontalGroup(choicePanel.createParallelGroup()
+				.addGroups(hBtn)
+				.addGroup(hLblConfirmation)
+				.addGroup(hBtnYes)
+				.addGroup(hBtnNo));
+		
+		choicePanel.setVerticalGroup(choicePanel.createSequentialGroup()
+				.addWidgets(choices)
+				.addWidget(lblConfirmation)
+				.addWidget(btnYes)
+				.addWidget(btnNo));
+		
+		// Set up buttons for choices
+		for(int i = 0; i < amountOfAnswers; i++)
+			choices[i].setText(current_choices[i]);
+		
+		// Set up callbacks for buttons
+		choices[0].addCallback(new Runnable() {
+            public void run() {
+                emulateChoice(0);
+            }
+        });
+		choices[1].addCallback(new Runnable() {
+            public void run() {
+                emulateChoice(1);
+            }
+        });
+		if(amountOfAnswers>2)
+			{
+			choices[2].addCallback(new Runnable() {
+				public void run() {
+					emulateChoice(2);
+				}
+			});
+		}
+		if(amountOfAnswers>3)
+		{
+			choices[3].addCallback(new Runnable() {
+				public void run() {
+					emulateChoice(3);
+				}
+			});
+			}
+		if(amountOfAnswers>4)
+		{
+			choices[4].addCallback(new Runnable() {
+				public void run() {
+					emulateChoice(4);
+				}
+			});
+		}
+		if(amountOfAnswers>5)
+		{
+			choices[5].addCallback(new Runnable() {
+				public void run() {
+					emulateChoice(5);
+				}
+			});
+		}
+
+		
+		// Add to root pane
+		enableChoices();
+		p1ResultPanel.setTheme("incorrect-panel");
+		p2ResultPanel.setTheme("incorrect-panel");
+		questionPanel.setVisible(true);
+		choicePanel.setVisible(true);
+		lblWaiting.setVisible(false);
+		p1ResultPanel.setVisible(false);
+		p2ResultPanel.setVisible(false);
+		
+		rootPane.add(p1ResultPanel);
+		rootPane.add(p2ResultPanel);
+		rootPane.add(lblWaiting);
+		rootPane.add(questionPanel);
+		rootPane.add(choicePanel);
+		
+		rootPane.setTheme("");
+	}
+	
+	@Override
+	protected RootPane createRootPane() {
+		assert rootPane == null : "RootPane already created";
+
+		RootPane rp = new RootPane(this);
+		rp.setTheme("");
+		rp.getOrCreateActionMap().addMapping(this);
+		return rp;
+	}
+
+	@Override
+	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
+		gcw = gc.getWidth();
+		gch = gc.getHeight();
+		rotateTransition = new RotateTransition();
+		selectTransition = new SelectTransition();
+		emptyTransition = new EmptyTransition();
+		scorebackground = new Image("simple/playerscorebackground.png");
 		
 		// Create custom font for question
-		 try {
+		try {
 			loadFont = java.awt.Font.createFont(java.awt.Font.TRUETYPE_FONT,
 			        org.newdawn.slick.util.ResourceLoader.getResourceAsStream("font/visitor2.ttf"));
 		} catch (FontFormatException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
-		 // Load all required fonts
+				}
+		loadTitleFont = loadFont.deriveFont(Font.BOLD,titleFontSize);
+		titleFont = new BasicFont(loadTitleFont);
+		
 		loadMainFont = loadFont.deriveFont(Font.BOLD,mainFontSize);
+		mainFont = new BasicFont(loadMainFont);
+		readyFont = new BasicFont(loadTitleFont, Color.red);
+		
 		loadQuestionFont = loadFont.deriveFont(Font.PLAIN, questionFontSize);
-		loadQuestionBoldFont = loadFont.deriveFont(Font.BOLD, questionFontSize);
 		loadTimerFont = loadFont.deriveFont(Font.BOLD,timerFontSize);
 		loadTimerMFont = loadFont.deriveFont(Font.BOLD,timerMFontSize);
-		mainFont = new BasicFont(loadMainFont);
 		timerFont = new BasicFont(loadTimerFont);
 		timerMFont = new BasicFont(loadTimerMFont);
 		questionFont = new BasicFont(loadQuestionFont);
-		questionSelectedFont = new BasicFont(loadQuestionBoldFont, Color.gray);
 		
+		// Set up question GUI widgets
+		choicePanel = new DialogLayout();
+		questionPanel = new DialogLayout();
+		questionPanel.setTheme("question-panel");
+		choicePanel.setTheme("choices-panel");				
+		questionPanel.setSize(750, 300);
+		questionPanel.setPosition(
+				(25),
+				(gch/2 - questionPanel.getHeight()/2) - 50);
+		        
+		choicePanel.setSize(500, 150);
+		choicePanel.setPosition(
+				(gcw/2 - choicePanel.getWidth()/2),
+		        (gch/2 - choicePanel.getHeight()/2) + 150);
+				
+		lblConfirmation = new Label("");
+		btnYes = new Button("Yes");
+		btnNo = new Button("No");
 		
-		// mainFont = new BasicFont("Arial", Font.PLAIN, mainFontSize);
-		// questionFont = new BasicFont("Arial", Font.PLAIN, 26);
+		lblConfirmation.setTheme("labelscoretotal");
+		btnYes.setTheme("choicebutton");
+		btnNo.setTheme("choicebutton");
+				
+		hLblConfirmation = choicePanel.createSequentialGroup().addWidget(lblConfirmation);
+		hBtnYes = choicePanel.createSequentialGroup().addWidget(btnYes);
+		hBtnNo = choicePanel.createSequentialGroup().addWidget(btnNo);
 		
-		/*
-		// Load all images
-		menubuttona = new Image("img/menubuttona.png");
-		menubuttonb = new Image("img/menubuttonb.png");
-		menubuttonc = new Image("img/menubuttonc.png");
-		menubuttond = new Image("img/menubuttond.png");
-		menubuttonah = new Image("img/menubuttonahover.png");
-		menubuttonbh = new Image("img/menubuttonbhover.png");
-		menubuttonch = new Image("img/menubuttonchover.png");
-		menubuttondh = new Image("img/menubuttondhover.png");
-		*/
+		btnYes.addCallback(new Runnable() {
+            public void run() {
+                emulateYes();
+            }
+        });
+				
+		btnNo.addCallback(new Runnable() {
+            public void run() {
+            	enableChoices();
+            }
+        });
 		
-	} 
-	
-	public void enter(GameContainer gc, StateBasedGame sbg) throws SlickException {
-		super.enter(gc, sbg);
+		choicePanel.setIncludeInvisibleWidgets(false);
 		
-		questions = question_list.getQuestion_list();
-		no_of_questions = question_list.getNumberOfQuestions();
+		btnNo.setVisible(false);
+		btnYes.setVisible(false);
 		
-		current_question_id = HRRUClient.cs.getActivity_id();
-		current_question = questions[current_question_id];
-
-		current_choices = current_question.getChoices();
-		full_question_description = current_question.getFile();
-		noOfAnswers = current_question.getAmountOfAnswers();
-		correctAnswer = current_question.getAnswer();
-		question_difficulty = current_question.getDifficulty();
-		backgroundx = 0;
-		backgroundx2 = -959;
+		// RESULTS PANEL SETUP
+		lblWaiting = new Label("");
+		lblWaiting.setSize(800, 100);
+		lblWaiting.setPosition(0,500);
+		lblWaiting.setTheme("labelscoretotal");
 		
-		timer = 80;
-		timer2 = 999;
+        p1ResultPanel = new DialogLayout();
+        p1ResultPanel.setTheme("incorrect-panel");
+		
+		p1ResultPanel.setSize(310, 310);
+		p1ResultPanel.setPosition(
+               (gcw/2 - p1ResultPanel.getWidth()/2 - 220),
+                (gch/2 - p1ResultPanel.getHeight()/2));
+		
+		p2ResultPanel = new DialogLayout();
+        p2ResultPanel.setTheme("incorrect-panel");
+		p2ResultPanel.setSize(310, 310);
+		p2ResultPanel.setPosition(
+               (gcw/2 - p2ResultPanel.getWidth()/2 + 180),
+                (gch/2 - p2ResultPanel.getHeight()/2));
+		
+		lActivity = new Label("");
+		lActivity.setTheme("labelmiddle");
+		lPoints = new Label("Points:");
+		lDifficulty = new Label("Difficulty:");
+		lTime = new Label("Time Bonus:");
+		lOverall = new Label("Overall Points:");
+		lNew = new Label("New Total:");
+		lNew.setTheme("labelscoretotal");
+		
+		lActivity2 = new Label("");
+		lActivity2.setTheme("labelmiddle");
+		lPoints2 = new Label("Points:");
+		lDifficulty2 = new Label("Difficulty:");
+		lTime2 = new Label("Time Bonus:");
+		lOverall2 = new Label("Overall Points:");
+		lNew2 = new Label("New Total:");
+		lNew2.setTheme("labelscoretotal");
+				
+		lblPoints1 = new Label("");
+		lblPoints1.setTheme("labelright");
+		lblDifficulty1 = new Label("");
+		lblDifficulty1.setTheme("labelright");
+		lblTime1 = new Label("");
+		lblTime1.setTheme("labelright");
+		lblOverall1 = new Label("");
+		lblOverall1.setTheme("labelright");
+		lblNew1 = new Label("");
+		lblNew1.setTheme("labelscoretotalright");
+		
+		lblPoints2 = new Label("");
+		lblPoints2.setTheme("labelright");
+		lblDifficulty2 = new Label("");
+		lblDifficulty2.setTheme("labelright");
+		lblTime2 = new Label("");
+		lblTime2.setTheme("labelright");
+		lblOverall2 = new Label("");
+		lblOverall2.setTheme("labelright");
+		lblNew2 = new Label("");
+		lblNew2.setTheme("labelscoretotalright");
+		
+		DialogLayout.Group hLabels1 = p1ResultPanel.createParallelGroup(lPoints, lDifficulty, lTime, lOverall, lNew).addGap(200);
+		DialogLayout.Group hP1Result1 = p1ResultPanel.createParallelGroup(lblPoints1, lblDifficulty1, lblTime1, lblOverall1, lblNew1);
+		DialogLayout.Group hActivity = p1ResultPanel.createSequentialGroup(lActivity);
+		
+		p1ResultPanel.setHorizontalGroup(p1ResultPanel.createParallelGroup()
+				.addGap(120)
+				.addGroup(hActivity)
+				.addGroup(p1ResultPanel.createSequentialGroup(hLabels1, hP1Result1)));
+		
+		p1ResultPanel.setVerticalGroup(p1ResultPanel.createSequentialGroup()
+				.addGap(60).addWidget(lActivity)
+				.addGap(30).addGroup(p1ResultPanel.createParallelGroup(lPoints, lblPoints1))
+				.addGap(30).addGroup(p1ResultPanel.createParallelGroup(lTime, lblTime1))
+				.addGap(30).addGroup(p1ResultPanel.createParallelGroup(lDifficulty, lblDifficulty1))
+				.addGap(30).addGroup(p1ResultPanel.createParallelGroup(lOverall, lblOverall1))
+				.addGap(30).addGroup(p1ResultPanel.createParallelGroup(lNew, lblNew1)));
+		
+		DialogLayout.Group hLabels2 = p2ResultPanel.createParallelGroup(lPoints2, lDifficulty2, lTime2, lOverall2, lNew2).addGap(200);
+		DialogLayout.Group hP1Result2 = p2ResultPanel.createParallelGroup(lblPoints2, lblDifficulty2, lblTime2, lblOverall2, lblNew2);
+		DialogLayout.Group hActivity2 = p2ResultPanel.createSequentialGroup(lActivity2);
+		
+		p2ResultPanel.setHorizontalGroup(p2ResultPanel.createParallelGroup()
+				.addGap(120)
+				.addGroup(hActivity2)
+				.addGroup(p2ResultPanel.createSequentialGroup(hLabels2, hP1Result2)));
+		
+		p2ResultPanel.setVerticalGroup(p2ResultPanel.createSequentialGroup()
+				.addGap(60).addWidget(lActivity2)
+				.addGap(30).addGroup(p2ResultPanel.createParallelGroup(lPoints2, lblPoints2))
+				.addGap(30).addGroup(p2ResultPanel.createParallelGroup(lTime2, lblTime2))
+				.addGap(30).addGroup(p2ResultPanel.createParallelGroup(lDifficulty2, lblDifficulty2))
+				.addGap(30).addGroup(p2ResultPanel.createParallelGroup(lOverall2, lblOverall2))
+				.addGap(30).addGroup(p2ResultPanel.createParallelGroup(lNew2, lblNew2)));
 	}
-	
-	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException{
-		g.drawImage(new Image("img/questionbg.png"), 0, 0);
-		g.drawString(mouse, 650, 50);
-		
-		g.setFont(mainFont.get());
+
+	@Override
+	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
+		if(!end)
+		{
+		g.drawImage(new Image("simple/questionbg.png"), 0, 0);
+		g.setFont(titleFont.get());
 		g.drawString("> " + start_message + "" + ticker, header_x, header_y);
-		
-		g.setFont(questionFont.get());
+		g.drawImage(scorebackground, 0,0);
+		g.setFont(mainFont.get());
+		g.drawImage(player1.getPlayerCharacter().getCharacterImage(), 13,13);
+		g.drawImage(player2.getPlayerCharacter().getCharacterImage(), 13,55);
+		g.drawString("" + player1.getName(), 65, 22);
+		g.drawString("" + player2.getName(), 65, 64);
+		g.drawString("" + player1.getScore(), 204, 22);
+		g.drawString("" + player2.getScore(), 204, 64);
 
-
-		for(int i = 0; i < current_question.getAmountOfAnswers(); i++)
-		{
-			if(currentAnswer==i)
-			{
-				g.setFont(questionSelectedFont.get());
-				g.drawString(">", choice_x-15, choice_y+(i*30));
-			}
-			else
-				g.setFont(questionFont.get());
-			g.drawString(i+1 + ". " + current_choices[i], choice_x, choice_y+(i*30));
-		}
-		
-		g.setFont(questionFont.get());
-		if(confirmation==true)
-		{
-			g.drawImage(new Image("img/answerbox.png"), answer_x, answer_y);
-			g.drawString("Is your answer: " + (currentAnswer+1) + "?", answer_x+15, answer_y+15);
-			
-			if(confirmation_selected==1)
-				g.setFont(questionSelectedFont.get());
-			
-			g.drawString("Yes", answer_x+100, answer_y+40);
-			g.setFont(questionFont.get());
-			
-			if(confirmation_selected==0)
-				g.setFont(questionSelectedFont.get());
-			g.drawString("No", answer_x+300, answer_y+40);
-		}
-
+		g.drawString(mouse, 50, 550);
 		
 		g.setFont(timerFont.get());
 		if(timer<100)
@@ -179,7 +584,6 @@ public class PlayQuestion extends BasicTWLGameState{
 			g.drawString("TIME: 00" + timer, timer_x, timer_y);
 		else
 		    g.drawString("TIME: " + timer, timer_x, timer_y);
-		
 		g.setFont(timerMFont.get());
 		if(timer2<100)
 			g.drawString("0" + timer2, timer_x+145, timer_y-10);
@@ -187,131 +591,139 @@ public class PlayQuestion extends BasicTWLGameState{
 			g.drawString("00" + timer2, timer_x+145, timer_y-10);
 		else
 			g.drawString("" + timer2, timer_x+145, timer_y-10);
-			
-		g.setFont(questionFont.get());
-		if(end)
+		
+		g.setFont(readyFont.get());
+		
+		if(otherPlayerReady == 1)
 		{
-			g.drawImage(new Image("img/questionui.png"), 0, 0);
-			if(win)
-			{
-				g.drawString("CORRECT!", 100, 100);
-				g.drawString("Points: ", 100, 130);
-				g.drawString("100", 500, 130);
-				g.drawString("Time Bonus: ", 100, 160);
-				g.drawString("" + timer, 500, 160);
-				g.drawString("Difficulty Multiplyer ", 100, 190);
-				if(question_difficulty==1)
-					g.drawString("Easy: x1", 500, 190);
-				g.drawString("Overall Points: ", 100, 400);
-				g.drawString("+" + points, 500, 400);
-				g.drawString(currentPlayer + "'s new score: playername", 100, 450);
-			}
-			else if(time_out)
-			{
-				g.drawString("You have ran out of time!", 100, 100);
-				g.drawString("The correct answer was " + current_choices[correctAnswer], 100, 150);
-				g.drawString("Overall Points: ", 100, 400);
-				g.drawString("+" + points, 500, 400);
-				g.drawString(currentPlayer + "'s score:  playername", 100, 450);
-			}
-			else if(win==false)
-			{
-				g.drawString("INCORRECT!", 100, 100);
-				g.drawString("The correct answer was " + current_choices[correctAnswer], 100, 150);
-				g.drawString("Overall Points: ", 100, 400);
-				g.drawString("+" + points, 500, 400);
-				g.drawString(currentPlayer + "'s score:  playername", 100, 450);
-			}
-			g.drawString("Press Q to continue...", 500, 530);
+			if(otherPlayerID == 1)
+				g.drawString("FINISHED", 92, 19);
+			else
+				g.drawString("FINISHED", 92, 61);
+		}
 		}
 		
-	} // render
-	
-	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException{
-		Input input = gc.getInput();
+		if(end)
+		{
+			g.drawImage(new Image("simple/questionbg.png"), 0, 0);
+			g.drawImage(scorebackground, 0,0);
+			g.setFont(mainFont.get());
+			g.drawImage(player1.getPlayerCharacter().getCharacterImage(), 13,13);
+			g.drawImage(player2.getPlayerCharacter().getCharacterImage(), 13,55);
+			g.drawString("" + player1.getName(), 65, 22);
+			g.drawString("" + player2.getName(), 65, 64);
+			g.drawString("" + player1.getScore(), 204, 22);
+			g.drawString("" + player2.getScore(), 204, 64);
+			g.setFont(readyFont.get());
+			if(ready)
+			{
+				if(playerID == 1)
+					g.drawString("FINISHED", 92, 19);
+				else
+					g.drawString("FINISHED", 92, 61);
+			}
+			if(otherPlayerReady == 1)
+			{
+				if(otherPlayerID == 1)
+					g.drawString("FINISHED", 92, 19);
+				else
+					g.drawString("FINISHED", 92, 61);
+			}
+			g.setFont(timerFont.get());
+			if(timer<100)
+				g.drawString("TIME: 0" + timer, timer_x, timer_y);
+			else if(timer<10)
+				g.drawString("TIME: 00" + timer, timer_x, timer_y);
+			else
+			    g.drawString("TIME: " + timer, timer_x, timer_y);
+			g.setFont(timerMFont.get());
+			if(timer2<100)
+				g.drawString("0" + timer2, timer_x+145, timer_y-10);
+			else if(timer2<10)
+				g.drawString("00" + timer2, timer_x+145, timer_y-10);
+			else
+				g.drawString("" + timer2, timer_x+145, timer_y-10);
+			
+			if(finished)
+			{
+				g.drawImage(new Image("simple/questionbg.png"), 0, 0);
+				g.setFont(titleFont.get());
+				g.drawString("> " + start_message + "" + ticker, 50, 50);
+				g.drawString("" + timer, 750, 550);
+				g.drawImage(new Image("simple/playerbg.png"), 124, 175);
+				g.drawImage(new Image("simple/playerbg.png"), 524, 175);
+				g.drawImage(player1.getPlayerCharacter().getCharacterImage(), 124, 175);
+				g.drawImage(player2.getPlayerCharacter().getCharacterImage(), 524, 175);
+				g.setFont(mainFont.get());
+				g.drawString("" + player1.getName(), 174, 184);
+				g.drawString("" + player2.getName(), 574, 184);
+			}
+		}
+		
+	}
+
+	@Override
+	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
+		gc.getInput();
 		int xpos = Mouse.getX();
 		int ypos= Mouse.getY();
 		mouse = "xpos: " + xpos + "\nypos: " + ypos;
-		currentPlayer = null;
-		full_start_message = "Question for " + currentPlayer + "...";
-		clock += delta;
+		
+		// Update variables
+		clock2 += delta;
+		clock3 += delta;
+		timer2 -= delta;
+		overallTimer += delta;
+		gameState = HRRUClient.cs.getState();
+		
+		// Connection to server lost
+		if(gameState == serverlost)
+			sbg.enterState(0);
+		
+		// Connection to other player lost
+		if(gameState == cancelled) {
+			if(playerID == 1)
+				sbg.enterState(1);
+			else sbg.enterState(2);
+		}
+		
+		// Check if other player is finished
+		if(otherPlayerID == 1)
+			otherPlayerReady = HRRUClient.cs.getP1().getReady();
+		else
+			otherPlayerReady = HRRUClient.cs.getP2().getReady();
+					
+		if(clock3 > 100){
+			if(full_start_counter < full_start_message.length())
+			{
+				start_message += full_start_message.substring(full_start_counter, full_start_counter+1);
+				full_start_counter++;
+				clock3-=100;
+			}
+		}
 		
 		if(end==false)
 		{
-			clock2 += delta;
-			clock3 += delta;
-			timer2--;
-			
-			if(confirmation == false)
-			{
-				if(input.isKeyPressed(Input.KEY_W))
-					if(currentAnswer == 0)
-						currentAnswer = noOfAnswers - 1;
-					else
-						currentAnswer--;
-				else if(input.isKeyPressed(Input.KEY_S))
-					if(currentAnswer == noOfAnswers-1)
-						currentAnswer = 0;
-					else
-						currentAnswer++;
-				else if(input.isKeyPressed(Input.KEY_Q))
-					confirmation = true;
-			}
-			else
-			{
-				if(input.isKeyPressed(Input.KEY_A))
-					confirmation_selected = 1;
-				else if(input.isKeyPressed(Input.KEY_D))
-					confirmation_selected = 0;
-				else if(input.isKeyPressed(Input.KEY_Q))
-					if(confirmation_selected == 0)
-					{
-						confirmation = false;
-					}
-					else if(confirmation_selected == 1)
-					{
-						clock = 0;
-						end = true;
-						if(currentAnswer == correctAnswer)
-						{
-							points = 100 + timer;
-							points *= question_difficulty;
-							win = true;
-						}
-						else
-							win = false;
-					}
-						
-			}
-			
-			if(clock>50)
-			{
-				backgroundx++;
-				if(backgroundx>959)
-					backgroundx=-959;
-				backgroundx2++;
-				if(backgroundx2>959)
-					backgroundx2=-959;
-				clock-=50;
-			}	
-			
-			if(clock3 > 100){
-				if(full_start_counter < full_start_message.length())
-				{
-					start_message += full_start_message.substring(full_start_counter, full_start_counter+1);
-					full_start_counter++;
-					clock3-=100;
-				}
-			}
 			if(clock2>999)
 			{
 				timer--;
+				timer2=999;
 				if(timer<=0)
 				{
+					disableGUI();
 					end = true;
 					time_out = true;
+					completeMessage = new Packet14QuestionComplete();
+					completeMessage.difficulty = question_difficulty;
+					completeMessage.elapsedtime = 0;
+					completeMessage.overall = 0;
+					completeMessage.correct = false;
+					completeMessage.player = playerID;
+					completeMessage.points = 0;
+					completeMessage.choice = -1;
+					completeMessage.sessionID = HRRUClient.cs.getSessionID();
+					client.sendTCP(completeMessage);
 				}
-				timer2=999;
 				clock2-=1000;
 				if(tickerBoolean) 
 				{
@@ -325,64 +737,199 @@ public class PlayQuestion extends BasicTWLGameState{
 				}
 			}
 		}
-		
-		if(end==true){
-			if(input.isKeyPressed(Input.KEY_Q))
+		if(end && !finished)
+		{
+			if(clock2>999)
 			{
-				reset();
-				sbg.enterState(1);
+				timer--;
+				timer2=999;
+				clock2-=1000;
+				if(tickerBoolean) 
+				{
+					ticker = "|";
+					tickerBoolean = false;
+				}
+				else
+				{
+					ticker = "";
+					tickerBoolean = true;
+				}
+			}
+			if(otherPlayerReady == 1)
+			{
+				// Setup new UI
+				timer = 5; // should be 10
+				timer2 = 999;
+				clock2 = 0;
+				clock3 = 0;
+				lblWaiting.setVisible(false);
+				questionPanel.setVisible(false);
+				full_start_message = "The results are in...";
+				full_start_counter = 0;
+				ticker = "";
+				start_message = "";
+				tickerBoolean = true;
+				p1ResultPanel.setVisible(true);
+				p2ResultPanel.setVisible(true);
+				// Setup players results
+				if(playerID == 1)
+				{
+					lblPoints1.setText("" + pointsAvailable);
+					
+					if(question_difficulty==1)
+						lblDifficulty1.setText("Easy X" + question_difficulty);
+					else if(question_difficulty==2)
+						lblDifficulty1.setText("Medium X" + question_difficulty);
+					else if(question_difficulty==3)
+						lblDifficulty1.setText("Hard X" + question_difficulty);
+					
+					lblOverall1.setText("" + pointsGained);
+					lblTime1.setText("" + elapsedTime);	
+					lblNew1.setText("" + HRRUClient.cs.getP1().getScore());
+					lActivity.setText("Answered a question...");
+					if(win)
+					{
+						p1ResultPanel.setTheme("correct-panel");
+						p1ResultPanel.reapplyTheme();
+					}
+					
+					otherPlayerResult = HRRUClient.cs.getP2().getActivityScore();
+					lblPoints2.setText("" + otherPlayerResult.getPoints());
+					
+					if(otherPlayerResult.getDifficulty()==1)
+						lblDifficulty2.setText("Easy X1");
+					else if(otherPlayerResult.getDifficulty()==2)
+						lblDifficulty2.setText("Medium X2");
+					else if(otherPlayerResult.getDifficulty()==3)
+						lblDifficulty2.setText("Hard X3");
+					
+					lblOverall2.setText("" +  otherPlayerResult.getOverall());
+					lblTime2.setText("" +  otherPlayerResult.getElapsedtime());
+					lblNew2.setText("" + (playerScore2 + otherPlayerResult.getOverall()));
+					
+					int activity = otherPlayerResult.getActivity();
+					if(activity== 1)
+						lActivity2.setText("Answered a question...");
+					else if(activity == 2)
+						lActivity2.setText("Solved a puzzle...");
+					else if(activity == 3)
+						lActivity2.setText("Completed a game...");
+					
+					if(otherPlayerResult.getCorrect())
+					{
+						p2ResultPanel.setTheme("correct-panel");
+						p2ResultPanel.reapplyTheme();
+					}
+					finished = true;
+				}
+				else if(playerID == 2)
+				{
+					otherPlayerResult = HRRUClient.cs.getP1().getActivityScore();
+					lblPoints1.setText("" + otherPlayerResult.getPoints());
+					
+					if(otherPlayerResult.getDifficulty()==1)
+						lblDifficulty1.setText("Easy X1");
+					else if(otherPlayerResult.getDifficulty()==2)
+						lblDifficulty1.setText("Medium X2");
+					else if(otherPlayerResult.getDifficulty()==3)
+						lblDifficulty1.setText("Hard X3");
+					
+					lblOverall1.setText("" +  otherPlayerResult.getOverall());
+					lblTime1.setText("" +  otherPlayerResult.getElapsedtime());
+					lblNew1.setText("" + (playerScore2 + otherPlayerResult.getOverall()));
+					
+					lActivity.setText("Answered a question...");
+					
+					if(otherPlayerResult.getCorrect())
+					{
+						p1ResultPanel.setTheme("correct-panel");
+						p1ResultPanel.reapplyTheme();
+					}
+					
+					lblPoints2.setText("" + pointsAvailable);
+					if(question_difficulty==1)
+						lblDifficulty2.setText("Easy X" + question_difficulty);
+					else if(question_difficulty==2)
+						lblDifficulty2.setText("Medium X" + question_difficulty);
+					else if(question_difficulty==3)
+						lblDifficulty2.setText("Hard X" + question_difficulty);
+					lblOverall2.setText("" + pointsGained);
+					lblTime2.setText("" + elapsedTime);
+				
+					lblNew2.setText("" + HRRUClient.cs.getP2().getScore());
+					
+					int activity = otherPlayerResult.getActivity();
+					if(activity== 1)
+						lActivity2.setText("Answered a question...");
+					else if(activity == 2)
+						lActivity2.setText("Solved a puzzle...");
+					else if(activity == 3)
+						lActivity2.setText("Completed a game...");
+						
+					if(win)
+					{
+						p2ResultPanel.setTheme("correct-panel");
+						p2ResultPanel.reapplyTheme();
+					}
+					finished = true;
+				}
+			}
+			else if(otherPlayerReady == 0)
+			{
+				questionPanel.setVisible(true);
+				if(currentAnswer >= 0)
+					lblWaiting.setText("You answered '" + choices[currentAnswer].getText() + "'\n" +"Waiting for " + otherPlayer.getName());
+				else
+					lblWaiting.setText("You did not answer.");
+				lblWaiting.setVisible(true);
 			}
 		}
-
-
-		
-	} // main
-	
-	private void reset()
-	{
-		current_question.setAppeared(1);
-		start_message = "";
-		full_start_message = "";
-		full_start_counter = 0;
-		tickerBoolean = true;
-		
-		current_question_id = rand.nextInt(no_of_questions);
-		current_question = questions[current_question_id];
-		question_check_counter = 0;
-		while(current_question.getAppeared() == 1)
+		else if(finished)
 		{
-			current_question_id = rand.nextInt(no_of_questions);
-			current_question = questions[current_question_id];
-			question_check_counter++;
-			if(question_check_counter > (no_of_questions*2))
-				for(int i = 0; i<no_of_questions; i++)
-					questions[i].setAppeared(0);
+			if(clock2>999)
+			{
+				timer--;
+				timer2=999;
+				clock2-=1000;
+				if(timer<=0)
+				{
+					playerResult = new ActivityScore(1, pointsAvailable, question_difficulty, elapsedTime, pointsGained, win);
+					playerResult.setActivity_id(current_question_id);
+					// If Player1, update Player2's new score and add own result to list of results.
+					if(playerID == 1)
+					{
+						HRRUClient.cs.getP2().addScore(otherPlayerResult.getOverall());
+						HRRUClient.cs.getP1().addActivityScore(playerResult);
+					}
+					else
+					{
+						HRRUClient.cs.getP1().addScore(otherPlayerResult.getOverall());
+						HRRUClient.cs.getP2().addActivityScore(playerResult);
+					}
+					syncMessage = new Packet00SyncMessage();
+					syncMessage.player = playerID;
+					syncMessage.sessionID = HRRUClient.cs.getSessionID();
+					client.sendTCP(syncMessage);
+					finished = false;
+					resume = true;
+				}
+			}
 		}
-
-		current_choices = current_question.getChoices();
-		full_question_description = current_question.getFile();
-		noOfAnswers = current_question.getAmountOfAnswers();
-		correctAnswer = current_question.getAnswer();
-		question_difficulty = current_question.getDifficulty();
-		
-		currentAnswer = 0;
-		timer = 80;
-		timer2 = 999;
-		clock = 0;
-		clock2 = 0;
-		clock3 = 0;
-		
-		confirmation = false;
-		win = false;
-		end = false;
-		time_out = false;
-		confirmation_selected = 0;
-		currentAnswer = 0;
-		points = 0;
+		if(resume)
+		{
+			if(HRRUClient.cs.isSync())
+			{
+				HRRUClient.cs.updateTimer(overallTimer);
+				System.out.println("Time Subtract" + (overallTimer));
+				HRRUClient.cs.setSync(false);
+				HRRUClient.cs.setState(p1_turn);
+				sbg.enterState(play, new FadeOutTransition(), new FadeInTransition());
+			}
+		}
 	}
 	
-	public int getID(){
+	@Override
+	public int getID() {
 		return 6;
 	}
-	
 }

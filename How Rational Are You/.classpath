@@ -23,7 +23,6 @@
 			<attribute name="javadoc_location" value="http://kryonet.googlecode.com/svn/api/v2"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry combineaccessrules="false" kind="src" path="/TWL"/>
 	<classpathentry kind="lib" path="C:/Users/Lylat/Downloads/TWL.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

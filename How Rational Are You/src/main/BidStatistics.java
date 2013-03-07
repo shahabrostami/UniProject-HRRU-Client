@@ -435,7 +435,6 @@ public class BidStatistics extends BasicTWLGameState {
 				bsAmountWonAvgL = (int) (amountWonL / noOfBidScoreLose + 0.5);
 				bsAmountWonTotalL = (int) amountWonL;
 			}
-			lAmountWonTotalW.setText("" + (int) bsAmountWonTotalW  + " of your " + playerScore + " (" + (int)((bsAmountWonTotalW/playerScore)*100+0.5) + "%)");
 		}
 		
 		lNoOfBidScores.setText("" + noOfBidScores);
@@ -489,7 +488,10 @@ public class BidStatistics extends BasicTWLGameState {
 				amountWonL);
 		
 		if(noOfBidScores > 0)
+		{
 			biddingScoreResult.setPercentage((int)((bsAmountWonTotalW/playerScore)*100+0.5));
+			lAmountWonTotalW.setText("" + (int) bsAmountWonTotalW + " (" + (int)((bsAmountWonTotalW/(playerScore-1000))*100+0.5) +  "% of your score)");
+		}
 		
 		if(playerID == 1)
 			HRRUClient.cs.getP1().setBiddingScoreResult(biddingScoreResult);

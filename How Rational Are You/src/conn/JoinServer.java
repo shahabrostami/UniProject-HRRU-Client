@@ -13,6 +13,12 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.state.transition.EmptyTransition;
+import org.newdawn.slick.state.transition.FadeInTransition;
+import org.newdawn.slick.state.transition.FadeOutTransition;
+import org.newdawn.slick.state.transition.HorizontalSplitTransition;
+import org.newdawn.slick.state.transition.RotateTransition;
+import org.newdawn.slick.state.transition.SelectTransition;
 
 import com.esotericsoftware.kryonet.Client;
 
@@ -68,6 +74,7 @@ public class JoinServer extends BasicTWLGameState {
     EditField efPassword;
     Button btnJoin, btnBack, btnCancel, btnReady;
     Label lName, lSessionID, lPassword, lStatus, lPlayer1, lPlayer2;
+    
     
 	private Packet2JoinRequest joinRequest;
 	private Packet7Ready readyRequest;
@@ -232,8 +239,8 @@ public class JoinServer extends BasicTWLGameState {
 		gcw = gc.getWidth();
 		gch = gc.getHeight();
 		gc.setShowFPS(false);
-		
-		//setup font variables
+	    
+	    //setup font variables
 		try {
 			loadFont = java.awt.Font.createFont(java.awt.Font.TRUETYPE_FONT,
 					      org.newdawn.slick.util.ResourceLoader.getResourceAsStream("font/visitor2.ttf"));
@@ -439,7 +446,7 @@ public class JoinServer extends BasicTWLGameState {
 			lStatus.setText("Game Starting in " + (clock/100+1) + "...");
 			if(clock<0)
 			{
-				sbg.enterState(4);
+				sbg.enterState(4, new FadeOutTransition(), new FadeInTransition());
 			}
 		}
 		// Player 1 is ready

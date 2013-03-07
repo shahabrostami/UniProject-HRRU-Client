@@ -74,6 +74,7 @@ public class TrustStatistics extends BasicTWLGameState {
 	private int tsAvg;
 	private double tsTotal;
 	private int playerGive, playerReturn, maxToGive, maxToReturn, maxToReceive, playerReceiveValue, playerGiveValue, playerReturnValue, multiplier, playerGiveProfit, playerReturnProfit;
+	private double pointsAvailable;
 
 	private int playerID;
 	private int playerScore;
@@ -86,7 +87,7 @@ public class TrustStatistics extends BasicTWLGameState {
 		tsPlayerGiveAvg = 0; tsPlayerReturnAvg = 0; tsPlayerReceiveAvg = 0; tsPlayerGiveProfitAvg = 0; tsPlayerReturnProfitAvg = 0;
 		tsPlayerGiveTotal = 0; tsPlayerReturnTotal = 0; tsPlayerReceiveTotal = 0; tsPlayerGiveProfitTotal = 0; tsPlayerReturnProfitTotal = 0;
 		playerGive = 0; playerReturn = 0; maxToGive = 0; maxToReturn = 0; maxToReceive = 0; playerReceiveValue = 0; playerGiveValue = 0; playerReturnValue = 0; multiplier = 0; playerGiveProfit = 0; playerReturnProfit = 0;
-		tsTotal = 0; tsAvg = 0;
+		tsTotal = 0; tsAvg = 0; pointsAvailable = 0;
 	}
 	
 	public TrustStatistics(int main) {
@@ -426,7 +427,8 @@ public class TrustStatistics extends BasicTWLGameState {
 		lTsPlayerGiveProfitTotal.setText("" + (int) tsPlayerGiveProfitTotal);
 		lTsPlayerReturnProfitTotal.setText("" + (int) tsPlayerReturnProfitTotal);
 		lTsAvg.setText("" + tsAvg);
-		lTsTotal.setText("" + (int) tsTotal + " of your " + playerScore + " (" + (int)((tsTotal/playerScore)*100+0.5) + "%)");
+		lTsTotal.setText("" + (int) tsTotal);
+		
 		
 		TrustScoreResult trustScoreResult = new TrustScoreResult(
 				noOfTrustScores, 
@@ -444,7 +446,13 @@ public class TrustStatistics extends BasicTWLGameState {
 				tsPlayerReturnProfitTotal, 
 				tsAvg, 
 				tsTotal);
-		
+
+		if(noOfTrustScores > 0)
+		{
+			trustScoreResult.setPointsAvailable((maxToReceive/2) + (maxToReturn/2));
+			trustScoreResult.setPercentage((int)((tsTotal/(playerScore-1000))*100+0.5));
+			lTsTotal.setText("" + (int) tsTotal + " (" + (int)((tsTotal/(playerScore-1000))*100+0.5) +  "% of your score)");
+		}
 		if(playerID == 1)
 			HRRUClient.cs.getP1().setTrustScoreResult(trustScoreResult);
 		else

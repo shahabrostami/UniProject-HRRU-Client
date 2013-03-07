@@ -18,6 +18,11 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.state.transition.EmptyTransition;
+import org.newdawn.slick.state.transition.FadeInTransition;
+import org.newdawn.slick.state.transition.FadeOutTransition;
+import org.newdawn.slick.state.transition.RotateTransition;
+import org.newdawn.slick.state.transition.SelectTransition;
 import org.newdawn.slick.util.ResourceLoader;
 
 
@@ -58,7 +63,7 @@ public class PlayGame_Prisoners extends BasicTWLGameState {
 	Label lProfit, lProfit2, lblProfit, lblProfit2;
 	Label lNew, lNew2, lblNew, lblNew2;
 	Button btnCooperate, btnBetray;
-	
+    
 	int gcw;
 	int gch;
 	
@@ -222,7 +227,6 @@ public class PlayGame_Prisoners extends BasicTWLGameState {
 				player1 = HRRUClient.cs.getP1();
 				player2 = HRRUClient.cs.getP2();
 				playerID = HRRUClient.cs.getPlayer();
-				System.out.println(playerID +" playerID");
 				if(playerID == 1)
 				{
 					player =  player1;
@@ -293,6 +297,7 @@ public class PlayGame_Prisoners extends BasicTWLGameState {
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		gcw = gc.getWidth();
 		gch = gc.getHeight();
+		
 		// Set up images
 		scorebackground = new Image("simple/playerscorebackground.png");
 		background = new Image("simple/questionbg.png");
@@ -607,7 +612,7 @@ public class PlayGame_Prisoners extends BasicTWLGameState {
 		// Game finished
 		else if(gameState == 3)
 		{
-			timer = 10;
+			timer = 7;
 			timer2 = 999;
 			clock2 = 0;
 			clock3 = 0;
@@ -709,7 +714,6 @@ public class PlayGame_Prisoners extends BasicTWLGameState {
 		}
 		else if(gameState == 4)
 		{
-			System.out.println("timer: " + timer);
 			if(timer<=0)
 			{
 				HRRUClient.cs.setGameState(5);
@@ -723,7 +727,7 @@ public class PlayGame_Prisoners extends BasicTWLGameState {
 				System.out.println("Time Subtract" + (overallTimer));
 				HRRUClient.cs.setSync(false);
 				HRRUClient.cs.setState(p1_turn);
-				sbg.enterState(play);
+				sbg.enterState(play, new FadeOutTransition(), new FadeInTransition());
 			}
 		}
 	}

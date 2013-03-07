@@ -8,7 +8,14 @@ a {
     font-family: link;
     color: blue;
 }
-
+p.answer {
+	margin-top: 0.1em;
+    margin-left: auto;
+    margin-right: auto;
+    font-family: small;
+    color: white;
+    text-align: justify;
+}
 p {
     margin-bottom: 1em;
     margin-left: auto;

@@ -10,6 +10,8 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.state.transition.FadeInTransition;
+import org.newdawn.slick.state.transition.FadeOutTransition;
 
 import com.esotericsoftware.kryonet.Client;
 
@@ -30,6 +32,9 @@ public class CharacterSelect extends BasicTWLGameState {
 	SpriteSheet gridSheet;
 	public Client client;
 	DialogLayout firstPanel;
+
+    FadeOutTransition fadeOutTransition;
+    FadeInTransition fadeInTransition;
 	
 	boolean p1ShowRollBanner, p2ShowRollBanner;
 	private int gameState;
@@ -187,6 +192,8 @@ public class CharacterSelect extends BasicTWLGameState {
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		gcw = gc.getWidth();
 		gch = gc.getHeight();
+		fadeOutTransition = new FadeOutTransition();
+		fadeInTransition  = new FadeInTransition();
 
 		player_character_bg = new Image("simple/player_character_bg.png");
 		
@@ -235,7 +242,6 @@ public class CharacterSelect extends BasicTWLGameState {
 
 	@Override
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
-		g.drawString(mouse, 650, 500);
 		g.scale(2f, 2f);
 		gridSheet.setFilter(Image.FILTER_NEAREST);
 		player_character_bg.setFilter(Image.FILTER_NEAREST);
@@ -378,7 +384,7 @@ public class CharacterSelect extends BasicTWLGameState {
 			if(clock<0)
 			{
 				HRRUClient.cs.setState(p1_turn);
-				sbg.enterState(5);
+				sbg.enterState(5, new FadeOutTransition(), new FadeInTransition());
 			}
 		}
 	}

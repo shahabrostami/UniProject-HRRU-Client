@@ -4,13 +4,14 @@ import main.item.Item;
 
 public class TrustScoreResult {
 
-	int noOfTrustScores;
-	int noOfTrustScoreGiver;
-	int noOfTrustScoreReturner;
-	int tsPlayerGiveAvg, tsPlayerReturnAvg, tsPlayerReceiveAvg, tsPlayerGiveProfitAvg, tsPlayerReturnProfitAvg;
-	double tsPlayerGiveTotal, tsPlayerReturnTotal, tsPlayerReceiveTotal, tsPlayerGiveProfitTotal, tsPlayerReturnProfitTotal;
-	int tsAvg;
-	double tsTotal, percentage;
+	private int noOfTrustScores;
+	private int noOfTrustScoreGiver;
+	private int noOfTrustScoreReturner;
+	private int tsPlayerGiveAvg, tsPlayerReturnAvg, tsPlayerReceiveAvg, tsPlayerGiveProfitAvg, tsPlayerReturnProfitAvg;
+	private double tsPlayerGiveTotal, tsPlayerReturnTotal, tsPlayerReceiveTotal, tsPlayerGiveProfitTotal, tsPlayerReturnProfitTotal;
+	private int tsAvg;
+	private double tsTotal, percentage;
+	private int pointsAvailable;
 	
 	public TrustScoreResult(
 			int noOfTrustScores,
@@ -44,5 +45,13 @@ public class TrustScoreResult {
 	
 	public void setPercentage(double percentage) {
 		this.percentage = percentage;
+	}
+	
+	public int getPointsAvailable() {
+		return pointsAvailable;
+	}
+	
+	public void setPointsAvailable(int pointsAvailable) {
+		this.pointsAvailable = pointsAvailable;
 	}
 }
