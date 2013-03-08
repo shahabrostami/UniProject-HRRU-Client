@@ -64,7 +64,6 @@ public class AnswerPage {
             
             scrollPane = new ScrollPane(textArea);
             scrollPane.setFixed(ScrollPane.Fixed.HORIZONTAL);
-            scrollPane.setFixed(ScrollPane.Fixed.VERTICAL);
             add(scrollPane);
         }
 

@@ -48,7 +48,7 @@ public class BidStatistics extends BasicTWLGameState {
 	private boolean tickerBoolean = true;
 	private int clock3, clock2 = 0;
 	
-	// Questions UI
+	// Questions UI 
 	Label lblWin, lblLose;
 	Label lNoOfBidScores, lNoOfBidScoreWin, lNoOfBidScoreLose;
 	Label lItemValueAvgW,  lItemValueTotalW,  lPlayerBidAvgW,  lPlayerBidTotalW,  lOtherPlayerBidAvgW,  lOtherPlayerBidTotalW,  lAmountWonAvgW,  lAmountWonTotalW;
@@ -279,7 +279,7 @@ public class BidStatistics extends BasicTWLGameState {
 		
 		leftPanel.setVerticalGroup(leftPanel.createSequentialGroup()
 				.addWidget(lblWin)
-				.addGap(20).addGroup(leftPanel.createParallelGroup(lblNoOfBidScoreWin, lNoOfBidScoreWin))
+				.addGroup(leftPanel.createParallelGroup(lblNoOfBidScoreWin, lNoOfBidScoreWin))
 				.addGap(20).addGroup(leftPanel.createParallelGroup(lblItemValueAvgW, lItemValueAvgW))
 				.addGroup(leftPanel.createParallelGroup(lblItemValueTotalW, lItemValueTotalW))
 				.addGap(20).addGroup(leftPanel.createParallelGroup(lblPlayerBidAvgW, lPlayerBidAvgW))
@@ -344,7 +344,7 @@ public class BidStatistics extends BasicTWLGameState {
 		
 		rightPanel.setVerticalGroup(rightPanel.createSequentialGroup()
 				.addWidget(lblLose)
-				.addGap(20).addGroup(rightPanel.createParallelGroup(lblNoOfBidScoreLose, lNoOfBidScoreLose))
+				.addGroup(rightPanel.createParallelGroup(lblNoOfBidScoreLose, lNoOfBidScoreLose))
 				.addGap(20).addGroup(rightPanel.createParallelGroup(lblItemValueAvgL, lItemValueAvgL))
 				.addGroup(rightPanel.createParallelGroup(lblItemValueTotalL, lItemValueTotalL))
 				.addGap(20).addGroup(rightPanel.createParallelGroup(lblPlayerBidAvgL, lPlayerBidAvgL))

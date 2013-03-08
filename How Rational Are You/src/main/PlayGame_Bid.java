@@ -118,7 +118,7 @@ public class PlayGame_Bid extends BasicTWLGameState {
 	private int timerMFontSize = 18;
 	
 	private Font loadFont, loadMainFont, loadTitleFont, loadQuestionFont, loadTimerFont, loadTimerMFont;
-	private BasicFont mainFont, titleFont, readyFont, questionFont, timerFont, timerMFont;;
+	private BasicFont mainFont, titleFont, readyFont, questionFont, timerFont, timerMFont;
 	
 	private int clock2,clock3,timer,timer2,overallTimer = 0;
 	private boolean end, ready, win, time_out, finished, resume = false;

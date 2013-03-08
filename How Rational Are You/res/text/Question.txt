@@ -91,7 +91,7 @@ None of the above.
 q8.html
 a8.html
 Linda is a bank teller.
-Linda is a bank teller who is active in the feminist movement.
+Linda is a bank teller, active in  the feminist movement.
 
 9
 5

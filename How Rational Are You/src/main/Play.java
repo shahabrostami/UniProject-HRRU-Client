@@ -52,10 +52,6 @@ public class Play extends BasicTWLGameState {
 	private boolean p1ShowRollBanner, p1ShowWaitBanner = false;
 	private boolean p2ShowRollBanner, p2ShowWaitBanner = false;
 	
-	private Font loadFont, loadMainFont;
-	private BasicFont mainFont;
-	private int mainFontSize = 24;
-	
 	private final int serverlost = -4;
 	private final int cancelled = -2;
 	private final int p1_turn = 7;
@@ -76,6 +72,11 @@ public class Play extends BasicTWLGameState {
 	private int clock, timer;
 	
 	String mouse = "no input";
+	
+	private int mainFontSize = 24;
+	private int timerFontSize = 30;
+	private Font loadFont, loadMainFont, loadTimerFont;
+	private BasicFont mainFont, timerFont;
 	
 	DialogLayout playerPanel;
 	Label lStatus, lPlayer1, lPlayer2, lPlayer1Score, lPlayer2Score;
@@ -277,8 +278,9 @@ public class Play extends BasicTWLGameState {
 				}
 		
 		loadMainFont = loadFont.deriveFont(Font.BOLD,mainFontSize);
+		loadTimerFont = loadFont.deriveFont(Font.BOLD,timerFontSize);
 		mainFont = new BasicFont(loadMainFont);
-		
+		timerFont = new BasicFont(loadTimerFont);
 		try {
 			question_list = new QuestionList("Question.txt");
 		} catch (NumberFormatException e) {
@@ -424,8 +426,8 @@ public class Play extends BasicTWLGameState {
 		g.drawString("" + player2.getName(), 65, 64);
 		g.drawString("" + player1.getScore(), 204, 22);
 		g.drawString("" + player2.getScore(), 204, 64);
-		
-		g.drawString(mouse, 650, 550);
+		timerFont.get();
+		g.drawString("TIME: " + ((timer/1000)+1), 650, 560);
 		
 		g.scale(1.25f, 1.25f);
 		for(int i = 0; i < board.getScale()*3-3; i++)
@@ -446,7 +448,6 @@ public class Play extends BasicTWLGameState {
 		input = gc.getInput();
 		int xpos = Mouse.getX();
 		int ypos= Mouse.getY();
-		mouse = "timer:" + ((timer/1000)+1) + "\nxpos: " + xpos + "\nypos: " + ypos;
 		gameState = HRRUClient.cs.getState();
 		timer -= delta;
 		if(gameState == serverlost)
@@ -462,6 +463,12 @@ public class Play extends BasicTWLGameState {
 		
 		if(timer <0)
 		{
+			Packet24SendScore sendScore = new Packet24SendScore();
+			sendScore.name = player.getName();
+			sendScore.score = player.getScore();
+			sendScore.sessionID = sessionID;
+			sendScore.player = playerID;
+			client.sendTCP(sendScore);
 			sbg.addState(new Verdict(verdict));
 			sbg.getState(verdict).init(gc, sbg);
 			sbg.enterState(verdict, new FadeOutTransition(), new FadeInTransition());

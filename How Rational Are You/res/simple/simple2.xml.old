@@ -430,7 +430,7 @@
         <area name="incorrect-background" xywh="*" border="20"/>
     </images>
     <images file="questionstatbg.png">
-        <area name="questionstat.background" xywh="*" border="35,10,10,10"/>
+        <area name="questionstat.background" xywh="*" border="50,30,30,30"/>
     </images>
     <images file="puzzlestatbg.png">
         <area name="puzzlestat.background" xywh="*" border="35,10,10,10"/>
@@ -513,6 +513,10 @@
     <images file="ultimatumpanelstats.png">
         <area name="ultpanelstats.background" xywh="*" border="50,30,30,30"/>
     </images>
+    <images file="questionfeedback.png">
+        <area name="questionfeedback.background" xywh="*" border="10,7"/>
+    </images>
+
 
 
 
@@ -837,6 +841,16 @@
 
     <theme name="questionatari9r" ref="-defaults" allowWildcard="true">
         <param name="font"><font>questionatari9y</font></param>
+        <param name="minWidth"><int>0</int></param>
+        <param name="maxWidth"><int>0</int></param>
+        <param name="minHeight"><int>0</int></param>
+        <param name="maxHeight"><int>0</int></param>
+        <param name="background"><image>none</image></param>
+        <param name="textAlignment"><enum type="alignment">RIGHT</enum></param>
+    </theme>
+
+    <theme name="questionatari10" ref="-defaults" allowWildcard="true">
+        <param name="font"><font>atariblue10</font></param>
         <param name="minWidth"><int>0</int></param>
         <param name="maxWidth"><int>0</int></param>
         <param name="minHeight"><int>0</int></param>
@@ -1502,6 +1516,109 @@
         <param name="font"><font>questionatari26</font></param>
     </theme>
 
+    <theme name="questionfeedback-panel" ref="-defaults" allowWildcard="true">
+                    <param name="background"><image>none</image></param>
+                    <param name="border"><border>background.border</border></param>
+        <param name="defaultGap"><dimension>5,5</dimension></param>
+        <param name="smallGap"><dimension>8,8</dimension></param>
+        <param name="mediumGap"><dimension>10,10</dimension></param>
+        <param name="largeGap"><dimension>15,15</dimension></param>
+        <param name="namedGaps"><map/></param>
+        <param name="minWidth"><int>700</int></param>
+        <param name="maxWidth"><int>700</int></param>
+        <param name="minHeight"><int>350</int></param>
+        <param name="font"><font>questionatari8</font></param>
+        <param name="maxHeight"><int>350</int></param>
+    </theme>
+
+    <theme name="questionfeedbackc-panel" ref="-defaults" allowWildcard="true">
+                    <param name="background"><image>choice.sel.background</image></param>
+                    <param name="border"><border>background.border</border></param>
+        <param name="defaultGap"><dimension>5,5</dimension></param>
+        <param name="smallGap"><dimension>8,8</dimension></param>
+        <param name="mediumGap"><dimension>10,10</dimension></param>
+        <param name="largeGap"><dimension>15,15</dimension></param>
+        <param name="namedGaps"><map/></param>
+        <param name="minWidth"><int>700</int></param>
+        <param name="maxWidth"><int>700</int></param>
+        <param name="minHeight"><int>350</int></param>
+        <param name="maxHeight"><int>350</int></param>
+        <param name="font"><font>scoretotal12</font></param>
+        <theme name="label" ref="-defaults">
+            <param name="font"><font>atarigreen10</font></param>
+            <param name="textAlignment"><enum type="alignment">LEFT</enum></param>
+        </theme>
+        <theme name="labelreceived" ref="-defaults">
+            <param name="font"><font>scoretotal12</font></param>
+            <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
+        </theme>
+        <theme name="labelright" ref="-defaults">
+            <param name="font"><font>whiteatari14</font></param>
+            <param name="textAlignment"><enum type="alignment">RIGHT</enum></param>
+        </theme>
+        <theme name="labelscoretotalright" ref="-defaults">
+            <param name="font"><font>scoretotal12</font></param>
+            <param name="textAlignment"><enum type="alignment">RIGHT</enum></param>
+        </theme>
+        <theme name="labelscoretotal" ref="-defaults">
+            <param name="font"><font>scoreatari12</font></param>
+            <param name="textAlignment"><enum type="alignment">LEFT</enum></param>
+        </theme>
+        <theme name="labelwhite" ref="-defaults" allowWildcard="true">
+            <param name="font"><font>whiteatari142</font></param>
+            <param name="minWidth"><int>0</int></param>
+            <param name="maxWidth"><int>0</int></param>
+            <param name="minHeight"><int>0</int></param>
+            <param name="maxHeight"><int>0</int></param>
+            <param name="background"><image>none</image></param>
+            <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
+        </theme>
+    </theme>
+
+    <theme name="questionfeedbacki-panel" ref="-defaults" allowWildcard="true">
+                    <param name="background"><image>choice.sel.background</image></param>
+                    <param name="border"><border>background.border</border></param>
+        <param name="defaultGap"><dimension>5,5</dimension></param>
+        <param name="smallGap"><dimension>8,8</dimension></param>
+        <param name="mediumGap"><dimension>10,10</dimension></param>
+        <param name="largeGap"><dimension>15,15</dimension></param>
+        <param name="namedGaps"><map/></param>
+        <param name="minWidth"><int>700</int></param>
+        <param name="maxWidth"><int>700</int></param>
+        <param name="minHeight"><int>350</int></param>
+        <param name="maxHeight"><int>350</int></param>
+        <param name="font"><font>scoretotal12</font></param>
+        <theme name="label" ref="-defaults">
+            <param name="font"><font>atarigreen10</font></param>
+            <param name="textAlignment"><enum type="alignment">LEFT</enum></param>
+        </theme>
+        <theme name="labelreceived" ref="-defaults">
+            <param name="font"><font>scoretotal12</font></param>
+            <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
+        </theme>
+        <theme name="labelright" ref="-defaults">
+            <param name="font"><font>whiteatari14</font></param>
+            <param name="textAlignment"><enum type="alignment">RIGHT</enum></param>
+        </theme>
+        <theme name="labelscoretotalright" ref="-defaults">
+            <param name="font"><font>scoretotal12</font></param>
+            <param name="textAlignment"><enum type="alignment">RIGHT</enum></param>
+        </theme>
+        <theme name="labelscoretotal" ref="-defaults">
+            <param name="font"><font>scoreatari12</font></param>
+            <param name="textAlignment"><enum type="alignment">LEFT</enum></param>
+        </theme>
+        <theme name="labelwhite" ref="-defaults" allowWildcard="true">
+            <param name="font"><font>whiteatari142</font></param>
+            <param name="minWidth"><int>0</int></param>
+            <param name="maxWidth"><int>0</int></param>
+            <param name="minHeight"><int>0</int></param>
+            <param name="maxHeight"><int>0</int></param>
+            <param name="background"><image>none</image></param>
+            <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
+        </theme>
+    </theme>
+
     <theme name="firsttrust-panel" ref="-defaults" allowWildcard="true">
                     <param name="background"><image>firsttrust.background</image></param>
                     <param name="border"><border>background.border</border></param>
@@ -1515,6 +1632,50 @@
         <param name="minHeight"><int>0</int></param>
         <param name="maxHeight"><int>100</int></param>
         <param name="font"><font>questionatari16</font></param>
+        <theme name="label" ref="-defaults">
+            <param name="font"><font>atarigreen10</font></param>
+            <param name="textAlignment"><enum type="alignment">LEFT</enum></param>
+        </theme>
+        <theme name="labelreceived" ref="-defaults">
+            <param name="font"><font>scoretotal12</font></param>
+            <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
+        </theme>
+        <theme name="labelright" ref="-defaults">
+            <param name="font"><font>whiteatari14</font></param>
+            <param name="textAlignment"><enum type="alignment">RIGHT</enum></param>
+        </theme>
+        <theme name="labelscoretotalright" ref="-defaults">
+            <param name="font"><font>scoretotal12</font></param>
+            <param name="textAlignment"><enum type="alignment">RIGHT</enum></param>
+        </theme>
+        <theme name="labelscoretotal" ref="-defaults">
+            <param name="font"><font>scoreatari12</font></param>
+            <param name="textAlignment"><enum type="alignment">LEFT</enum></param>
+        </theme>
+        <theme name="labelwhite" ref="-defaults" allowWildcard="true">
+            <param name="font"><font>whiteatari142</font></param>
+            <param name="minWidth"><int>0</int></param>
+            <param name="maxWidth"><int>0</int></param>
+            <param name="minHeight"><int>0</int></param>
+            <param name="maxHeight"><int>0</int></param>
+            <param name="background"><image>none</image></param>
+            <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
+        </theme>
+    </theme>
+
+    <theme name="questionfeedbackmain-panel" ref="-defaults" allowWildcard="true">
+                    <param name="background"><image>questionfeedback.background</image></param>
+                    <param name="border"><border>background.border</border></param>
+        <param name="defaultGap"><dimension>5,5</dimension></param>
+        <param name="smallGap"><dimension>8,8</dimension></param>
+        <param name="mediumGap"><dimension>10,10</dimension></param>
+        <param name="largeGap"><dimension>15,15</dimension></param>
+        <param name="namedGaps"><map/></param>
+        <param name="minWidth"><int>0</int></param>
+        <param name="maxWidth"><int>530</int></param>
+        <param name="minHeight"><int>0</int></param>
+        <param name="maxHeight"><int>80</int></param>
+        <param name="font"><font>questionatari8</font></param>
         <theme name="label" ref="-defaults">
             <param name="font"><font>atarigreen10</font></param>
             <param name="textAlignment"><enum type="alignment">LEFT</enum></param>
@@ -1671,9 +1832,9 @@
         <param name="largeGap"><dimension>15,15</dimension></param>
         <param name="namedGaps"><map/></param>
         <param name="minWidth"><int>0</int></param>
-        <param name="maxWidth"><int>220</int></param>
+        <param name="maxWidth"><int>750</int></param>
         <param name="minHeight"><int>0</int></param>
-        <param name="maxHeight"><int>435</int></param>
+        <param name="maxHeight"><int>350</int></param>
     </theme>
 
     <theme name="trustgamestat-panel" ref="-defaults" allowWildcard="true">
@@ -2315,11 +2476,40 @@
             <param name="background"><image>none</image></param>
         </theme>
         <param name="font"><font>questionatari8</font></param>
-        <param name="maxWidth"><int>500</int></param>
-        <param name="maxHeight"><int>565</int></param>
+        <param name="maxWidth"><int>700</int></param>
+        <param name="maxHeight"><int>300</int></param>
     </theme>
 	
 	<theme name="textarea" ref="-defaults">
+                    <param name="fonts"><map>
+                        <param name="default"><fontDef filename="questionatari16.fnt" color="#FFFFFF"/></param>
+                        <param name="link"><fontDef filename="Font/font.fnt" underlineOffset="1">
+                            <fontParam if="hover" underline="true"/>
+                        </fontDef></param>
+                        <param name="big"><fontDef filename="questionatari16.fnt" color="#FFFFFF"/></param>
+                        <param name="code"><fontDef filename="scoretotal12.fnt"/></param>
+                        <param name="codeBold"><fontDef filename="questionatari12.fnt"/></param>
+                <param name="name"><fontDef filename="scoretotal12.fnt"/></param>
+                <param name="red"><fontDef filename="questionatari16red.fnt"/></param>
+                <param name="green"><fontDef filename="greenatari14.fnt"/></param>
+                <param name="small"><fontDef filename="questionatari8.fnt" color="white"/></param>
+                    </map></param>
+                    <param name="images"><map>
+                        <param name="frame"><image>evilframe.background</image></param>
+                        <param name="smiley"><image>smiley</image></param>
+                        <param name="ul-bullet"><image>textarea.ul-bullet</image></param>
+                        <param name="q7.png"><image>q7.png</image></param>
+                    </map></param>
+    
+                    <param name="mouseCursor.link"><cursor>cursor.finger</cursor></param>
+                    <theme name="" ref="*"/>
+                    <param name="background"><image>none</image></param>
+        <param name="font"><font>questionatari16</font></param>
+        <param name="maxWidth"><int>730</int></param>
+        <param name="maxHeight"><int>200</int></param>
+    </theme>
+	
+	<theme name="answerarea" ref="-defaults">
                     <param name="fonts"><map>
                         <param name="default"><fontDef filename="questionatari12.fnt" color="#FFFFFF"/></param>
                         <param name="link"><fontDef filename="Font/font.fnt" underlineOffset="1">
@@ -2344,8 +2534,10 @@
                     <theme name="" ref="*"/>
                     <param name="background"><image>none</image></param>
         <param name="font"><font>questionatari16</font></param>
-        <param name="maxWidth"><int>730</int></param>
-        <param name="maxHeight"><int>200</int></param>
+        <param name="maxWidth"><int>700</int></param>
+        <param name="minHeight"><int>350</int></param>
+        <param name="minWidth"><int>700</int></param>
+        <param name="maxHeight"><int>350</int></param>
     </theme>
 
     <theme name="questiontextarea" ref="-defaults">

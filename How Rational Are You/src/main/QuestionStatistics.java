@@ -24,24 +24,19 @@ import de.matthiasmann.twl.Alignment;
 import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.DialogLayout;
 import de.matthiasmann.twl.Label;
+import de.matthiasmann.twl.ToggleButton;
 
 public class QuestionStatistics extends BasicTWLGameState {
 
 	public Client client;
-	DialogLayout questionPanel;
+	DialogLayout questionPanel, leftPanel, rightPanel;
 	Button btnBack;
 	
+	private final int questionstats = 16;
+	private final int questionfeedback = 17;
 	private int enterState;
 	int gcw;
 	int gch;
-	
-	// Answer variables
-	AnswerPageFrame textpageframe;
-	private int current_question_id;
-	private QuestionList question_list;
-	private Question[] questions;
-	private Question current_question;
-	private String current_filename;
 	
 	// Ticker variables
 	private int titleFontSize = 60;
@@ -55,6 +50,7 @@ public class QuestionStatistics extends BasicTWLGameState {
 	private int clock3, clock2 = 0;
 	
 	// Questions UI
+	ToggleButton btnStats, btnFeedback;
 	Label lQAmount, lQEasy, lQEasyCorrect, lQEasyTimeBonusAvg, lQEasyTimeBonusOverall, lQEasyPointsAvg, lQEasyPointsOverall;
 	Label lQMedium, lQMediumCorrect, lQMediumTimeBonusAvg, lQMediumTimeBonusOverall, lQMediumPointsAvg, lQMediumPointsOverall;
 	Label lQHard, lQHardCorrect, lQHardTimeBonusAvg, lQHardTimeBonusOverall, lQHardPointsAvg, lQHardPointsOverall;
@@ -140,28 +136,22 @@ public class QuestionStatistics extends BasicTWLGameState {
 		
 		// RESET VARIABLES
 		start_message = "";
-		full_start_message = "QUESTION FEEDBACK...";
+		full_start_message = "QUESTION STATISTICS...";
 		full_start_counter = 0;
 		ticker = "";
 		tickerBoolean = true;
 		clock2 = 0;
 		clock3 = 0;
+		enterState = 0;
 		
-		// answer question
-		current_question = questions[activityScores.get(0).getActivity_id()];
-		current_filename = current_question.getAnswerFile();
-		
-		textpageframe = new AnswerPageFrame(current_filename);
-		textpageframe.setPosition(280, 80);
-		textpageframe.setDraggable(false);
-		textpageframe.setResizableAxis(ResizableAxis.NONE);
-		textpageframe.setTheme("textpageframeanswer");
-		textpageframe.setSize(500, 435);
-
+		// reset button active
+		btnFeedback.setActive(false);
+		btnStats.setActive(true);
 		
 		rootPane.add(questionPanel);
+		rootPane.add(btnFeedback);
+		rootPane.add(btnStats);
 		rootPane.add(btnBack);
-		rootPane.add(textpageframe);
 		rootPane.setTheme("");
 	}
 
@@ -192,9 +182,10 @@ public class QuestionStatistics extends BasicTWLGameState {
 		loadTitleFont = loadFont.deriveFont(Font.BOLD,titleFontSize);
 		titleFont = new BasicFont(loadTitleFont);
 		
+		// btn back
 		btnBack = new Button("Back");
 		btnBack.setSize(700, 30);
-		btnBack.setPosition(50,565);
+		btnBack.setPosition(50,550);
 		btnBack.addCallback(new Runnable() {
 			@Override
 			public void run() {
@@ -203,10 +194,34 @@ public class QuestionStatistics extends BasicTWLGameState {
 		});
 		btnBack.setTheme("menubutton");
 		
+		// btnstats
+		btnStats = new ToggleButton("Statistics");
+		btnStats.setSize(340, 30);
+		btnStats.setPosition(50,510);
+		btnStats.addCallback(new Runnable() {
+			@Override
+			public void run() {
+				enterState = 2;
+			}
+		});
+		btnStats.setTheme("menubutton");
+		// btn feedback
+		btnFeedback = new ToggleButton("Feedback");
+		btnFeedback.setSize(340, 30);
+		btnFeedback.setPosition(410,510);
+		btnFeedback.addCallback(new Runnable() {
+			@Override
+			public void run() {
+				enterState = 3;
+			}
+		});
+		btnFeedback.setTheme("menubutton");
+		
+		// question panel
 		questionPanel = new DialogLayout();
         questionPanel.setTheme("questionstat-panel");
-        questionPanel.setSize(220,435);
-        questionPanel.setPosition(20,80);
+        questionPanel.setSize(630, 270);
+        questionPanel.setPosition(50,130);
         
 		lQAmount = new Label("Number of Questions: ");
 		lQAmountR = new Label("");
@@ -333,59 +348,82 @@ public class QuestionStatistics extends BasicTWLGameState {
 		lQTotalPointsOverall.setTheme("questionatari8");
 		lQTotalPointsOverallR.setTheme("questionatari8");
 		
-		 DialogLayout.Group hQLeft = questionPanel.createParallelGroup(lQAmount, lQEasy, lQMedium, lQHard, lQTotal);
-	        DialogLayout.Group hQRight = questionPanel.createParallelGroup(lQAmountR, lQEasyR, lQMediumR, lQHardR, lQTotalR);
+		leftPanel = new DialogLayout();
+		rightPanel = new DialogLayout();
+		
+		DialogLayout.Group hQLLeft = leftPanel.createParallelGroup(lQAmount, lQEasy, lQMedium);
+	    DialogLayout.Group hQLRight = leftPanel.createParallelGroup(lQAmountR, lQEasyR, lQMediumR);
 	        
-	        DialogLayout.Group hQEasyLeft = questionPanel.createParallelGroup(
+	    DialogLayout.Group hQLLabel = leftPanel.createParallelGroup(
 	        		lQEasyCorrect, lQEasyTimeBonusAvg, lQEasyTimeBonusOverall, lQEasyPointsAvg, lQEasyPointsOverall, 
-	        		lQMediumCorrect, lQMediumTimeBonusAvg, lQMediumTimeBonusOverall, lQMediumPointsAvg, lQMediumPointsOverall,
-	        		lQHardCorrect, lQHardTimeBonusAvg, lQHardTimeBonusOverall, lQHardPointsAvg, lQHardPointsOverall,
-	        		lQTotalCorrect, lQTotalTimeBonusAvg, lQTotalTimeBonusOverall, lQTotalPointsAvg);
+	        		lQMediumCorrect, lQMediumTimeBonusAvg, lQMediumTimeBonusOverall, lQMediumPointsAvg, lQMediumPointsOverall);
 	        
-	        DialogLayout.Group hQEasyRight = questionPanel.createParallelGroup(
+	    DialogLayout.Group hQLResult = leftPanel.createParallelGroup(
 	        		lQEasyCorrectR, lQEasyTimeBonusAvgR, lQEasyTimeBonusOverallR, lQEasyPointsAvgR, lQEasyPointsOverallR,
-	        		lQMediumCorrectR, lQMediumTimeBonusAvgR, lQMediumTimeBonusOverallR, lQMediumPointsAvgR, lQMediumPointsOverallR,
+	        		lQMediumCorrectR, lQMediumTimeBonusAvgR, lQMediumTimeBonusOverallR, lQMediumPointsAvgR, lQMediumPointsOverallR);
+	        
+	    leftPanel.setHorizontalGroup(leftPanel.createParallelGroup()
+	        		.addGroup(leftPanel.createSequentialGroup(hQLLeft, hQLRight))
+	        		.addGroup(leftPanel.createSequentialGroup(hQLLabel, hQLResult)));
+	        
+	    leftPanel.setVerticalGroup(leftPanel.createSequentialGroup()
+	        		.addGroup(leftPanel.createParallelGroup(lQAmount, lQAmountR))
+	        		
+	        		.addGap(10).addGroup(leftPanel.createParallelGroup(lQEasy, lQEasyR))
+	        		.addGap(5).addGroup(leftPanel.createParallelGroup(lQEasyCorrect, lQEasyCorrectR))
+	        		.addGap(5).addGroup(leftPanel.createParallelGroup(lQEasyTimeBonusAvg, lQEasyTimeBonusAvgR))
+	        		.addGap(5).addGroup(leftPanel.createParallelGroup(lQEasyTimeBonusOverall, lQEasyTimeBonusOverallR))
+	        		.addGap(5).addGroup(leftPanel.createParallelGroup(lQEasyPointsAvg, lQEasyPointsAvgR))
+	        		.addGap(5).addGroup(leftPanel.createParallelGroup(lQEasyPointsOverall, lQEasyPointsOverallR))
+	        		
+	        		.addGap(30).addGroup(leftPanel.createParallelGroup(lQMedium, lQMediumR))
+	        		.addGap(5).addGroup(leftPanel.createParallelGroup(lQMediumCorrect, lQMediumCorrectR))
+	        		.addGap(5).addGroup(leftPanel.createParallelGroup(lQMediumTimeBonusAvg, lQMediumTimeBonusAvgR))
+	        		.addGap(5).addGroup(leftPanel.createParallelGroup(lQMediumTimeBonusOverall, lQMediumTimeBonusOverallR))
+	        		.addGap(5).addGroup(leftPanel.createParallelGroup(lQMediumPointsAvg, lQMediumPointsAvgR))
+	        		.addGap(5).addGroup(leftPanel.createParallelGroup(lQMediumPointsOverall, lQMediumPointsOverallR)));
+	        
+	    DialogLayout.Group hQRLeft = rightPanel.createParallelGroup(lQHard, lQTotal);
+	    DialogLayout.Group hQRRight = rightPanel.createParallelGroup(lQHardR, lQTotalR);
+	    Label gap = new Label("");
+	    DialogLayout.Group hQRLabel = rightPanel.createParallelGroup(
+					lQHardCorrect, lQHardTimeBonusAvg, lQHardTimeBonusOverall, lQHardPointsAvg, lQHardPointsOverall,
+	        		lQTotalCorrect, lQTotalTimeBonusAvg, lQTotalTimeBonusOverall, lQTotalPointsAvg, lQTotalPointsOverall);
+	        
+	    DialogLayout.Group hQRResult = rightPanel.createParallelGroup(
 	        		lQHardCorrectR, lQHardTimeBonusAvgR, lQHardTimeBonusOverallR, lQHardPointsAvgR, lQHardPointsOverallR,
-	        		lQTotalCorrectR, lQTotalTimeBonusAvgR, lQTotalTimeBonusOverallR, lQTotalPointsAvgR);
+	        		lQTotalCorrectR, lQTotalTimeBonusAvgR, lQTotalTimeBonusOverallR, lQTotalPointsAvgR, gap);
 	        
-	        questionPanel.setHorizontalGroup(questionPanel.createParallelGroup()
-	        		.addGroup(questionPanel.createSequentialGroup(hQLeft, hQRight))
-	        		.addGroup(questionPanel.createSequentialGroup(hQEasyLeft, hQEasyRight))
-	        		.addGap(5).addWidget(lQTotalPointsOverall)
+	    rightPanel.setHorizontalGroup(rightPanel.createParallelGroup()
+	        		.addGroup(rightPanel.createSequentialGroup(hQRLeft, hQRRight))
+	        		.addGroup(rightPanel.createSequentialGroup(hQRLabel, hQRResult))
 	        		.addGap(5).addWidget(lQTotalPointsOverallR));
-	        
-	        questionPanel.setVerticalGroup(questionPanel.createSequentialGroup()
-	        		.addGroup(questionPanel.createParallelGroup(lQAmount, lQAmountR))
+	      
+	    rightPanel.setVerticalGroup(rightPanel.createSequentialGroup()
+	        		.addGap(20).addGroup(rightPanel.createParallelGroup(lQHard, lQHardR))
+	        		.addGap(5).addGroup(rightPanel.createParallelGroup(lQHardCorrect, lQHardCorrectR))
+	        		.addGap(5).addGroup(rightPanel.createParallelGroup(lQHardTimeBonusAvg, lQHardTimeBonusAvgR))
+	        		.addGap(5).addGroup(rightPanel.createParallelGroup(lQHardTimeBonusOverall, lQHardTimeBonusOverallR))
+	        		.addGap(5).addGroup(rightPanel.createParallelGroup(lQHardPointsAvg, lQHardPointsAvgR))
+	        		.addGap(5).addGroup(rightPanel.createParallelGroup(lQHardPointsOverall, lQHardPointsOverallR))
 	        		
-	        		.addGap(10).addGroup(questionPanel.createParallelGroup(lQEasy, lQEasyR))
-	        		.addGap(5).addGroup(questionPanel.createParallelGroup(lQEasyCorrect, lQEasyCorrectR))
-	        		.addGap(5).addGroup(questionPanel.createParallelGroup(lQEasyTimeBonusAvg, lQEasyTimeBonusAvgR))
-	        		.addGap(5).addGroup(questionPanel.createParallelGroup(lQEasyTimeBonusOverall, lQEasyTimeBonusOverallR))
-	        		.addGap(5).addGroup(questionPanel.createParallelGroup(lQEasyPointsAvg, lQEasyPointsAvgR))
-	        		.addGap(5).addGroup(questionPanel.createParallelGroup(lQEasyPointsOverall, lQEasyPointsOverallR))
-	        		
-	        		.addGap(10).addGroup(questionPanel.createParallelGroup(lQMedium, lQMediumR))
-	        		.addGap(5).addGroup(questionPanel.createParallelGroup(lQMediumCorrect, lQMediumCorrectR))
-	        		.addGap(5).addGroup(questionPanel.createParallelGroup(lQMediumTimeBonusAvg, lQMediumTimeBonusAvgR))
-	        		.addGap(5).addGroup(questionPanel.createParallelGroup(lQMediumTimeBonusOverall, lQMediumTimeBonusOverallR))
-	        		.addGap(5).addGroup(questionPanel.createParallelGroup(lQMediumPointsAvg, lQMediumPointsAvgR))
-	        		.addGap(5).addGroup(questionPanel.createParallelGroup(lQMediumPointsOverall, lQMediumPointsOverallR))
-	        		
-	        		.addGap(10).addGroup(questionPanel.createParallelGroup(lQHard, lQHardR))
-	        		.addGap(5).addGroup(questionPanel.createParallelGroup(lQHardCorrect, lQHardCorrectR))
-	        		.addGap(5).addGroup(questionPanel.createParallelGroup(lQHardTimeBonusAvg, lQHardTimeBonusAvgR))
-	        		.addGap(5).addGroup(questionPanel.createParallelGroup(lQHardTimeBonusOverall, lQHardTimeBonusOverallR))
-	        		.addGap(5).addGroup(questionPanel.createParallelGroup(lQHardPointsAvg, lQHardPointsAvgR))
-	        		.addGap(5).addGroup(questionPanel.createParallelGroup(lQHardPointsOverall, lQHardPointsOverallR))
-	        		
-	        		.addGap(20).addGroup(questionPanel.createParallelGroup(lQTotal, lQTotalR))
-	        		.addGap(5).addGroup(questionPanel.createParallelGroup(lQTotalCorrect, lQTotalCorrectR))
-	        		.addGap(5).addGroup(questionPanel.createParallelGroup(lQTotalTimeBonusAvg, lQTotalTimeBonusAvgR))
-	        		.addGap(5).addGroup(questionPanel.createParallelGroup(lQTotalTimeBonusOverall, lQTotalTimeBonusOverallR))
-	        		.addGap(5).addGroup(questionPanel.createParallelGroup(lQTotalPointsAvg, lQTotalPointsAvgR))
-	        		.addGap(15).addWidget(lQTotalPointsOverall)
+	        		.addGap(30).addGroup(rightPanel.createParallelGroup(lQTotal, lQTotalR))
+	        		.addGap(5).addGroup(rightPanel.createParallelGroup(lQTotalCorrect, lQTotalCorrectR))
+	        		.addGap(5).addGroup(rightPanel.createParallelGroup(lQTotalTimeBonusAvg, lQTotalTimeBonusAvgR))
+	        		.addGap(5).addGroup(rightPanel.createParallelGroup(lQTotalTimeBonusOverall, lQTotalTimeBonusOverallR))
+	        		.addGap(5).addGroup(rightPanel.createParallelGroup(lQTotalPointsAvg, lQTotalPointsAvgR))
+	        		.addGap(30).addGroup(rightPanel.createParallelGroup(lQTotalPointsOverall, gap))
 	        		.addGap(5).addWidget(lQTotalPointsOverallR));
-			
+	    
+	    DialogLayout.Group hLeftPanel = questionPanel.createSequentialGroup(leftPanel).addGap(50);
+		DialogLayout.Group hRightPanel = questionPanel.createSequentialGroup(rightPanel);
+		
+		questionPanel.setHorizontalGroup(questionPanel.createParallelGroup()
+				.addGroup(questionPanel.createSequentialGroup(hLeftPanel, hRightPanel)));
+		
+		questionPanel.setVerticalGroup(questionPanel.createSequentialGroup()
+				.addGroup(questionPanel.createParallelGroup(leftPanel, rightPanel)));
+		
 			// RESET VARIABLES
 			reset();
 			// set player variable
@@ -536,20 +574,7 @@ public class QuestionStatistics extends BasicTWLGameState {
 			if(playerID == 1)
 				HRRUClient.cs.getP1().setQuestionScoreResult(questionScoreResult);
 			else
-				HRRUClient.cs.getP2().setQuestionScoreResult(questionScoreResult);
-			
-			
-			// Sort answer panel
-			try {
-				question_list = new QuestionList("Question.txt");
-			} catch (NumberFormatException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			questions = question_list.getQuestion_list();		
+				HRRUClient.cs.getP2().setQuestionScoreResult(questionScoreResult);	
 	}
 
 	@Override
@@ -563,6 +588,8 @@ public class QuestionStatistics extends BasicTWLGameState {
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
 		if(enterState == 1)
 			sbg.enterState(15);
+		else if(enterState == 3)
+			sbg.enterState(questionfeedback);
 		clock3 += delta;
 		clock2 += delta;
 		// full message ticker
@@ -593,7 +620,7 @@ public class QuestionStatistics extends BasicTWLGameState {
 
 	@Override
 	public int getID() {
-		return 17;
+		return 16;
 	}
 
 }

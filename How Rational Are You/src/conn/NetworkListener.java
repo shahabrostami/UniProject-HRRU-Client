@@ -9,6 +9,7 @@ import main.BiddingScore;
 import main.HRRUClient;
 import main.Play;
 import main.Player;
+import main.Score;
 import main.TrustScore;
 
 import com.esotericsoftware.kryonet.Client;
@@ -387,6 +388,19 @@ public class NetworkListener extends Listener{
 				HRRUClient.cs.getP2().getCurrentUltimatumScore().setSuccess(success);
 			System.out.println("nice");
 			HRRUClient.cs.setGameState(3);
+		}
+		if(o instanceof Packet25AllScores)
+		{
+			HRRUClient.cs.setState(20);
+			String names[] = ((Packet25AllScores)o).names;
+			int points[] = ((Packet25AllScores)o).scores;
+			Score[] scores = new Score[10];
+			for(int i = 0; i < scores.length; i++)
+			{
+				scores[i] = new Score(names[i], points[i]);
+				System.out.println("name: " + names[i] + "score: " + points[i]);
+			}
+			HRRUClient.cs.setScores(scores);
 		}
 	}
 

@@ -1,11 +1,12 @@
 package conn;
 
 import main.Player;
+import main.Score;
 
 public class ConnectionState {
 	
 	private final int initial = -1;
-	private int timer = 15000;	
+	private int timer = 300000;	
 	private int player;
 	private Player p1;
 	private Player p2;
@@ -20,6 +21,7 @@ public class ConnectionState {
 	private String password;
 	private int[] board;
 	private boolean sync;
+	private Score[] scores;
 	
 	
 	public ConnectionState(){
@@ -150,5 +152,13 @@ public class ConnectionState {
 
 	public void setGameState(int gameState) {
 		this.gameState = gameState;
+	}
+
+	public Score[] getScores() {
+		return scores;
+	}
+
+	public void setScores(Score[] scores) {
+		this.scores = scores;
 	}
 }

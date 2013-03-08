@@ -191,9 +191,9 @@ public class PlayQuestion extends BasicTWLGameState {
 			pointsGained = question_points_amount;
 			completeMessage.points = pointsGained;
 			completeMessage.choice = currentAnswer;
-			
-			pointsGained += timer;
+
 			pointsGained *= question_difficulty;
+			pointsGained += timer;
 			completeMessage.correct = true;
 			completeMessage.overall = pointsGained;
 			player.addScore(pointsGained);
@@ -203,7 +203,6 @@ public class PlayQuestion extends BasicTWLGameState {
 		{
 			win = false;
 		}
-		
 		client.sendTCP(completeMessage);
 	}
 
@@ -217,10 +216,11 @@ public class PlayQuestion extends BasicTWLGameState {
 		// Set up question variables
 		questions = question_list.getQuestion_list();
 		
-		current_question_id = 2; //HRRUClient.cs.getActivity_id();
+		current_question_id = HRRUClient.cs.getActivity_id();
+		
 		current_question = questions[current_question_id];
 
-		current_choices = current_question.getChoices();
+		current_choices =  current_question.getChoices();
 		FILE_NAME = current_question.getFile();
 		amountOfAnswers = current_question.getAmountOfAnswers();
 		correctAnswer = current_question.getAnswer();
@@ -466,7 +466,7 @@ public class PlayQuestion extends BasicTWLGameState {
 		// RESULTS PANEL SETUP
 		lblWaiting = new Label("");
 		lblWaiting.setSize(800, 100);
-		lblWaiting.setPosition(0,500);
+		lblWaiting.setPosition(0,480);
 		lblWaiting.setTheme("labelscoretotal");
 		
         p1ResultPanel = new DialogLayout();
@@ -536,8 +536,8 @@ public class PlayQuestion extends BasicTWLGameState {
 		p1ResultPanel.setVerticalGroup(p1ResultPanel.createSequentialGroup()
 				.addGap(60).addWidget(lActivity)
 				.addGap(30).addGroup(p1ResultPanel.createParallelGroup(lPoints, lblPoints1))
-				.addGap(30).addGroup(p1ResultPanel.createParallelGroup(lTime, lblTime1))
 				.addGap(30).addGroup(p1ResultPanel.createParallelGroup(lDifficulty, lblDifficulty1))
+				.addGap(30).addGroup(p1ResultPanel.createParallelGroup(lTime, lblTime1))
 				.addGap(30).addGroup(p1ResultPanel.createParallelGroup(lOverall, lblOverall1))
 				.addGap(30).addGroup(p1ResultPanel.createParallelGroup(lNew, lblNew1)));
 		
@@ -553,8 +553,8 @@ public class PlayQuestion extends BasicTWLGameState {
 		p2ResultPanel.setVerticalGroup(p2ResultPanel.createSequentialGroup()
 				.addGap(60).addWidget(lActivity2)
 				.addGap(30).addGroup(p2ResultPanel.createParallelGroup(lPoints2, lblPoints2))
-				.addGap(30).addGroup(p2ResultPanel.createParallelGroup(lTime2, lblTime2))
 				.addGap(30).addGroup(p2ResultPanel.createParallelGroup(lDifficulty2, lblDifficulty2))
+				.addGap(30).addGroup(p2ResultPanel.createParallelGroup(lTime2, lblTime2))
 				.addGap(30).addGroup(p2ResultPanel.createParallelGroup(lOverall2, lblOverall2))
 				.addGap(30).addGroup(p2ResultPanel.createParallelGroup(lNew2, lblNew2)));
 	}
@@ -878,7 +878,7 @@ public class PlayQuestion extends BasicTWLGameState {
 			{
 				questionPanel.setVisible(true);
 				if(currentAnswer >= 0)
-					lblWaiting.setText("You answered '" + choices[currentAnswer].getText() + "'\n" +"Waiting for " + otherPlayer.getName());
+					lblWaiting.setText("You answered\n '" + choices[currentAnswer].getText() + "'\n" +"Waiting for " + otherPlayer.getName());
 				else
 					lblWaiting.setText("You did not answer.");
 				lblWaiting.setVisible(true);

@@ -60,6 +60,9 @@ public class Connection {
 		kryo.register(Packet21EndPrison.class);
 		kryo.register(Packet22PropUlt.class);
 		kryo.register(packet23DecUlt.class);
+		kryo.register(Packet24SendScore.class);
+		kryo.register(Packet25AllScores.class);
+		kryo.register(String[].class);
 		kryo.register(int[].class);
 	}
 	

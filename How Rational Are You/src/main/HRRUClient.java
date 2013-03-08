@@ -51,7 +51,7 @@ public class HRRUClient extends TWLStateBasedGame {
 			app.setTargetFrameRate(60);
 			app.setMaximumLogicUpdateInterval(16);
 			app.setMinimumLogicUpdateInterval(16);
-			app.setDisplayMode(800, 600, false);
+			app.setDisplayMode(800, 600, true);
 			app.setAlwaysRender(true);
 			app.start();
 		} catch (SlickException e) {

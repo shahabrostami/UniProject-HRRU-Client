@@ -91,7 +91,7 @@ public class QuestionScoreResult {
 		this.totalQPointsAvg = totalQPointsAvg; 
 		this.totalQPointsOverall = totalQPointsOverall;
 		this.percentage = 0;
-		this.setPointsAvailable((noOfEasyQuestions * easyPoints) + (noOfMediumQuestions * mediumPoints) + (noOfHardQuestions * hardPoints) + (40*noOfTotalQuestions));
+		this.setPointsAvailable((noOfEasyQuestions * easyPoints) + (noOfMediumQuestions * mediumPoints) + (noOfHardQuestions * hardPoints) + (55*noOfTotalQuestions));
 	}
 	
 	public double getPercentage() {

@@ -38,17 +38,21 @@ public class Verdict extends BasicTWLGameState {
 	private final int number_of_achievements = 6;
 	private ResultPercentage[] resultPercentages = new ResultPercentage[number_of_achievements];
 	private String[] rankDescriptions = new String[6];
+	Image scorebackground;
+	Player player1, player2;
 	
 	// constant variables
 	int gcw;
 	int gch;
 	int clock;
 	boolean done, enter, finishLabelShown;
-	private final int questionstats = 17;
+	private final int questionstats = 16;
+	private final int questionfeedback = 17;
 	private final int bidstats = 20;
 	private final int prisonerstats = 21;
 	private final int truststats = 22;
 	private final int ultstats = 23;
+	private final int scoreboard = 25;
 	
 	// overall results variables
 	int overallPointsAvailable;
@@ -56,9 +60,10 @@ public class Verdict extends BasicTWLGameState {
 	String message1, message2, message3, message4;
 	
 	// Ticker variables
-	private int titleFontSize = 60;
-	private Font loadFont, loadTitleFont;
-	private BasicFont titleFont;
+	private int titleFontSize = 36;
+	private int mainFontSize = 24;
+	private Font loadFont, loadTitleFont, loadMainFont;
+	private BasicFont titleFont, mainFont;
 	private String start_message = "";
 	private String full_start_message = "HOW RATIONAL ARE YOU?";
 	private int full_start_counter = 0;
@@ -96,11 +101,11 @@ public class Verdict extends BasicTWLGameState {
 	
 	// Achievement coordinates
 	private int ach1_x = 71;
-	private int ach1_y = 152;
+	private int ach1_y = 172;
 	private int ach2_x = 297;
-	private int ach2_y = 152;
+	private int ach2_y = 172;
 	private int ach3_x = 523;
-	private int ach3_y = 152;
+	private int ach3_y = 172;
 	
 	private int playerID;
 	private int playerScore;
@@ -170,26 +175,12 @@ public class Verdict extends BasicTWLGameState {
 		clock3 = 0;
 		enterState = 0;
 		
-		playerID = HRRUClient.cs.getPlayer();
-		if(playerID == 1)
-		{
-			player = HRRUClient.cs.getP1();
-			playerScore = HRRUClient.cs.getP1().getScore();
-			otherPlayer = HRRUClient.cs.getP2();
-			otherPlayerScore = HRRUClient.cs.getP2().getScore();
-		}
-		else
-		{
-			player = HRRUClient.cs.getP2();
-			playerScore = HRRUClient.cs.getP2().getScore();
-			otherPlayer = HRRUClient.cs.getP1();
-			otherPlayerScore = HRRUClient.cs.getP1().getScore();
-		}
-		
 		if(!enter)
 		{
 			sbg.addState(new QuestionStatistics(questionstats));
 			sbg.getState(questionstats).init(gc, sbg);
+			sbg.addState(new QuestionFeedback(questionfeedback));
+			sbg.getState(questionfeedback).init(gc, sbg);
 			sbg.addState(new BidStatistics(bidstats));
 			sbg.getState(bidstats).init(gc, sbg);
 			sbg.addState(new PrisonerStatistics(prisonerstats));
@@ -198,6 +189,8 @@ public class Verdict extends BasicTWLGameState {
 			sbg.getState(truststats).init(gc, sbg);
 			sbg.addState(new UltimatumStatistics(ultstats));
 			sbg.getState(ultstats).init(gc, sbg);
+			sbg.addState(new Scoreboard(scoreboard));
+			sbg.getState(scoreboard).init(gc, sbg);
 			
 			if(playerScore > otherPlayerScore)
 			{
@@ -278,29 +271,35 @@ public class Verdict extends BasicTWLGameState {
 			}
 			
 			// Calculate player Rank
+			int overallPointsAvailable1 = biddingScore.getPointsAvailable();
+			int overallPointsAvailable2 = questionScore.getPointsAvailable(); 
+			int overallPointsAvailable3 = prisonScore.getPointsAvailable();
+			int overallPointsAvailable4 = ultimatumScore.getPointsAvailable();
+			int overallPointsAvailable5 = trustScore.getPointsAvailable();
+			
 			overallPointsAvailable = biddingScore.getPointsAvailable() + questionScore.getPointsAvailable() 
 					+ prisonScore.getPointsAvailable() + ultimatumScore.getPointsAvailable() + trustScore.getPointsAvailable();
 			if(overallPointsAvailable == 0 || (playerScore-1000 <= 0))
 				rankPercentage = 0;
 			else
-				rankPercentage = (((playerScore-1000) / overallPointsAvailable) * 100);
+				rankPercentage = ((((double)playerScore-1000) / (double)overallPointsAvailable)) * 100;
 			
-			if(rankPercentage > 95)
+			if(rankPercentage > 90)
 			{
 				message2 = rankDescriptions[0];
 				playerRank = 0;
 			}
-			else if(rankPercentage > 80)
+			else if(rankPercentage > 70)
 			{
 				message2 = rankDescriptions[1];
 				playerRank = 1;
 			}
-			else if(rankPercentage > 60)
+			else if(rankPercentage > 50)
 			{
 				message2 = rankDescriptions[2];
 				playerRank = 2;
 			}
-			else if(rankPercentage > 40)
+			else if(rankPercentage > 30)
 			{
 				message2 = rankDescriptions[3];
 				playerRank = 3;
@@ -359,12 +358,32 @@ public class Verdict extends BasicTWLGameState {
 		HRRUClient.cs.setP2(player);
 		HRRUClient.cs.setPlayer(1);
 		*/
+		playerID = HRRUClient.cs.getPlayer();
+		if(playerID == 1)
+		{
+			player = HRRUClient.cs.getP1();
+			playerScore = HRRUClient.cs.getP1().getScore();
+			otherPlayer = HRRUClient.cs.getP2();
+			otherPlayerScore = HRRUClient.cs.getP2().getScore();
+		}
+		else
+		{
+			player = HRRUClient.cs.getP2();
+			playerScore = HRRUClient.cs.getP2().getScore();
+			otherPlayer = HRRUClient.cs.getP1();
+			otherPlayerScore = HRRUClient.cs.getP1().getScore();
+		}
+		
+		player1 = HRRUClient.cs.getP1();
+		player2 = HRRUClient.cs.getP2();
+		
 		finishLabelShown = false;
 		enter = false;
+		scorebackground = new Image("simple/playerscorebackground.png");
 		// GUI
 		btnQuestion = new Button("Question\nFeedback");
 		btnQuestion.setSize(100, 50);
-		btnQuestion.setPosition(75, 490);
+		btnQuestion.setPosition(75, 510);
 		btnQuestion.addCallback(new Runnable() {
 			@Override
 			public void run() {
@@ -375,7 +394,7 @@ public class Verdict extends BasicTWLGameState {
 		
 		btnGame = new Button("Game\nFeedback");
 		btnGame.setSize(100, 50);
-		btnGame.setPosition(180,490);
+		btnGame.setPosition(180,510);
 		btnGame.addCallback(new Runnable() {
 			@Override
 			public void run() {
@@ -386,7 +405,7 @@ public class Verdict extends BasicTWLGameState {
 		
 		btnScoreboard = new Button("Scoreboard");
 		btnScoreboard.setSize(100, 50);
-		btnScoreboard.setPosition(285,490);
+		btnScoreboard.setPosition(285,510);
 		btnScoreboard.addCallback(new Runnable() {
 			@Override
 			public void run() {
@@ -397,7 +416,7 @@ public class Verdict extends BasicTWLGameState {
 		
 		btnEnd = new Button("Finish");
 		btnEnd.setSize(100, 50);
-		btnEnd.setPosition(390,490);
+		btnEnd.setPosition(390,510);
 		btnEnd.addCallback(new Runnable() {
 			@Override
 			public void run() {
@@ -421,6 +440,9 @@ public class Verdict extends BasicTWLGameState {
 		}
 		loadTitleFont = loadFont.deriveFont(Font.BOLD,titleFontSize);
 		titleFont = new BasicFont(loadTitleFont);
+		
+		loadMainFont = loadFont.deriveFont(Font.BOLD,mainFontSize);
+		mainFont = new BasicFont(loadMainFont);
 		
 		// setup achievement images
 		imgNone = new Image("achievement/achievement_none.png");
@@ -459,7 +481,7 @@ public class Verdict extends BasicTWLGameState {
 		
 		
 		verdictPanel = new DialogLayout();
-		verdictPanel.setPosition(50,100);
+		verdictPanel.setPosition(50,120);
 		verdictPanel.setSize(701-245-20, 462-255-20);
 		verdictPanel.setTheme("verdict-panel");
 		
@@ -488,9 +510,17 @@ public class Verdict extends BasicTWLGameState {
 			g.drawImage(ach1, ach1_x, ach1_y);
 			g.drawImage(ach2, ach2_x, ach2_y);
 			g.drawImage(ach3, ach3_x, ach3_y);
-			g.drawImage(rankLetter, 525, 355);
+			g.drawImage(rankLetter, 525, 375);
 			g.setFont(titleFont.get());
-			g.drawString("> " + start_message + "" + ticker, 30, 25);
+			g.drawString("> " + start_message + "" + ticker, 320, 80);
+			g.drawImage(scorebackground, 0,0);
+			g.setFont(mainFont.get());
+			g.drawImage(player1.getPlayerCharacter().getCharacterImage(), 13,13);
+			g.drawImage(player2.getPlayerCharacter().getCharacterImage(), 13,55);
+			g.drawString("" + player1.getName(), 65, 22);
+			g.drawString("" + player2.getName(), 65, 64);
+			g.drawString("" + player1.getScore(), 204, 22);
+			g.drawString("" + player2.getScore(), 204, 64);
 		}
 	}
 
@@ -577,6 +607,10 @@ public class Verdict extends BasicTWLGameState {
 		else if(enterState == 2)
 		{
 			sbg.enterState(bidstats);
+		}
+		else if(enterState == 3)
+		{
+			sbg.enterState(scoreboard);
 		}
 	}
 

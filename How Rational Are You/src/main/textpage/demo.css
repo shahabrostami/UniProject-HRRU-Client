@@ -5,8 +5,8 @@ body {
 }
 
 a {
-    font-family: link;
-    color: blue;
+    font-family: name;
+    margin-top:1em;
 }
 p.answer {
 	margin-top: 0.1em;
