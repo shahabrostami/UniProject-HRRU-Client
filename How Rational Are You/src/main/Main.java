@@ -9,22 +9,13 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
-import org.newdawn.slick.state.transition.BlobbyTransition;
-import org.newdawn.slick.state.transition.CombinedTransition;
-import org.newdawn.slick.state.transition.CrossStateTransition;
 import org.newdawn.slick.state.transition.EmptyTransition;
-import org.newdawn.slick.state.transition.FadeInTransition;
-import org.newdawn.slick.state.transition.FadeOutTransition;
 import org.newdawn.slick.state.transition.HorizontalSplitTransition;
-import org.newdawn.slick.state.transition.RotateTransition;
 import org.newdawn.slick.state.transition.SelectTransition;
-import org.newdawn.slick.state.transition.VerticalSplitTransition;
-
 import com.esotericsoftware.kryonet.Client;
 
 import conn.Connection;
 import conn.Packet.Packet0CreateRequest;
-import conn.Packet.Packet16SendBid;
 import conn.Packet.Packet2JoinRequest;
 import conn.Packet.Packet8Start;
 import conn.Packet.Packet9CharacterSelect;

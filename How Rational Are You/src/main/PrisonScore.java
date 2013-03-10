@@ -1,7 +1,5 @@
 package main;
 
-import main.item.Item;
-
 public class PrisonScore {
 	private int playerChoice;
 	private int otherPlayerChoice;

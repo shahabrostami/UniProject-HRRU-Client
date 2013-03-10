@@ -1,18 +1,8 @@
 package main;
 
-import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.ByteBuffer;
-import java.util.Random;
-
-import main.item.Item;
-import main.item.ItemList;
-import main.textpage.TextPage;
-import main.textpage.TextPage.TextPageFrame;
-
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -24,9 +14,6 @@ import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
 import org.newdawn.slick.state.transition.RotateTransition;
 import org.newdawn.slick.state.transition.SelectTransition;
-import org.newdawn.slick.util.ResourceLoader;
-
-
 import com.esotericsoftware.kryonet.Client;
 
 import conn.Packet.Packet00SyncMessage;
@@ -35,18 +22,11 @@ import conn.Packet.packet23DecUlt;
 
 import TWLSlick.BasicTWLGameState;
 import TWLSlick.RootPane;
-import de.matthiasmann.twl.ResizableFrame.ResizableAxis;
 import de.matthiasmann.twl.textarea.HTMLTextAreaModel;
-import de.matthiasmann.twl.textarea.SimpleTextAreaModel;
-import de.matthiasmann.twl.utils.PNGDecoder;
-import de.matthiasmann.twl.utils.PNGDecoder.Format;
-import de.matthiasmann.twl.Alignment;
 import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.DialogLayout;
 import de.matthiasmann.twl.Label;
 import de.matthiasmann.twl.TextArea;
-import de.matthiasmann.twl.ValueAdjuster;
-import de.matthiasmann.twl.ValueAdjusterFloat;
 import de.matthiasmann.twl.ValueAdjusterInt;
 
 public class PlayGame_Ultimatum extends BasicTWLGameState {
@@ -127,19 +107,15 @@ public class PlayGame_Ultimatum extends BasicTWLGameState {
 	// Fonts
 	private int mainFontSize = 24;
 	private int titleFontSize = 36;
-	private int questionFontSize = 26;
 	private int timerFontSize = 40;
 	private int timerMFontSize = 18;
 	
-	private Font loadFont, loadMainFont, loadTitleFont, loadQuestionFont, loadTimerFont, loadTimerMFont;
-	private BasicFont mainFont, titleFont, readyFont, questionFont, timerFont, timerMFont;;
+	private Font loadFont, loadMainFont, loadTitleFont, loadTimerFont, loadTimerMFont;
+	private BasicFont mainFont, titleFont, timerFont, timerMFont;
 	
 	// Timers and state variables
 	private int clock2,clock3,timer,timer2,overallTimer = 0;
-	private boolean end, ready, win, time_out, finished, resume = false;
-	
-	private boolean playedBefore = false;
-	private Random rand = new Random();
+	private boolean time_out, finished;
 	
 	Packet22PropUlt packetProp;
 	packet23DecUlt packetDec;
@@ -337,7 +313,6 @@ public class PlayGame_Ultimatum extends BasicTWLGameState {
 		
 		// Retrieve game information
 		playerProp = HRRUClient.cs.getSecondary_id();
-		System.out.println("playerGive" + playerProp);
 		if(playerProp == 1)
 			playerDec = 2;
 		else playerDec = 1;
@@ -347,7 +322,6 @@ public class PlayGame_Ultimatum extends BasicTWLGameState {
 		// Set initial game state
 		if(playerID == playerProp)
 		{
-			System.out.println("player is playerGive" + playerID);
 			pShowRollBanner = true;
 			lblYourTurn.setVisible(true);
 			bPlayerProp = true;
@@ -363,7 +337,6 @@ public class PlayGame_Ultimatum extends BasicTWLGameState {
 		}
 		else
 		{
-			System.out.println("player is playerReturn" + playerID + ".");
 			bPlayerProp = false;
 			bPlayerDec = true;
 			vaProposal.setVisible(false);
@@ -463,14 +436,11 @@ public class PlayGame_Ultimatum extends BasicTWLGameState {
 		
 		loadMainFont = loadFont.deriveFont(Font.BOLD,mainFontSize);
 		mainFont = new BasicFont(loadMainFont);
-		readyFont = new BasicFont(loadTitleFont, Color.red);
 		
-		loadQuestionFont = loadFont.deriveFont(Font.PLAIN, questionFontSize);
 		loadTimerFont = loadFont.deriveFont(Font.BOLD,timerFontSize);
 		loadTimerMFont = loadFont.deriveFont(Font.BOLD,timerMFontSize);
 		timerFont = new BasicFont(loadTimerFont);
 		timerMFont = new BasicFont(loadTimerMFont);
-		questionFont = new BasicFont(loadQuestionFont);
 		
 		// Setup Game GUI
 		questionDescriptionModel = new HTMLTextAreaModel();
@@ -743,7 +713,6 @@ public class PlayGame_Ultimatum extends BasicTWLGameState {
 			timer2=999;
 			if(timer<0)
 			{					
-				end = true;
 				time_out = true;
 			}
 			clock2-=1000;
@@ -889,7 +858,6 @@ public class PlayGame_Ultimatum extends BasicTWLGameState {
 		// Timer for end game
 		if(gameState == 4)
 		{
-			System.out.println("success");
 			if(timer < 0)
 			{
 			// 	Calculate variables and set new labels

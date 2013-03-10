@@ -4,15 +4,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.ByteBuffer;
-import java.util.Random;
-
 import main.item.Item;
 import main.item.ItemList;
-import main.textpage.TextPage;
-import main.textpage.TextPage.TextPageFrame;
-
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -23,29 +16,19 @@ import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
 import org.newdawn.slick.state.transition.RotateTransition;
 import org.newdawn.slick.state.transition.SelectTransition;
-import org.newdawn.slick.util.ResourceLoader;
-
-
 import com.esotericsoftware.kryonet.Client;
 
 import conn.Packet.Packet00SyncMessage;
-import conn.Packet.Packet14QuestionComplete;
 import conn.Packet.Packet16SendBid;
 
 import TWLSlick.BasicTWLGameState;
 import TWLSlick.RootPane;
-import de.matthiasmann.twl.ResizableFrame.ResizableAxis;
 import de.matthiasmann.twl.textarea.HTMLTextAreaModel;
 import de.matthiasmann.twl.textarea.SimpleTextAreaModel;
-import de.matthiasmann.twl.utils.PNGDecoder;
-import de.matthiasmann.twl.utils.PNGDecoder.Format;
-import de.matthiasmann.twl.Alignment;
 import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.DialogLayout;
 import de.matthiasmann.twl.Label;
 import de.matthiasmann.twl.TextArea;
-import de.matthiasmann.twl.ValueAdjuster;
-import de.matthiasmann.twl.ValueAdjusterFloat;
 import de.matthiasmann.twl.ValueAdjusterInt;
 
 public class PlayGame_Bid extends BasicTWLGameState {
@@ -113,18 +96,14 @@ public class PlayGame_Bid extends BasicTWLGameState {
 	
 	private int mainFontSize = 24;
 	private int titleFontSize = 36;
-	private int questionFontSize = 26;
 	private int timerFontSize = 40;
 	private int timerMFontSize = 18;
 	
-	private Font loadFont, loadMainFont, loadTitleFont, loadQuestionFont, loadTimerFont, loadTimerMFont;
-	private BasicFont mainFont, titleFont, readyFont, questionFont, timerFont, timerMFont;
+	private Font loadFont, loadMainFont, loadTitleFont, loadTimerFont, loadTimerMFont;
+	private BasicFont mainFont, titleFont, readyFont, timerFont, timerMFont;
 	
 	private int clock2,clock3,timer,timer2,overallTimer = 0;
-	private boolean end, ready, win, time_out, finished, resume = false;
-	
-	private boolean playedBefore = false;
-	private Random rand = new Random();
+	private boolean end, ready, finished, resume = false;
 	
 	Packet16SendBid playerBid;
 	Packet00SyncMessage syncMessage;
@@ -193,9 +172,7 @@ public class PlayGame_Bid extends BasicTWLGameState {
 		rootPane.removeAllChildren();
 		itemPanel.removeAllChildren();
 		
-		// Reset variables
-		playedBefore = true;
-		win = false; end = false; time_out = false; finished = false; resume = false; ready = false;
+		end = false; finished = false; resume = false; ready = false;
 		otherPlayerReady = 0;
 		currentBid = 0;
 		amountWon = 0;
@@ -380,12 +357,10 @@ public class PlayGame_Bid extends BasicTWLGameState {
 		mainFont = new BasicFont(loadMainFont);
 		readyFont = new BasicFont(loadTitleFont, Color.red);
 		
-		loadQuestionFont = loadFont.deriveFont(Font.PLAIN, questionFontSize);
 		loadTimerFont = loadFont.deriveFont(Font.BOLD,timerFontSize);
 		loadTimerMFont = loadFont.deriveFont(Font.BOLD,timerMFontSize);
 		timerFont = new BasicFont(loadTimerFont);
 		timerMFont = new BasicFont(loadTimerMFont);
-		questionFont = new BasicFont(loadQuestionFont);
 		
 		// Confirmation GUI
 		lblConfirmation = new Label("");
@@ -638,9 +613,7 @@ public class PlayGame_Bid extends BasicTWLGameState {
 				if(timer<=0)
 				{
 					disableGUI();
-					System.out.println("timed out");
 					end = true;
-					time_out = true;
 					playerBid = new Packet16SendBid();
 					playerBid.player = playerID;
 					playerBid.bid = currentBid;

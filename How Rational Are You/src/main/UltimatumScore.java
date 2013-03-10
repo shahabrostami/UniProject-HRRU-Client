@@ -1,7 +1,5 @@
 package main;
 
-import main.item.Item;
-
 public class UltimatumScore {
 	private int playerProp;
 	private int playerDec;

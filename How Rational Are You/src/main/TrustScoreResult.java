@@ -1,15 +1,7 @@
 package main;
 
-import main.item.Item;
-
 public class TrustScoreResult {
 
-	private int noOfTrustScores;
-	private int noOfTrustScoreGiver;
-	private int noOfTrustScoreReturner;
-	private int tsPlayerGiveAvg, tsPlayerReturnAvg, tsPlayerReceiveAvg, tsPlayerGiveProfitAvg, tsPlayerReturnProfitAvg;
-	private double tsPlayerGiveTotal, tsPlayerReturnTotal, tsPlayerReceiveTotal, tsPlayerGiveProfitTotal, tsPlayerReturnProfitTotal;
-	private int tsAvg;
 	private double tsTotal, percentage;
 	private int pointsAvailable;
 	
@@ -22,20 +14,6 @@ public class TrustScoreResult {
 			int tsAvg,
 			double tsTotal)
 	{
-		this.noOfTrustScores = noOfTrustScores;
-		this.noOfTrustScoreGiver = noOfTrustScoreGiver;
-		this.noOfTrustScoreReturner = noOfTrustScoreReturner;
-		this.tsPlayerGiveAvg =  tsPlayerGiveAvg;
-		this.tsPlayerReturnAvg =  tsPlayerReturnAvg;
-		this.tsPlayerReceiveAvg = tsPlayerReceiveAvg ;
-		this.tsPlayerGiveProfitAvg = tsPlayerGiveProfitAvg; 
-		this.tsPlayerReturnProfitAvg = tsPlayerReturnProfitAvg;
-		this.tsPlayerGiveTotal =  tsPlayerGiveTotal;
-		this.tsPlayerReturnTotal =  tsPlayerReturnTotal2;
-		this.tsPlayerReceiveTotal =  tsPlayerReceiveTotal2;
-		this.tsPlayerGiveProfitTotal =  tsPlayerGiveProfitTotal2;
-		this.tsPlayerReturnProfitTotal = tsPlayerReturnProfitTotal2;
-		this.tsAvg = tsAvg;
 		this.setTsTotal(tsTotal);
 		this.percentage = 0;
 	}

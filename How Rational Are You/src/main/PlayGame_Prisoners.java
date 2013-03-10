@@ -4,50 +4,27 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.ByteBuffer;
-import java.util.Random;
-
 import main.item.Item;
 import main.item.ItemList;
-import main.textpage.TextPage;
-import main.textpage.TextPage.TextPageFrame;
-
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
-import org.newdawn.slick.state.transition.EmptyTransition;
 import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
-import org.newdawn.slick.state.transition.RotateTransition;
-import org.newdawn.slick.state.transition.SelectTransition;
-import org.newdawn.slick.util.ResourceLoader;
-
-
 import com.esotericsoftware.kryonet.Client;
 
 import conn.Packet.Packet00SyncMessage;
-import conn.Packet.Packet14QuestionComplete;
-import conn.Packet.Packet16SendBid;
 import conn.Packet.Packet20SendPrison;
 
 import TWLSlick.BasicTWLGameState;
 import TWLSlick.RootPane;
-import de.matthiasmann.twl.ResizableFrame.ResizableAxis;
 import de.matthiasmann.twl.textarea.HTMLTextAreaModel;
-import de.matthiasmann.twl.textarea.SimpleTextAreaModel;
-import de.matthiasmann.twl.utils.PNGDecoder;
-import de.matthiasmann.twl.utils.PNGDecoder.Format;
-import de.matthiasmann.twl.Alignment;
 import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.DialogLayout;
 import de.matthiasmann.twl.Label;
 import de.matthiasmann.twl.TextArea;
-import de.matthiasmann.twl.ValueAdjuster;
-import de.matthiasmann.twl.ValueAdjusterFloat;
-import de.matthiasmann.twl.ValueAdjusterInt;
 
 public class PlayGame_Prisoners extends BasicTWLGameState {
 	
@@ -117,12 +94,11 @@ public class PlayGame_Prisoners extends BasicTWLGameState {
 	
 	private int mainFontSize = 24;
 	private int titleFontSize = 36;
-	private int questionFontSize = 26;
 	private int timerFontSize = 40;
 	private int timerMFontSize = 18;
 	
-	private Font loadFont, loadMainFont, loadTitleFont, loadQuestionFont, loadTimerFont, loadTimerMFont;
-	private BasicFont mainFont, titleFont, readyFont, questionFont, timerFont, timerMFont;;
+	private Font loadFont, loadMainFont, loadTitleFont, loadTimerFont, loadTimerMFont;
+	private BasicFont mainFont, titleFont, readyFont, timerFont, timerMFont;;
 	
 	private int clock2,clock3,timer,timer2,overallTimer,timetaken = 0;
 	private boolean timeout = false;
@@ -328,12 +304,10 @@ public class PlayGame_Prisoners extends BasicTWLGameState {
 		mainFont = new BasicFont(loadMainFont);
 		readyFont = new BasicFont(loadTitleFont, Color.red);
 		
-		loadQuestionFont = loadFont.deriveFont(Font.PLAIN, questionFontSize);
 		loadTimerFont = loadFont.deriveFont(Font.BOLD,timerFontSize);
 		loadTimerMFont = loadFont.deriveFont(Font.BOLD,timerMFontSize);
 		timerFont = new BasicFont(loadTimerFont);
 		timerMFont = new BasicFont(loadTimerMFont);
-		questionFont = new BasicFont(loadQuestionFont);
 		
 		// Confirmation GUI
 		lblConfirmation = new Label("");

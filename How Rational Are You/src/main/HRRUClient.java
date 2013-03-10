@@ -1,9 +1,6 @@
 package main;
 
-import java.io.File;
 import java.net.URL;
-import java.net.URLClassLoader;
-
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
@@ -35,7 +32,6 @@ public class HRRUClient extends TWLStateBasedGame {
  public HRRUClient() {
 		super("How Rational Are You");
 		cs = new ConnectionState();
-		System.out.println("client");
 		conn = new Connection();
 		this.addState(new Main(main));
 		this.addState(new HostServer(host));

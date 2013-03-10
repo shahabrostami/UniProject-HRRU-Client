@@ -10,8 +10,6 @@ import main.HRRUClient;
 import main.Play;
 import main.Player;
 import main.Score;
-import main.TrustScore;
-
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
@@ -51,7 +49,6 @@ public class NetworkListener extends Listener{
 		}
 		if(o instanceof Packet1CreateAnswer)
 		{
-			System.out.println("hey");
 			boolean answer = ((Packet1CreateAnswer)o).accepted;
 			if(answer)
 			{
@@ -130,17 +127,14 @@ public class NetworkListener extends Listener{
 		{
 			int characterID = ((Packet.Packet9CharacterSelect)o).characterID;
 			int player = ((Packet.Packet9CharacterSelect)o).player;
-			System.out.println("derp");
 			
 			if(player == 1)
 			{
-				System.out.println("derp1");
 				HRRUClient.cs.getP1().setPlayerCharacterID(characterID);
 				HRRUClient.cs.setState(player1char);
 			}
 			if(player == 2)
 			{
-				System.out.println("derp2");
 				HRRUClient.cs.getP2().setPlayerCharacterID(characterID);
 				HRRUClient.cs.setState(player2char);
 			}
@@ -163,14 +157,12 @@ public class NetworkListener extends Listener{
 			{
 				for(int i = 0; i < moves; i++)
 					HRRUClient.cs.getP2().updatePosition();
-				System.out.println("receive");
 				HRRUClient.cs.setState(start_play);
 			}
 			
 		}
 		if(o instanceof Packet13Play)
 		{
-			System.out.println("playready");
 			HRRUClient.cs.getP1().setReady(0);
 			HRRUClient.cs.getP2().setReady(0);
 			int activity = ((Packet13Play)o).activity;
@@ -184,26 +176,16 @@ public class NetworkListener extends Listener{
 			}
 			else if(activity == 3 && activity_id == 2)
 			{
-				int secondary_id = ((Packet13Play)o).secondary_id;
-				int secondary_value = ((Packet13Play)o).secondary_value;
-				int third_value = ((Packet13Play)o).third_value;
-				System.out.println(secondary_id + "-" + secondary_value + "-" + third_value);
 				HRRUClient.cs.setSecondary_id(((Packet13Play)o).secondary_id);
 				HRRUClient.cs.setSecondary_value(((Packet13Play)o).secondary_value);
 				HRRUClient.cs.setThird_value(((Packet13Play)o).third_value);
 			}
 			else if(activity == 3 && activity_id == 4)
 			{
-				int secondary_id = ((Packet13Play)o).secondary_id;
-				int secondary_value = ((Packet13Play)o).secondary_value;
-				System.out.println(secondary_id + "-" + secondary_value + "-");
 				HRRUClient.cs.setSecondary_id(((Packet13Play)o).secondary_id);
 				HRRUClient.cs.setSecondary_value(((Packet13Play)o).secondary_value);
 			}
 			HRRUClient.cs.setState(play);
-			System.out.println(activity);
-			System.out.println(activity_id);
-			
 		}
 		if(o instanceof Packet14QuestionComplete)
 		{
@@ -226,13 +208,11 @@ public class NetworkListener extends Listener{
 			
 			if(player == 1)
 			{
-				System.out.println("done");
 				HRRUClient.cs.getP1().setActivityScore(otherPlayerResult);
 				HRRUClient.cs.getP1().setReady(1);
 			}
 			else
 			{
-				System.out.println("done");
 				HRRUClient.cs.getP2().setActivityScore(otherPlayerResult);
 				HRRUClient.cs.getP2().setReady(1);
 			}
@@ -288,7 +268,6 @@ public class NetworkListener extends Listener{
 			
 			if(player == 1)
 			{
-				System.out.println(win);
 				biddingScore = HRRUClient.cs.getP1().getCurrentBiddingScore();
 				biddingScore.setAmountWon(amountWon);
 				biddingScore.setItemValue(itemValue);
@@ -299,7 +278,6 @@ public class NetworkListener extends Listener{
 			}
 			else
 			{
-				System.out.println(win);
 				biddingScore = HRRUClient.cs.getP2().getCurrentBiddingScore();
 				biddingScore.setAmountWon(amountWon);
 				biddingScore.setItemValue(itemValue);
@@ -353,7 +331,6 @@ public class NetworkListener extends Listener{
 				HRRUClient.cs.getP2().getCurrentPrisonScore().setOtherPlayerChoice(otherPlayerChoice);
 				HRRUClient.cs.getP2().getCurrentPrisonScore().setOtherPlayerTime(otherPlayerTime);
 			}
-			System.out.println("nice");
 			HRRUClient.cs.setGameState(2);
 		}
 		if(o instanceof Packet21EndPrison)
@@ -375,7 +352,6 @@ public class NetworkListener extends Listener{
 				HRRUClient.cs.getP2().getCurrentUltimatumScore().setPlayerPropValue(playerPropValue);
 				HRRUClient.cs.getP2().getCurrentUltimatumScore().setPlayerDecValue(playerDecValue);
 			}
-			System.out.println("nice");
 			HRRUClient.cs.setGameState(1);
 		}
 		if(o instanceof packet23DecUlt)
@@ -386,7 +362,6 @@ public class NetworkListener extends Listener{
 				HRRUClient.cs.getP1().getCurrentUltimatumScore().setSuccess(success);
 			if(player==2)
 				HRRUClient.cs.getP2().getCurrentUltimatumScore().setSuccess(success);
-			System.out.println("nice");
 			HRRUClient.cs.setGameState(3);
 		}
 		if(o instanceof Packet25AllScores)
@@ -398,7 +373,6 @@ public class NetworkListener extends Listener{
 			for(int i = 0; i < scores.length; i++)
 			{
 				scores[i] = new Score(names[i], points[i]);
-				System.out.println("name: " + names[i] + "score: " + points[i]);
 			}
 			HRRUClient.cs.setScores(scores);
 		}

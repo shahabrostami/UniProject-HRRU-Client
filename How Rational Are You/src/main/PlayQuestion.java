@@ -28,9 +28,7 @@ import TWLSlick.RootPane;
 import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.DialogLayout;
 import de.matthiasmann.twl.Label;
-import de.matthiasmann.twl.TextArea;
 import de.matthiasmann.twl.ResizableFrame.ResizableAxis;
-import de.matthiasmann.twl.textarea.SimpleTextAreaModel;
 
 public class PlayQuestion extends BasicTWLGameState {
 	
@@ -59,15 +57,12 @@ public class PlayQuestion extends BasicTWLGameState {
 	private Player otherPlayer;
 	private Player player1;
 	private Player player2;
-	private int playerScore;
 	private int playerScore2;
-	private String playerName;
 	private int currentAnswer;
 	private int otherPlayerReady;
 	private ActivityScore playerResult;
 	private ActivityScore otherPlayerResult;
 	private int elapsedTime = 0;
-	private int elapsedTimeFixed = 0;
 	private int pointsAvailable = 0;
 	private int pointsGained = 0;
 	boolean ready = false;
@@ -94,15 +89,14 @@ public class PlayQuestion extends BasicTWLGameState {
 	
 	private int mainFontSize = 24;
 	private int titleFontSize = 36;
-	private int questionFontSize = 26;
 	private int timerFontSize = 40;
 	private int timerMFontSize = 18;
 	
-	private Font loadFont, loadMainFont, loadTitleFont, loadQuestionFont, loadTimerFont, loadTimerMFont;
-	private BasicFont mainFont, titleFont, readyFont, questionFont, timerFont, timerMFont;;
+	private Font loadFont, loadMainFont, loadTitleFont, loadTimerFont, loadTimerMFont;
+	private BasicFont mainFont, titleFont, readyFont, timerFont, timerMFont;;
 	
 	private int clock2,clock3,timer,timer2,overallTimer = 0;
-	private boolean end, win, time_out, finished, resume = false;
+	private boolean end, win, finished, resume = false;
 	
 	TextPageFrame textpageframe;
 	DialogLayout p1ResultPanel, p2ResultPanel;
@@ -180,7 +174,6 @@ public class PlayQuestion extends BasicTWLGameState {
 		pointsAvailable = 0;
 		pointsGained = 0;
 		elapsedTime = 0;
-		elapsedTimeFixed = 80 - timer;
 		ready = true;
 		end = true;
 		if(currentAnswer == correctAnswer)
@@ -228,7 +221,7 @@ public class PlayQuestion extends BasicTWLGameState {
 		
 		// Reset variables
 		otherPlayerReady=0;
-		win = false; end = false; time_out = false; finished = false; resume = false;
+		win = false; end = false; finished = false; resume = false;
 		currentAnswer = -1;
 		clock2 = 0; clock3 = 0;
 		timer = 80;
@@ -236,7 +229,6 @@ public class PlayQuestion extends BasicTWLGameState {
 		elapsedTime = 0;
 		pointsAvailable = 0;
 		pointsGained = 0;
-		elapsedTimeFixed = 0;
 		overallTimer = 0;
 		
 		start_message = "";
@@ -262,9 +254,6 @@ public class PlayQuestion extends BasicTWLGameState {
 			otherPlayer = player1;
 			otherPlayerID = 1;
 		}
-		
-		playerName = player.getName();
-		playerScore = player.getScore();
 		playerScore2 = otherPlayer.getScore();
 		
 		choicePanel.setTheme("choices-panel");   
@@ -412,12 +401,10 @@ public class PlayQuestion extends BasicTWLGameState {
 		mainFont = new BasicFont(loadMainFont);
 		readyFont = new BasicFont(loadTitleFont, Color.red);
 		
-		loadQuestionFont = loadFont.deriveFont(Font.PLAIN, questionFontSize);
 		loadTimerFont = loadFont.deriveFont(Font.BOLD,timerFontSize);
 		loadTimerMFont = loadFont.deriveFont(Font.BOLD,timerMFontSize);
 		timerFont = new BasicFont(loadTimerFont);
 		timerMFont = new BasicFont(loadTimerMFont);
-		questionFont = new BasicFont(loadQuestionFont);
 		
 		// Set up question GUI widgets
 		choicePanel = new DialogLayout();
@@ -712,7 +699,6 @@ public class PlayQuestion extends BasicTWLGameState {
 				{
 					disableGUI();
 					end = true;
-					time_out = true;
 					completeMessage = new Packet14QuestionComplete();
 					completeMessage.difficulty = question_difficulty;
 					completeMessage.elapsedtime = 0;

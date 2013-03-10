@@ -1,24 +1,15 @@
 package main;
 
-import main.item.Item;
-
 public class BiddingScoreResult {
 
-	private int noOfBidScores;
-	private int noOfBidScoreWin;
-	private int noOfBidScoreLose;
-	private int bsItemValueAvgW, bsPlayerBidAvgW, bsOtherPlayerBidAvgW, bsAmountWonAvgW;
 	double bsOtherPlayerBidTotalW;
 	double bsPlayerBidTotalW;
 	double bsItemValueTotalW;
 	double bsAmountWonTotalW;
-	private int bsItemValueAvgL, bsPlayerBidAvgL, bsOtherPlayerBidAvgL, bsAmountWonAvgL;
 	double bsAmountWonTotalL;
 	double bsOtherPlayerBidTotalL;
 	double bsItemValueTotalL;
 	double bsPlayerBidTotalL;
-	private int itemValueW, playerBidW, otherPlayerBidW, amountWonW;
-	private int itemValueL, playerBidL, otherPlayerBidL, amountWonL;
 	private double percentage;
 	private double pointsAvailable;
 	
@@ -51,33 +42,14 @@ public class BiddingScoreResult {
 			int otherPlayerBidL,
 			int amountWonL)
 	{
-		this.noOfBidScores = noOfBidScores;
-		this.noOfBidScoreWin = noOfBidScoreWin;
-		this.noOfBidScoreLose = noOfBidScoreLose;
-		this.bsItemValueAvgW = bsItemValueAvgW;
 		this.setBsItemValueTotalW(bsItemValueTotalW2);
-		this.bsPlayerBidAvgW = bsPlayerBidAvgW;
 		this.setBsPlayerBidTotalW(bsPlayerBidTotalW2);
-		this.bsOtherPlayerBidAvgW = bsOtherPlayerBidAvgW;
 		this.bsOtherPlayerBidTotalW = bsOtherPlayerBidTotalW2;
-		this.bsAmountWonAvgW = bsAmountWonAvgW;
 		this.setBsAmountWonTotalW(bsAmountWonTotalW2);
-		this.bsItemValueAvgL = bsItemValueAvgL;
 		this.setBsItemValueTotalL(bsItemValueTotalL2);
-		this.bsPlayerBidAvgL = bsPlayerBidAvgL;
 		this.setBsPlayerBidTotalL(bsPlayerBidTotalL2);
-		this.bsOtherPlayerBidAvgL = bsOtherPlayerBidAvgL;
 		this.bsOtherPlayerBidTotalL = bsOtherPlayerBidTotalL2;
-		this.bsAmountWonAvgL = bsAmountWonAvgL;
 		this.bsAmountWonTotalL = bsAmountWonTotalL2;
-		this.itemValueW = itemValueW;
-		this.playerBidW = playerBidW;
-		this.otherPlayerBidW = otherPlayerBidW;
-		this.amountWonW = amountWonW;
-		this.itemValueL = itemValueL;
-		this.playerBidL = playerBidL;
-		this.otherPlayerBidL = otherPlayerBidL;
-		this.amountWonL = amountWonL;
 		this.percentage = 0;
 		this.setPointsAvailable((bsItemValueTotalL2 + bsItemValueTotalW2)/2);
 	}

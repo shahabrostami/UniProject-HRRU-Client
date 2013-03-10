@@ -23,7 +23,6 @@ import TWLSlick.RootPane;
 import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.DialogLayout;
 import de.matthiasmann.twl.Label;
-import de.matthiasmann.twl.TextArea;
 import de.matthiasmann.twl.ResizableFrame.ResizableAxis;
 import de.matthiasmann.twl.textarea.SimpleTextAreaModel;
 
@@ -50,15 +49,12 @@ public class PlayGame extends BasicTWLGameState {
 	private Player otherPlayer;
 	private Player player1;
 	private Player player2;
-	private int playerScore;
 	private int playerScore2;
-	private String playerName;
 	private int currentAnswer;
 	private int otherPlayerReady;
 	private ActivityScore playerResult;
 	private ActivityScore otherPlayerResult;
 	private int elapsedTime = 0;
-	private int elapsedTimeFixed = 0;
 	private int pointsAvailable = 0;
 	private int pointsGained = 0;
 	
@@ -92,7 +88,7 @@ public class PlayGame extends BasicTWLGameState {
 	private boolean tickerBoolean = true;
 	
 	private int clock2,clock3,timer,timer2,overallTimer = 0;
-	private boolean end, win, time_out, finished, resume = false;
+	private boolean end, win, finished, resume = false;
 	
 	TextPageFrame textpageframe;
 	DialogLayout p1ResultPanel, p2ResultPanel;
@@ -169,11 +165,9 @@ public class PlayGame extends BasicTWLGameState {
 		pointsAvailable = 0;
 		pointsGained = 0;
 		elapsedTime = 0;
-		elapsedTimeFixed = (25*question_difficulty) - timer;
 		end = true;
 		if(currentAnswer == correctAnswer)
 		{
-			System.out.println(currentAnswer + "---" + correctAnswer);
 			completeMessage.elapsedtime = timer;
 			elapsedTime = timer; 
 			pointsAvailable = question_points_amount;
@@ -217,7 +211,7 @@ public class PlayGame extends BasicTWLGameState {
 		
 		// Reset variables
 		otherPlayerReady=0;
-		win = false; end = false; time_out = false; finished = false; resume = false;
+		win = false; end = false; finished = false; resume = false;
 		currentAnswer = 0;
 		clock2 = 0; clock3 = 0;
 		timer = 25*question_difficulty;
@@ -225,7 +219,6 @@ public class PlayGame extends BasicTWLGameState {
 		elapsedTime = 0;
 		pointsAvailable = 0;
 		pointsGained = 0;
-		elapsedTimeFixed = 0;
 		overallTimer = 0;
 		
 		start_message = "";
@@ -251,9 +244,6 @@ public class PlayGame extends BasicTWLGameState {
 			otherPlayer = player1;
 			otherPlayerID = 1;
 		}
-		
-		playerName = player.getName();
-		playerScore = player.getScore();
 		playerScore2 = otherPlayer.getScore();
 		
 		choicePanel.setTheme("choices-panel");   
@@ -652,7 +642,6 @@ public class PlayGame extends BasicTWLGameState {
 				{
 					disableGUI();
 					end = true;
-					time_out = true;
 					completeMessage = new Packet14QuestionComplete();
 					completeMessage.difficulty = question_difficulty;
 					completeMessage.elapsedtime = 0;

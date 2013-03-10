@@ -15,8 +15,6 @@ import com.esotericsoftware.kryonet.Client;
 
 import TWLSlick.BasicTWLGameState;
 import TWLSlick.RootPane;
-import de.matthiasmann.twl.utils.PNGDecoder;
-import de.matthiasmann.twl.Alignment;
 import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.DialogLayout;
 import de.matthiasmann.twl.Label;
@@ -33,15 +31,10 @@ public class TrustStatistics extends BasicTWLGameState {
 	int gcw;
 	int gch;
 	boolean calculated;
-	private final int questionstats = 18;
-	private final int questionfeedback = 19;
-	private final int questionnaire = 20;
 	private final int bidstats = 21;
 	private final int prisonerstats = 22;
 	private final int truststats = 23;
 	private final int ultstats = 24;
-	private final int scoreboard = 25;
-	
 	// Ticker variables
 	private int titleFontSize = 60;
 	private Font loadFont, loadTitleFont;
@@ -76,9 +69,7 @@ public class TrustStatistics extends BasicTWLGameState {
 	private double tsPlayerGiveTotal, tsPlayerReturnTotal, tsPlayerReceiveTotal, tsPlayerGiveProfitTotal, tsPlayerReturnProfitTotal;
 	private int tsAvg;
 	private double tsTotal;
-	private int playerGive, playerReturn, maxToGive, maxToReturn, maxToReceive, playerReceiveValue, playerGiveValue, playerReturnValue, multiplier, playerGiveProfit, playerReturnProfit;
-	private double pointsAvailable;
-
+	private int maxToGive, maxToReturn, maxToReceive, playerReceiveValue, playerGiveValue, playerReturnValue, multiplier, playerGiveProfit, playerReturnProfit;
 	private int playerID;
 	private int playerScore;
 	
@@ -89,8 +80,8 @@ public class TrustStatistics extends BasicTWLGameState {
 		noOfTrustScoreReturner = 0;
 		tsPlayerGiveAvg = 0; tsPlayerReturnAvg = 0; tsPlayerReceiveAvg = 0; tsPlayerGiveProfitAvg = 0; tsPlayerReturnProfitAvg = 0;
 		tsPlayerGiveTotal = 0; tsPlayerReturnTotal = 0; tsPlayerReceiveTotal = 0; tsPlayerGiveProfitTotal = 0; tsPlayerReturnProfitTotal = 0;
-		playerGive = 0; playerReturn = 0; maxToGive = 0; maxToReturn = 0; maxToReceive = 0; playerReceiveValue = 0; playerGiveValue = 0; playerReturnValue = 0; multiplier = 0; playerGiveProfit = 0; playerReturnProfit = 0;
-		tsTotal = 0; tsAvg = 0; pointsAvailable = 0;
+		setMaxToGive(0); maxToReturn = 0; maxToReceive = 0; playerReceiveValue = 0; playerGiveValue = 0; playerReturnValue = 0; setMultiplier(0); playerGiveProfit = 0; playerReturnProfit = 0;
+		tsTotal = 0; tsAvg = 0;
 	}
 	
 	public TrustStatistics(int main) {
@@ -377,10 +368,10 @@ public class TrustStatistics extends BasicTWLGameState {
 			{
 				noOfTrustScoreGiver ++;
 				playerGiveValue += trustScore.getPlayerGiveValue();
-				maxToGive += trustScore.getMaxToGive();
+				setMaxToGive(getMaxToGive() + trustScore.getMaxToGive());
 				playerReceiveValue += trustScore.getPlayerReturnValue();
 				maxToReceive += trustScore.getMaxToReturn();
-				multiplier += trustScore.getMultiplier();
+				setMultiplier(getMultiplier() + trustScore.getMultiplier());
 				playerGiveProfit += trustScore.getPlayerGiveProfit();
 			}
 			else
@@ -388,7 +379,7 @@ public class TrustStatistics extends BasicTWLGameState {
 				noOfTrustScoreReturner++;
 				playerReturnValue += trustScore.getPlayerReturnValue();
 				maxToReturn += trustScore.getMaxToReturn();
-				multiplier += trustScore.getMultiplier();
+				setMultiplier(getMultiplier() + trustScore.getMultiplier());
 				playerReturnProfit += trustScore.getPlayerReturnProfit();
 			}
 		}
@@ -512,6 +503,22 @@ public class TrustStatistics extends BasicTWLGameState {
 	@Override
 	public int getID() {
 		return 23;
+	}
+
+	public int getMultiplier() {
+		return multiplier;
+	}
+
+	public void setMultiplier(int multiplier) {
+		this.multiplier = multiplier;
+	}
+
+	public int getMaxToGive() {
+		return maxToGive;
+	}
+
+	public void setMaxToGive(int maxToGive) {
+		this.maxToGive = maxToGive;
 	}
 
 }

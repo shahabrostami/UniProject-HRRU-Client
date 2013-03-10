@@ -14,13 +14,8 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
-import org.newdawn.slick.state.transition.EmptyTransition;
 import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
-import org.newdawn.slick.state.transition.HorizontalSplitTransition;
-import org.newdawn.slick.state.transition.RotateTransition;
-import org.newdawn.slick.state.transition.SelectTransition;
-
 import com.esotericsoftware.kryonet.Client;
 
 import TWLSlick.BasicTWLGameState;
@@ -368,7 +363,7 @@ public class JoinServer extends BasicTWLGameState {
 	@Override
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
 		input = gc.getInput();
-		if(input.isKeyPressed(input.KEY_TAB))
+		if(input.isKeyPressed(Input.KEY_TAB))
 		{
 			if (efName.hasKeyboardFocus())
 				efSessionID.requestKeyboardFocus();

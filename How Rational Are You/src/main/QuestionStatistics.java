@@ -5,9 +5,6 @@ import java.awt.FontFormatException;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import main.textpage.AnswerPage.AnswerPageFrame;
-import main.textpage.TextPage.TextPageFrame;
-
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -18,9 +15,6 @@ import com.esotericsoftware.kryonet.Client;
 
 import TWLSlick.BasicTWLGameState;
 import TWLSlick.RootPane;
-import de.matthiasmann.twl.ResizableFrame.ResizableAxis;
-import de.matthiasmann.twl.utils.PNGDecoder;
-import de.matthiasmann.twl.Alignment;
 import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.DialogLayout;
 import de.matthiasmann.twl.Label;
@@ -32,14 +26,7 @@ public class QuestionStatistics extends BasicTWLGameState {
 	DialogLayout questionPanel, leftPanel, rightPanel;
 	Button btnBack;
 	
-	private final int questionstats = 18;
 	private final int questionfeedback = 19;
-	private final int questionnaire = 20;
-	private final int bidstats = 21;
-	private final int prisonerstats = 22;
-	private final int truststats = 23;
-	private final int ultstats = 24;
-	private final int scoreboard = 25;
 	private int enterState;
 	int gcw;
 	int gch;
@@ -71,9 +58,6 @@ public class QuestionStatistics extends BasicTWLGameState {
 	// Question variables
 	private ActivityScore activityScore;
 	private ArrayList<ActivityScore> activityScores;
-	private ArrayList<ActivityScore> mediumActivityScores;
-	private ArrayList<ActivityScore> hardActivityScores;
-	
 	// Question Statistics
 	private int noOfEasyQuestions;
 	private int noOfEasyQCorrect;
@@ -103,9 +87,6 @@ public class QuestionStatistics extends BasicTWLGameState {
 	private int totalQPointsAvg;
 	private double totalQPointsOverall;
 	
-	private double questionScoreTotal;
-	
-
 	private int playerID;
 	private int playerScore;
 	

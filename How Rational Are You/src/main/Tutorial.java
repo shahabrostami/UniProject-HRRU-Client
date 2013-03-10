@@ -1,11 +1,8 @@
 package main;
 
-import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.io.IOException;
-import java.util.ArrayList;
-
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -16,11 +13,7 @@ import com.esotericsoftware.kryonet.Client;
 
 import TWLSlick.BasicTWLGameState;
 import TWLSlick.RootPane;
-import de.matthiasmann.twl.utils.PNGDecoder;
-import de.matthiasmann.twl.Alignment;
 import de.matthiasmann.twl.Button;
-import de.matthiasmann.twl.DialogLayout;
-import de.matthiasmann.twl.Label;
 import de.matthiasmann.twl.ToggleButton;
 
 public class Tutorial extends BasicTWLGameState {
@@ -37,14 +30,9 @@ public class Tutorial extends BasicTWLGameState {
 	int gch;
 	
 	// Ticker variables and font variables
-	private int mainFontSize = 14;
 	private int titleFontSize = 20;
-	private int questionFontSize = 26;
-	private int timerFontSize = 40;
-	private int timerMFontSize = 18;
-	
-	private Font loadFont, loadMainFont, loadTitleFont, loadQuestionFont, loadTimerFont, loadTimerMFont;
-	private BasicFont mainFont, titleFont, readyFont, questionFont, timerFont, timerMFont;;
+	private Font loadFont, loadTitleFont;
+	private BasicFont titleFont;
 	
 	private String start_message = "";
 	private String full_start_message = "Game Tutorial...";
@@ -52,12 +40,6 @@ public class Tutorial extends BasicTWLGameState {
 	private String ticker = "";
 	private boolean tickerBoolean = true;
 	private int clock3, clock2 = 0;
-	
-	private Score[] scores;
-	private Player player;
-	private int playerScore;
-	private int playerID;
-	private String playerName;
 	
 	public Tutorial(int main) {
 		client = HRRUClient.conn.getClient();
@@ -176,17 +158,6 @@ public class Tutorial extends BasicTWLGameState {
 		}
 		loadTitleFont = loadFont.deriveFont(Font.BOLD,titleFontSize);
 		titleFont = new BasicFont(loadTitleFont);
-		
-		loadMainFont = loadFont.deriveFont(Font.BOLD,mainFontSize);
-		mainFont = new BasicFont(loadMainFont, Color.white);
-		readyFont = new BasicFont(loadTitleFont, Color.red);
-		
-		loadQuestionFont = loadFont.deriveFont(Font.PLAIN, questionFontSize);
-		loadTimerFont = loadFont.deriveFont(Font.BOLD,timerFontSize);
-		loadTimerMFont = loadFont.deriveFont(Font.BOLD,timerMFontSize);
-		timerFont = new BasicFont(loadTimerFont);
-		timerMFont = new BasicFont(loadTimerMFont);
-		questionFont = new BasicFont(loadQuestionFont);
 		
 		//btn back
 		btnBack = new Button("Back");

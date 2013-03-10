@@ -16,7 +16,6 @@ public class QuestionList {
 	{
 		
 		FILE_NAME = file_name;
-		System.out.println("--------" + FILE_NAME);
 		InputStream file_stream = ResourceLoader.getResourceAsStream("text/" + FILE_NAME);
 		DataInputStream in = new DataInputStream(file_stream);
 		BufferedReader br = new BufferedReader(new InputStreamReader(in));

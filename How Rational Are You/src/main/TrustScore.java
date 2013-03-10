@@ -1,7 +1,5 @@
 package main;
 
-import main.item.Item;
-
 public class TrustScore {
 	private int playerGive;
 	private int playerReturn;

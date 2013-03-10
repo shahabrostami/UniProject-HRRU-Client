@@ -14,13 +14,8 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
-import org.newdawn.slick.state.transition.EmptyTransition;
 import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
-import org.newdawn.slick.state.transition.HorizontalSplitTransition;
-import org.newdawn.slick.state.transition.RotateTransition;
-import org.newdawn.slick.state.transition.SelectTransition;
-
 import com.esotericsoftware.kryonet.Client;
 
 import TWLSlick.BasicTWLGameState;
@@ -260,8 +255,7 @@ public class HostServer extends BasicTWLGameState {
         
         efName.addCallback(new Callback() {
             public void callback(int key) {
-            	System.out.println(key); if(key == Event.KEY_RETURN || key == Event.KEY_TAB) {
-                
+            	if(key == Event.KEY_RETURN) {
                     efPassword.requestKeyboardFocus();
                 }
             }
@@ -355,7 +349,7 @@ public class HostServer extends BasicTWLGameState {
 		clock2 += delta;
 		input = gc.getInput();
 		
-		if(input.isKeyPressed(input.KEY_TAB))
+		if(input.isKeyPressed(Input.KEY_TAB))
 		{
 			if(efName.hasKeyboardFocus())
 				efPassword.requestKeyboardFocus();

@@ -17,14 +17,10 @@ import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.state.transition.EmptyTransition;
 import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
-import org.newdawn.slick.state.transition.HorizontalSplitTransition;
-import org.newdawn.slick.state.transition.SelectTransition;
-
 import com.esotericsoftware.kryonet.Client;
 
 import TWLSlick.BasicTWLGameState;
 import TWLSlick.RootPane;
-import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.ResizableFrame.ResizableAxis;
 import de.matthiasmann.twl.DialogLayout;
 import de.matthiasmann.twl.Label;
@@ -50,8 +46,8 @@ public class Play extends BasicTWLGameState {
 	private Player player;
 	private Player player1;
 	private Player player2;
-	private boolean p1ShowRollBanner, p1ShowWaitBanner = false;
-	private boolean p2ShowRollBanner, p2ShowWaitBanner = false;
+	private boolean p1ShowRollBanner;
+	private boolean p2ShowRollBanner;
 	private boolean moving;
 	private int glowTimer;
 	Animation glowAnimation;
@@ -135,7 +131,7 @@ public class Play extends BasicTWLGameState {
 			player = HRRUClient.cs.getP1();
 			p1ShowRollBanner = true;
 			// p1ShowWaitBanner = false;
-			
+			/*
 			ActivityScore list;
 			if(!(player.getActivityScores().isEmpty()))
 			{
@@ -454,8 +450,8 @@ public class Play extends BasicTWLGameState {
 	@Override
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
 		input = gc.getInput();
-		int xpos = Mouse.getX();
-		int ypos= Mouse.getY();
+		Mouse.getX();
+		Mouse.getY();
 		gameState = HRRUClient.cs.getState();
 		timer -= delta;
 		if(gameState == serverlost)
@@ -606,12 +602,10 @@ public class Play extends BasicTWLGameState {
 				turnMessage.playerID = playerID;
 				turnMessage.moves = dice_counter_copy;
 				turnMessage.tile = board.gridSquares[player.getPosition()].getTileType();
-				System.out.println("tiletype" + turnMessage.tile);
 				client.sendTCP(turnMessage);
 				
 				if(playerID == 1)
 				{
-					p1ShowWaitBanner = true;
 					HRRUClient.cs.setState(p2_turn);
 					lStatus.setText("Waiting for " + player2.getName() + "...");
 					btnRoll.setText("Waiting for " + player2.getName() + "...");
@@ -680,7 +674,6 @@ public class Play extends BasicTWLGameState {
 		{
 			if(gameState == play)
 			{
-				System.out.println(timer + "timer");
 				int currentTile = board.gridSquares[player.getPosition()].getTileType();
 				int otherPlayerTile;
 				HRRUClient.cs.setTimer(timer);
@@ -690,7 +683,6 @@ public class Play extends BasicTWLGameState {
 					otherPlayerTile = board.gridSquares[HRRUClient.cs.getP1().getPosition()].getTileType();
 					
 				int activity_id = HRRUClient.cs.getActivity_id();
-				System.out.println(otherPlayerTile + "the tile");
 				
 				if(otherPlayerTile == 3 || currentTile == 3)
 				{

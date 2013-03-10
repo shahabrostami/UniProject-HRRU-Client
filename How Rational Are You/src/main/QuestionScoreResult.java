@@ -1,39 +1,14 @@
 package main;
 
-import main.item.Item;
-
 public class QuestionScoreResult {
 
 	private final int easyPoints = 50;
 	private final int mediumPoints = 100;
 	private final int hardPoints = 150;
 	
-	private int noOfEasyQuestions;
-	private int noOfEasyQCorrect;
-	private int easyQTimeBonusAvg;
-	private double easyQTimeBonusOverall;
-	private int easyQPointsAvg;
-	private double easyQPointsOverall;
-	
-	private int noOfMediumQuestions;
-	private int noOfMediumQCorrect;
-	private int mediumQTimeBonusAvg;
-	private double mediumQTimeBonusOverall;
-	private int mediumQPointsAvg;
-	private double mediumQPointsOverall;
-	
-	private int noOfHardQuestions;
-	private int noOfHardQCorrect;
-	private int hardQTimeBonusAvg;
-	private double hardQTimeBonusOverall;
-	private int hardQPointsAvg;
-	private double hardQPointsOverall;
-	
 	private int noOfTotalQuestions;
 	private int noOfTotalQCorrect;
-	private int totalQTimeBonusAvg;
 	private double totalQTimeBonusOverall;
-	private int totalQPointsAvg;
 	private double totalQPointsOverall;
 	
 	private int pointsAvailable;
@@ -66,29 +41,9 @@ public class QuestionScoreResult {
 			int totalQPointsAvg,
 			double totalQPointsOverall)
 	{
-		this.noOfEasyQuestions = noOfEasyQuestions;
-		this.noOfEasyQCorrect = noOfEasyQCorrect;
-		this.easyQTimeBonusAvg = easyQTimeBonusAvg;
-		this.easyQTimeBonusOverall = easyQTimeBonusOverall;
-		this.easyQPointsAvg = easyQPointsAvg;
-		this.easyQPointsOverall = easyQPointsOverall;
-		this.noOfMediumQuestions = noOfMediumQuestions;
-		this.noOfMediumQCorrect = noOfMediumQCorrect;
-		this.mediumQTimeBonusAvg = mediumQTimeBonusAvg;
-		this.mediumQTimeBonusOverall = mediumQTimeBonusOverall;
-		this.mediumQPointsAvg = mediumQPointsAvg;
-		this.mediumQPointsOverall = mediumQPointsOverall;
-		this.noOfHardQuestions = noOfHardQuestions;
-		this.noOfHardQCorrect = noOfHardQCorrect;
-		this.hardQTimeBonusAvg = hardQTimeBonusAvg;
-		this.hardQTimeBonusOverall = hardQTimeBonusOverall;
-		this.hardQPointsAvg = hardQPointsAvg;
-		this.hardQPointsOverall = hardQPointsOverall;
 		this.setNoOfTotalQuestions(noOfTotalQuestions);
 		this.setNoOfTotalQCorrect(noOfTotalQCorrect);
-		this.totalQTimeBonusAvg = totalQTimeBonusAvg;
 		this.setTotalQTimeBonusOverall(totalQTimeBonusOverall); 
-		this.totalQPointsAvg = totalQPointsAvg; 
 		this.setTotalQPointsOverall(totalQPointsOverall);
 		this.percentage = 0;
 		this.setPointsAvailable((noOfEasyQuestions * easyPoints) + (noOfMediumQuestions * mediumPoints) + (noOfHardQuestions * hardPoints) + (55*noOfTotalQuestions));

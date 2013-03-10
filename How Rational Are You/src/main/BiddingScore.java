@@ -1,7 +1,5 @@
 package main;
 
-import main.item.Item;
-
 public class BiddingScore {
 
 	private int item_id;

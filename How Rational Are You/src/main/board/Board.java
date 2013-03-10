@@ -32,9 +32,6 @@ public class Board {
 		
 		int[] tileOrder = HRRUClient.cs.getBoard();
 		
-		for(int i = 0; i < size; i++)
-			System.out.println(tileOrder[i]);
-		
 		// create board grid
 		for(int row1 = 0; row1 < scale-1; row1++)
 		{
