@@ -236,7 +236,7 @@
         </select>
         <alias name="togglebutton.overlay" ref="-selection"/>
 
-        <grid name="radiobutton.background" weightsX="0,1" weightsY="1" border="1,14,1,1">
+        <grid name="radiobutton.background" weightsX="0,1" weightsY="1" border="1" center="true">
             <select center="true">
                 <composed if="selected + disabled" tint="#8fff">
                     <alias ref="-iconP"/>
@@ -256,7 +256,7 @@
             </select>
             <alias ref="none"/>
         </grid>
-        <alias name="radiobutton.overlay" ref="--selection" if="keyboardFocus" inset="1,14,1,1"/>
+        <alias name="radiobutton.overlay" ref="--selection" if="keyboardFocus"/>
 
         <select name="valueadjuster.display.background">
             <alias ref="-borderB" if="disabled" tint="#8fff"/>
@@ -516,6 +516,16 @@
     <images file="questionfeedback.png">
         <area name="questionfeedback.background" xywh="*" border="10,7"/>
     </images>
+    <images file="fullscreenicon.png">
+        <select name="fullscreen.button">
+            <area xywh="25,0,25,25" if="hover"/>
+            <area xywh="50,0,25,25" if="selected"/>
+            <area xywh="0,0,25,25"/>
+        </select>
+    
+    
+    </images>
+
 
 
 
@@ -641,6 +651,8 @@
     <fontDef name="questionatari12" filename="questionatari12.fnt" color="white"/>
     <fontDef name="questionatari8" filename="questionatari8.fnt" color="white"/>
     <fontDef name="questionatari9y" filename="questionatari9y.fnt" color="white"/>
+    <fontDef name="questionatari9yellow" filename="questionatari9yellow.fnt" color="white"/>
+
     
 	<fontDef name="combobox" filename="Font/font.fnt" color="black">
         <fontParam if="comboboxKeyboardFocus" color="white"/>
@@ -827,6 +839,16 @@
         <param name="maxHeight"><int>0</int></param>
         <param name="background"><image>none</image></param>
         <param name="textAlignment"><enum type="alignment">LEFT</enum></param>
+    </theme>
+
+    <theme name="questionatari9c" ref="-defaults" allowWildcard="true">
+        <param name="font"><font>questionatari9yellow</font></param>
+        <param name="minWidth"><int>700</int></param>
+        <param name="maxWidth"><int>700</int></param>
+        <param name="minHeight"><int>0</int></param>
+        <param name="maxHeight"><int>0</int></param>
+        <param name="background"><image>none</image></param>
+        <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
     </theme>
 
     <theme name="questionatari9l" ref="-defaults" allowWildcard="true">
@@ -1093,6 +1115,21 @@
     <theme name="editfield" allowWildcard="true" ref="-defaults">
         <param name=""><image>editfield.*</image></param>
         <param name="background"><image>innerframe.background</image></param>
+        <param name="border"><border>background.border</border></param>
+        <param name="passwordChar"><int>0x25CF</int></param>
+        <param name="columns"><int>8</int></param>
+        <param name="mouseCursor"><cursor>cursor.text</cursor></param>
+        <theme name="renderer" ref="-defaults">
+        </theme>
+        <param name="autocompletion-height"><int>150</int></param>
+        <param name="minWidth"><int>0</int></param>
+        <param name="minHeight"><int>0</int></param>
+        <param name="maxHeight"><int>0</int></param>
+    </theme>
+
+    <theme name="editfield2" allowWildcard="true" ref="-defaults">
+        <param name=""><image>editfield.*</image></param>
+        <param name="background"><image>tooltip.background</image></param>
         <param name="border"><border>background.border</border></param>
         <param name="passwordChar"><int>0x25CF</int></param>
         <param name="columns"><int>8</int></param>
@@ -2482,11 +2519,11 @@
 	
 	<theme name="textarea" ref="-defaults">
                     <param name="fonts"><map>
-                        <param name="default"><fontDef filename="questionatari16.fnt" color="#FFFFFF"/></param>
+                        <param name="default"><fontDef filename="questionatari12.fnt" color="#FFFFFF"/></param>
                         <param name="link"><fontDef filename="Font/font.fnt" underlineOffset="1">
                             <fontParam if="hover" underline="true"/>
                         </fontDef></param>
-                        <param name="big"><fontDef filename="questionatari16.fnt" color="#FFFFFF"/></param>
+                        <param name="big"><fontDef filename="questionatari12.fnt" color="#FFFFFF"/></param>
                         <param name="code"><fontDef filename="scoretotal12.fnt"/></param>
                         <param name="codeBold"><fontDef filename="questionatari12.fnt"/></param>
                 <param name="name"><fontDef filename="scoretotal12.fnt"/></param>

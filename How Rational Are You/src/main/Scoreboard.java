@@ -99,7 +99,7 @@ public class Scoreboard extends BasicTWLGameState {
 		// set up font variables
 		try {
 			loadFont = java.awt.Font.createFont(java.awt.Font.TRUETYPE_FONT,
-					      org.newdawn.slick.util.ResourceLoader.getResourceAsStream("font/ATARI FULL.ttf"));
+					      org.newdawn.slick.util.ResourceLoader.getResourceAsStream("font/atari.ttf"));
 		} catch (FontFormatException e) {
 				e.printStackTrace();
 		} catch (IOException e) {
@@ -200,7 +200,7 @@ public class Scoreboard extends BasicTWLGameState {
 			}
 		}
 		if(enterState == 1)
-			sbg.enterState(15);
+			sbg.enterState(17);
 	}
 
 	@Override

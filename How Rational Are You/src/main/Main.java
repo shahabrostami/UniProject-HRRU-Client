@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.state.transition.BlobbyTransition;
@@ -33,6 +34,7 @@ import TWLSlick.RootPane;
 import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.EditField;
 import de.matthiasmann.twl.Label;
+import de.matthiasmann.twl.ToggleButton;
 
 public class Main extends BasicTWLGameState {
 
@@ -41,13 +43,16 @@ public class Main extends BasicTWLGameState {
 	}
 
 	Client client;
+	boolean read = false;
 	
 	// GUI variables
+	ToggleButton btnFullscreen;
+	boolean isFullscreen;
 	boolean connectionSuccessful;
 	int enterState = 0;
 	int attempts = 0;
 	Label lConnection;
-	Button btnHost, btnJoin;
+	Button btnHost, btnJoin, btnTutorial, btnSummary, btnScoreboard;
 	Button btnHT1, btnHT2, btnHT3;
 	Button btnTestStart;
 	EditField efSessionID;
@@ -67,6 +72,7 @@ public class Main extends BasicTWLGameState {
 	private String ticker = "";
 	private boolean tickerBoolean = true;
 	private int clock3, clock2 = 0;
+	private Image summaryImg;
 	
 	@Override
 	public void enter(GameContainer gc, StateBasedGame sbg) throws SlickException {
@@ -82,8 +88,9 @@ public class Main extends BasicTWLGameState {
 		btnJT2.setEnabled(false);
 		btnTestStart.setEnabled(false);
 		
-		rootPane.add(lConnection);
-		//rootPane.add(btnRetry);
+		
+		// rootPane.add(btnRetry);
+		/*
 		rootPane.add(btnHT1);
 		rootPane.add(efSessionID);
 		rootPane.add(btnJT1);
@@ -91,8 +98,18 @@ public class Main extends BasicTWLGameState {
 		rootPane.add(btnJT2);
 		rootPane.add(btnHT3);
 		rootPane.add(btnTestStart);
-		rootPane.add(btnJoin);
-		rootPane.add(btnHost);
+		*/
+		
+		rootPane.add(btnSummary);
+		if(read)
+		{
+			rootPane.add(lConnection);
+			rootPane.add(btnTutorial);
+			rootPane.add(btnJoin);
+			rootPane.add(btnHost);
+			rootPane.add(btnScoreboard);
+			rootPane.add(btnFullscreen);
+		}
 		rootPane.setTheme("");
 		
 		// RESET VARIABLES
@@ -152,6 +169,21 @@ public class Main extends BasicTWLGameState {
 			}
 		});
 		*/
+	    // setup fullscreen button
+	    btnFullscreen = new ToggleButton("");
+	    btnFullscreen.setSize(25, 25);
+	    btnFullscreen.setPosition(775,0);
+	    btnFullscreen.addCallback(new Runnable() {
+			@Override
+			public void run() {
+					if(isFullscreen)
+						isFullscreen = false;
+					else
+						isFullscreen = true;
+			}
+		});
+	    btnFullscreen.setTheme("fullscreenbutton");
+	    
 		// setup gui variables
 		btnHost = new Button("Host Game");
 		btnHost.setSize(400, 30);
@@ -160,6 +192,7 @@ public class Main extends BasicTWLGameState {
 			@Override
 			public void run() {
 				enterState = 1;
+				
 			}
 		});
 		btnHost.setTheme("menubutton");
@@ -174,18 +207,60 @@ public class Main extends BasicTWLGameState {
 		});
 		btnJoin.setTheme("menubutton");
 		
+		btnTutorial = new Button("Tutorial");
+		btnTutorial.setSize(400, 30);
+		btnTutorial.setPosition(gc.getWidth()/2-200, gc.getHeight()/2+20);
+		btnTutorial.addCallback(new Runnable() {
+			@Override
+			public void run() {
+				enterState = 5;
+			}
+		});
+		btnTutorial.setTheme("menubutton");
+		
+		btnScoreboard = new Button("Scoreboard");
+		btnScoreboard.setSize(400, 30);
+		btnScoreboard.setPosition(gc.getWidth()/2-200, gc.getHeight()/2+55);
+		btnScoreboard.addCallback(new Runnable() {
+			@Override
+			public void run() {
+				enterState = 6;
+			}
+		});
+		btnScoreboard.setTheme("menubutton");
+		
+		btnSummary = new Button("CONTINUE");
+		btnSummary.setSize(400, 50);
+		btnSummary.setPosition(gc.getWidth()/2-200, gc.getHeight()/2+250);
+		btnSummary.addCallback(new Runnable() {
+			@Override
+			public void run() {
+				btnSummary.setVisible(false);
+				rootPane.add(lConnection);
+				rootPane.add(btnTutorial);
+				rootPane.add(btnJoin);
+				rootPane.add(btnHost);
+				rootPane.add(btnScoreboard);
+				rootPane.add(btnFullscreen);
+				read = true;
+			}
+		});
+		btnSummary.setTheme("menubutton");
+		
+
+		
 		btnHT1 = new Button("1) Host Server Create");
 		btnHT1.setSize(200, 20);
-		btnHT1.setPosition(gc.getWidth()/2-100, gc.getHeight()/2+15);
+		btnHT1.setPosition(gc.getWidth()/2-300, gc.getHeight()/2+15);
 		btnHT1.addCallback(new Runnable() {
 			@Override
 			public void run() {
 				Packet0CreateRequest createRequest = new Packet0CreateRequest();
 				createRequest.password = "";
-				createRequest.player1Name = "p1name";
+				createRequest.player1Name = "Alex";
 				Player player1;
 				try {
-					player1 = new Player("p1name");
+					player1 = new Player("Alex");
 					HRRUClient.cs.setP1(player1);
 				} catch (SlickException e) {
 					// TODO Auto-generated catch block
@@ -201,21 +276,21 @@ public class Main extends BasicTWLGameState {
 		});
 		
 		efSessionID = new EditField();
-		efSessionID.setPosition(gc.getWidth()/2-50, gc.getHeight()/2+45);
+		efSessionID.setPosition(gc.getWidth()/2-250, gc.getHeight()/2+45);
 		efSessionID.setSize(100,20);
 		btnJT1 = new Button("2) Join Server Request");
 		btnJT1.setSize(200, 20);
-		btnJT1.setPosition(gc.getWidth()/2-100, gc.getHeight()/2+75);
+		btnJT1.setPosition(gc.getWidth()/2-300, gc.getHeight()/2+75);
 		btnJT1.addCallback(new Runnable() {
 			@Override
 			public void run() {
 				Packet2JoinRequest joinRequest = new Packet2JoinRequest();
 				joinRequest.sessionID = Integer.parseInt(efSessionID.getText());
 				joinRequest.password = "";
-				joinRequest.player2Name = "p2name";
+				joinRequest.player2Name = "Samantha";
 				Player player2;
 				try {
-					player2 = new Player("p2name");
+					player2 = new Player("Samantha");
 					HRRUClient.cs.setP2(player2);
 				} catch (SlickException e) {
 					// TODO Auto-generated catch block
@@ -232,7 +307,7 @@ public class Main extends BasicTWLGameState {
 		
 		btnHT2 = new Button("3) Host Server Start");
 		btnHT2.setSize(200, 20);
-		btnHT2.setPosition(gc.getWidth()/2-100, gc.getHeight()/2+105);
+		btnHT2.setPosition(gc.getWidth()/2-300, gc.getHeight()/2+105);
 		btnHT2.addCallback(new Runnable() {
 			@Override
 			public void run() {
@@ -246,7 +321,7 @@ public class Main extends BasicTWLGameState {
 		
 		btnHT3 = new Button("4) Host Server Character");
 		btnHT3.setSize(200, 20);
-		btnHT3.setPosition(gc.getWidth()/2-100, gc.getHeight()/2+135);
+		btnHT3.setPosition(gc.getWidth()/2-300, gc.getHeight()/2+135);
 		btnHT3.addCallback(new Runnable() {
 			@Override
 			public void run() {
@@ -263,7 +338,7 @@ public class Main extends BasicTWLGameState {
 		
 		btnJT2 = new Button("5) Join Server Character");
 		btnJT2.setSize(200, 20);
-		btnJT2.setPosition(gc.getWidth()/2-100, gc.getHeight()/2+165);
+		btnJT2.setPosition(gc.getWidth()/2-300, gc.getHeight()/2+165);
 		btnJT2.addCallback(new Runnable() {
 			@Override
 			public void run() {
@@ -280,26 +355,37 @@ public class Main extends BasicTWLGameState {
 		
 		btnTestStart = new Button("6) Start Test Game");
 		btnTestStart.setSize(200, 20);
-		btnTestStart.setPosition(gc.getWidth()/2-100, gc.getHeight()/2+195);
+		btnTestStart.setPosition(gc.getWidth()/2-300, gc.getHeight()/2+195);
 		btnTestStart.addCallback(new Runnable() {
 			@Override
 			public void run() {
 				enterState = 4;
 			}
 		});
+		
+		summaryImg = new Image("tutorial/summary2.png");
 	}
 
 	@Override
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
 		g.setFont(titleFont.get());
 		g.drawString("> " + start_message + "" + ticker, 50, 50);
+		if(!read)
+			g.drawImage(summaryImg, 0, 0);
 	}
 
 	@Override
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
+		if(read)
+		{
 		clock3 += delta;
 		clock2 += delta;
 		// full message ticker
+		if(isFullscreen && !(gc.isFullscreen()))
+			gc.setFullscreen(true);
+		else if(!(isFullscreen) && gc.isFullscreen())
+			gc.setFullscreen(false);
+		
 		if(clock3 > 100){
 			if(full_start_counter < full_start_message.length())
 			{
@@ -359,8 +445,13 @@ public class Main extends BasicTWLGameState {
 			HRRUClient.cs.getP1().setScore(1000);
 			HRRUClient.cs.getP2().setScore(1000);
 			HRRUClient.cs.setState(7);
-			sbg.enterState(5);
+			sbg.enterState(11);
 			enterState = 0;
+		}
+		else if(enterState == 5)
+			sbg.enterState(3);
+		else if(enterState == 6)
+			sbg.enterState(4);
 		}
 	}
 

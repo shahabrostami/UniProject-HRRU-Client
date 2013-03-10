@@ -53,7 +53,7 @@ public class PlayGame_Bid extends BasicTWLGameState {
 	private int gameState;
 	private final int serverlost = -4;
 	private final int cancelled = -2;
-	private final int play = 5;
+	private final int play = 11;
 	private final int p1_turn = 7;
 	public final int question_points_amount = 100;
 	
@@ -236,7 +236,6 @@ public class PlayGame_Bid extends BasicTWLGameState {
 		player1 = HRRUClient.cs.getP1();
 		player2 = HRRUClient.cs.getP2();
 		playerID = HRRUClient.cs.getPlayer();
-		System.out.println(playerID +" playerID");
 		if(playerID == 1)
 		{
 			player =  player1;
@@ -261,7 +260,7 @@ public class PlayGame_Bid extends BasicTWLGameState {
 				+ "</div></body></html>");
 		
 		// Setup new item variables
-		item_id = HRRUClient.cs.getSecondary_id();
+		item_id = 0; // HRRUClient.cs.getSecondary_id();
 		currentItem = items[item_id];
         itemValue = HRRUClient.cs.getSecondary_value();
         
@@ -839,7 +838,7 @@ public class PlayGame_Bid extends BasicTWLGameState {
 
 	@Override
 	public int getID() {
-		return 7;
+		return 13;
 	}
 
 }

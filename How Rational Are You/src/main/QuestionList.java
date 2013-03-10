@@ -24,6 +24,7 @@ public class QuestionList {
 		String strLine = br.readLine();
 		
 		number_of_questions = Integer.parseInt(strLine);
+		HRRUClient.cs.no_of_questions = number_of_questions;
 		question_list = new Question[number_of_questions];
 		
 		int question_id, number_of_answers, answer, difficulty;

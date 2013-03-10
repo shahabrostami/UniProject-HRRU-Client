@@ -6,7 +6,7 @@ import main.Score;
 public class ConnectionState {
 	
 	private final int initial = -1;
-	private int timer = 300000;	
+	private int timer = 360000;	
 	private int player;
 	private Player p1;
 	private Player p2;
@@ -22,6 +22,7 @@ public class ConnectionState {
 	private int[] board;
 	private boolean sync;
 	private Score[] scores;
+	public int no_of_questions; 
 	
 	
 	public ConnectionState(){
@@ -160,5 +161,13 @@ public class ConnectionState {
 
 	public void setScores(Score[] scores) {
 		this.scores = scores;
+	}
+
+	public int getNo_of_questions(){
+		return no_of_questions;
+	}
+	
+	public void setNo_of_questions(int no_of_questions){
+		this.no_of_questions = no_of_questions;
 	}
 }

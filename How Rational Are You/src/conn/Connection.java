@@ -24,7 +24,7 @@ public class Connection {
 		register();
 
 		try{
-			client.connect(5000, "2.27.4.246", 9991);
+			client.connect(5000, "2.27.4.233", 9991);
 			HRRUClient.ConnectionSuccessful = true;
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -62,6 +62,8 @@ public class Connection {
 		kryo.register(packet23DecUlt.class);
 		kryo.register(Packet24SendScore.class);
 		kryo.register(Packet25AllScores.class);
+		kryo.register(Packet26Feedback.class);
+		kryo.register(Packet27QuestionAnswers.class);
 		kryo.register(String[].class);
 		kryo.register(int[].class);
 	}

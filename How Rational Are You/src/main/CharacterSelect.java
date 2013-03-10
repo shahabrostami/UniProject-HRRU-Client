@@ -384,14 +384,14 @@ public class CharacterSelect extends BasicTWLGameState {
 			if(clock<0)
 			{
 				HRRUClient.cs.setState(p1_turn);
-				sbg.enterState(5, new FadeOutTransition(), new FadeInTransition());
+				sbg.enterState(11, new FadeOutTransition(), new FadeInTransition());
 			}
 		}
 	}
 
 	@Override
 	public int getID() {
-		return 4;
+		return 10;
 	}
 
 }

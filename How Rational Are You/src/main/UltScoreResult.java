@@ -11,7 +11,8 @@ public class UltScoreResult {
 	private int usOverallValueAvgD, usPlayerPropAvgD, usPlayerDecAvgD;
 	private double usOverallValueTotalP, usPlayerPropTotalP, usPlayerDecTotalP;
 	private double usOverallValueTotalD, usPlayerPropTotalD, usPlayerDecTotalD;
-	private int usAvg, usTotal;
+	private int usAvg;
+	double usTotal;
 	private double percentage;
 	private int pointsAvailable;
 	
@@ -34,7 +35,7 @@ public class UltScoreResult {
 			double usPlayerPropTotalD2, 
 			double usPlayerDecTotalD2,
 			int usAvg, 
-			int usTotal)
+			double usTotal2)
 	{
 		this.noOfUltimatumScores = noOfUltimatumScores;
 		this.noOfUltimatumScoreProp = noOfUltimatumScoreProp; 
@@ -54,7 +55,7 @@ public class UltScoreResult {
 		this.usPlayerPropTotalD = usPlayerPropTotalD2;
 		this.usPlayerDecTotalD = usPlayerDecTotalD2;
 		this.usAvg = usAvg;
-		this.usTotal = usTotal;
+		this.setUsTotal(usTotal2);
 		this.percentage = 0;
 		this.setPointsAvailable((int) ((usOverallValueTotalP + usOverallValueTotalD) / noOfUltimatumScores + 0.5));
 	}
@@ -70,5 +71,11 @@ public class UltScoreResult {
 	}
 	public void setPointsAvailable(int pointsAvailable) {
 		this.pointsAvailable = pointsAvailable;
+	}
+	public double getUsTotal() {
+		return usTotal;
+	}
+	public void setUsTotal(double usTotal2) {
+		this.usTotal = usTotal2;
 	}
 }

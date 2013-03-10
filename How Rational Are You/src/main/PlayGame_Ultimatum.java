@@ -55,7 +55,7 @@ public class PlayGame_Ultimatum extends BasicTWLGameState {
 	private int gameState, overallState, sessionID;
 	private final int serverlost = -4;
 	private final int cancelled = -2;
-	private final int play = 5;
+	private final int play = 11;
 	private final int p1_turn = 7;
 	public final int question_points_amount = 100;
 	
@@ -1050,7 +1050,7 @@ public class PlayGame_Ultimatum extends BasicTWLGameState {
 
 	@Override
 	public int getID() {
-		return 10;
+		return 16;
 	}
 
 }

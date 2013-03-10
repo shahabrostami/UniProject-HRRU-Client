@@ -89,7 +89,7 @@ public class QuestionScoreResult {
 		this.totalQTimeBonusAvg = totalQTimeBonusAvg;
 		this.setTotalQTimeBonusOverall(totalQTimeBonusOverall); 
 		this.totalQPointsAvg = totalQPointsAvg; 
-		this.totalQPointsOverall = totalQPointsOverall;
+		this.setTotalQPointsOverall(totalQPointsOverall);
 		this.percentage = 0;
 		this.setPointsAvailable((noOfEasyQuestions * easyPoints) + (noOfMediumQuestions * mediumPoints) + (noOfHardQuestions * hardPoints) + (55*noOfTotalQuestions));
 	}
@@ -132,5 +132,13 @@ public class QuestionScoreResult {
 
 	public void setPointsAvailable(int pointsAvailable) {
 		this.pointsAvailable = pointsAvailable;
+	}
+
+	public double getTotalQPointsOverall() {
+		return totalQPointsOverall;
+	}
+
+	public void setTotalQPointsOverall(double totalQPointsOverall) {
+		this.totalQPointsOverall = totalQPointsOverall;
 	}
 }

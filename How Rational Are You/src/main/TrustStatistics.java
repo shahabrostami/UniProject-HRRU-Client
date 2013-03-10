@@ -33,11 +33,14 @@ public class TrustStatistics extends BasicTWLGameState {
 	int gcw;
 	int gch;
 	boolean calculated;
-	private final int questionstats = 17;
-	private final int bidstats = 20;
-	private final int prisonerstats = 21;
-	private final int truststats = 22;
-	private final int ultstats = 23;
+	private final int questionstats = 18;
+	private final int questionfeedback = 19;
+	private final int questionnaire = 20;
+	private final int bidstats = 21;
+	private final int prisonerstats = 22;
+	private final int truststats = 23;
+	private final int ultstats = 24;
+	private final int scoreboard = 25;
 	
 	// Ticker variables
 	private int titleFontSize = 60;
@@ -495,7 +498,7 @@ public class TrustStatistics extends BasicTWLGameState {
 			}
 		}
 		if(enterState == 1)
-			sbg.enterState(15);
+			sbg.enterState(17);
 		else if(enterState == 2)
 			sbg.enterState(bidstats);
 		else if(enterState == 3)
@@ -508,7 +511,7 @@ public class TrustStatistics extends BasicTWLGameState {
 
 	@Override
 	public int getID() {
-		return 22;
+		return 23;
 	}
 
 }

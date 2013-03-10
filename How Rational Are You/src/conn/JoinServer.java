@@ -11,6 +11,7 @@ import main.Player;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.state.transition.EmptyTransition;
@@ -28,7 +29,7 @@ import de.matthiasmann.twl.*;
 import de.matthiasmann.twl.EditField.Callback;
 
 public class JoinServer extends BasicTWLGameState {
-
+	Input input;
 	public static boolean p1ready = false;
 	public static boolean p2ready = false;
 	
@@ -212,6 +213,7 @@ public class JoinServer extends BasicTWLGameState {
 		 } catch (NumberFormatException e) {
 			 	HRRUClient.cs.setState(initial);
 		        lStatus.setText("Please enter numbers only for the Session ID.");
+		        enableGUI();
 		        resetPosition();
 		 }
 	}
@@ -365,6 +367,16 @@ public class JoinServer extends BasicTWLGameState {
 
 	@Override
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
+		input = gc.getInput();
+		if(input.isKeyPressed(input.KEY_TAB))
+		{
+			if (efName.hasKeyboardFocus())
+				efSessionID.requestKeyboardFocus();
+			else if(efSessionID.hasKeyboardFocus())
+				efPassword.requestKeyboardFocus();
+			else if(efPassword.hasKeyboardFocus())
+				efName.requestKeyboardFocus();
+		}
 		if(back)
 		{
 			lStatus.setText("Enter your name and game details.");
@@ -446,7 +458,7 @@ public class JoinServer extends BasicTWLGameState {
 			lStatus.setText("Game Starting in " + (clock/100+1) + "...");
 			if(clock<0)
 			{
-				sbg.enterState(4, new FadeOutTransition(), new FadeInTransition());
+				sbg.enterState(10, new FadeOutTransition(), new FadeInTransition());
 			}
 		}
 		// Player 1 is ready

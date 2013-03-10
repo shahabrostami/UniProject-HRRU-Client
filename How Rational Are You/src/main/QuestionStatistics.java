@@ -32,8 +32,14 @@ public class QuestionStatistics extends BasicTWLGameState {
 	DialogLayout questionPanel, leftPanel, rightPanel;
 	Button btnBack;
 	
-	private final int questionstats = 16;
-	private final int questionfeedback = 17;
+	private final int questionstats = 18;
+	private final int questionfeedback = 19;
+	private final int questionnaire = 20;
+	private final int bidstats = 21;
+	private final int prisonerstats = 22;
+	private final int truststats = 23;
+	private final int ultstats = 24;
+	private final int scoreboard = 25;
 	private int enterState;
 	int gcw;
 	int gch;
@@ -587,7 +593,7 @@ public class QuestionStatistics extends BasicTWLGameState {
 	@Override
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
 		if(enterState == 1)
-			sbg.enterState(15);
+			sbg.enterState(17);
 		else if(enterState == 3)
 			sbg.enterState(questionfeedback);
 		clock3 += delta;
@@ -620,7 +626,7 @@ public class QuestionStatistics extends BasicTWLGameState {
 
 	@Override
 	public int getID() {
-		return 16;
+		return 18;
 	}
 
 }

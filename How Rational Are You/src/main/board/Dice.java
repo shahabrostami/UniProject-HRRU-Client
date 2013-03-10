@@ -97,6 +97,4 @@ public class Dice {
 	public void setPosition(int position) {
 		this.position = position;
 	}
-
-
 }

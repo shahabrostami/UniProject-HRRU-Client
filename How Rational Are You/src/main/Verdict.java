@@ -16,6 +16,8 @@ import org.newdawn.slick.state.transition.Transition;
 
 import com.esotericsoftware.kryonet.Client;
 
+import conn.Packet.Packet27QuestionAnswers;
+
 import TWLSlick.BasicTWLGameState;
 import TWLSlick.RootPane;
 import de.matthiasmann.twl.textarea.HTMLTextAreaModel;
@@ -46,12 +48,13 @@ public class Verdict extends BasicTWLGameState {
 	int gch;
 	int clock;
 	boolean done, enter, finishLabelShown;
-	private final int questionstats = 16;
-	private final int questionfeedback = 17;
-	private final int bidstats = 20;
-	private final int prisonerstats = 21;
-	private final int truststats = 22;
-	private final int ultstats = 23;
+	private final int questionstats = 18;
+	private final int questionfeedback = 19;
+	private final int questionnaire = 20;
+	private final int bidstats = 21;
+	private final int prisonerstats = 22;
+	private final int truststats = 23;
+	private final int ultstats = 24;
 	private final int scoreboard = 25;
 	
 	// overall results variables
@@ -191,6 +194,8 @@ public class Verdict extends BasicTWLGameState {
 			sbg.getState(ultstats).init(gc, sbg);
 			sbg.addState(new Scoreboard(scoreboard));
 			sbg.getState(scoreboard).init(gc, sbg);
+			sbg.addState(new Questionnaire(questionnaire));
+			sbg.getState(questionnaire).init(gc, sbg);
 			
 			if(playerScore > otherPlayerScore)
 			{
@@ -270,15 +275,8 @@ public class Verdict extends BasicTWLGameState {
 				message4 = "";
 			}
 			
-			// Calculate player Rank
-			int overallPointsAvailable1 = biddingScore.getPointsAvailable();
-			int overallPointsAvailable2 = questionScore.getPointsAvailable(); 
-			int overallPointsAvailable3 = prisonScore.getPointsAvailable();
-			int overallPointsAvailable4 = ultimatumScore.getPointsAvailable();
-			int overallPointsAvailable5 = trustScore.getPointsAvailable();
-			
-			overallPointsAvailable = biddingScore.getPointsAvailable() + questionScore.getPointsAvailable() 
-					+ prisonScore.getPointsAvailable() + ultimatumScore.getPointsAvailable() + trustScore.getPointsAvailable();
+			overallPointsAvailable = (int) (biddingScore.getPointsAvailable() + questionScore.getPointsAvailable() 
+					+ prisonScore.getPointsAvailable() + ultimatumScore.getPointsAvailable() + trustScore.getPointsAvailable());
 			if(overallPointsAvailable == 0 || (playerScore-1000 <= 0))
 				rankPercentage = 0;
 			else
@@ -316,8 +314,25 @@ public class Verdict extends BasicTWLGameState {
 			}
 			
 			// Calculate summary message
-		
 			summaryDescriptionModel.setHtml("<p>" + message1 + "</p><p>" + message2 + "</p><p>" + message3 + "</p><p>" + message4 + "</p>");
+			
+			Packet27QuestionAnswers questionAnswers = new Packet27QuestionAnswers();
+			int answers[] = new int[HRRUClient.cs.getNo_of_questions()];
+			for(int i = 0; i < answers.length; i++)
+				answers[i] = -1;
+			ArrayList<ActivityScore> activityScores = player.getActivityScores();
+			for(int i = 0; i < activityScores.size(); i++)
+			{
+				answers[activityScores.get(i).getActivity_id()] = activityScores.get(i).getChoice();
+			}
+			questionAnswers.answers = answers;
+			questionAnswers.questionScore = (int) player.getQuestionScoreResult().getTotalQPointsOverall();
+			questionAnswers.bidScore = (int) player.getBiddingScoreResult().getBsAmountWonTotalW();
+			questionAnswers.prisonScore = (int) player.getPrisonerScoreResult().getPsTotal();
+			questionAnswers.trustScore = (int) player.getTrustScoreResult().getTsTotal();
+			questionAnswers.ultScore = (int) player.getUltScoreResult().getUsTotal();
+			questionAnswers.playerScore = player.getScore();
+			client.sendTCP(questionAnswers);
 			
 			enter = true;
 		}
@@ -612,11 +627,15 @@ public class Verdict extends BasicTWLGameState {
 		{
 			sbg.enterState(scoreboard);
 		}
+		else if(enterState == 4)
+		{
+			sbg.enterState(questionnaire);
+		}
 	}
 
 	@Override
 	public int getID() {
-		return 15;
+		return 17;
 	}
 
 }

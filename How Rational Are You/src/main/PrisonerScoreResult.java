@@ -59,7 +59,7 @@ public class PrisonerScoreResult {
 				this.psCAvg = psCAvg;
 				this.psAvg = psAvg;
 				this.psBAvg = psBAvg;
-				this.psTotal =  psTotal;
+				this.setPsTotal(psTotal);
 				this.psCTotal = psCTotal;
 				this.psBTotal = psBTotal;
 				this.percentage = 0;
@@ -96,6 +96,12 @@ public class PrisonerScoreResult {
 	}
 	public void setNoOfPrisonScoreBetray(int noOfPrisonScoreBetray) {
 		this.noOfPrisonScoreBetray = noOfPrisonScoreBetray;
+	}
+	public double getPsTotal() {
+		return psTotal;
+	}
+	public void setPsTotal(double psTotal) {
+		this.psTotal = psTotal;
 	}
 }
 

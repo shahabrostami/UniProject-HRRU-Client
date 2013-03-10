@@ -11,6 +11,7 @@ import main.Player;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.state.transition.EmptyTransition;
@@ -29,6 +30,8 @@ import de.matthiasmann.twl.EditField.Callback;
 
 public class HostServer extends BasicTWLGameState {
 
+	Input input;
+	
 	// static variables
 	public static boolean p1ready = false;
 	public static boolean p2ready = false;
@@ -350,6 +353,17 @@ public class HostServer extends BasicTWLGameState {
 		// Back to main menu
 		clock3 += delta;
 		clock2 += delta;
+		input = gc.getInput();
+		
+		if(input.isKeyPressed(input.KEY_TAB))
+		{
+			if(efName.hasKeyboardFocus())
+				efPassword.requestKeyboardFocus();
+			else if(efPassword.hasKeyboardFocus())
+				efName.requestKeyboardFocus();
+		}
+		
+		
 		if(back) {
 			lStatus.setText("Enter your name and a password for your game.");
 			sbg.enterState(0);
@@ -431,7 +445,7 @@ public class HostServer extends BasicTWLGameState {
 			lStatus.setText("Game Starting in " + (clock/100+1) + "...");
 			if(clock<0)
 			{
-				sbg.enterState(4, new FadeOutTransition(), new FadeInTransition());
+				sbg.enterState(10, new FadeOutTransition(), new FadeInTransition());
 			}
 		}
 		if(p2ready == true)

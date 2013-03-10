@@ -33,11 +33,14 @@ public class UltimatumStatistics extends BasicTWLGameState {
 	int gcw;
 	int gch;
 	boolean calculated;
-	private final int questionstats = 17;
-	private final int bidstats = 20;
-	private final int prisonerstats = 21;
-	private final int truststats = 22;
-	private final int ultstats = 23;
+	private final int questionstats = 18;
+	private final int questionfeedback = 19;
+	private final int questionnaire = 20;
+	private final int bidstats = 21;
+	private final int prisonerstats = 22;
+	private final int truststats = 23;
+	private final int ultstats = 24;
+	private final int scoreboard = 25;
 	
 	// Ticker variables
 	private int titleFontSize = 60;
@@ -82,7 +85,8 @@ public class UltimatumStatistics extends BasicTWLGameState {
 	private int usOverallValueAvgD, usPlayerPropAvgD, usPlayerDecAvgD;
 	private double usOverallValueTotalP, usPlayerPropTotalP, usPlayerDecTotalP;
 	private double usOverallValueTotalD, usPlayerPropTotalD, usPlayerDecTotalD;
-	private int usAvg, usTotal;
+	private int usAvg;
+	private double usTotal;
 	
 	private int playerID;
 	private int playerScore;
@@ -436,7 +440,7 @@ public class UltimatumStatistics extends BasicTWLGameState {
 					usPlayerDecAvgD = (int) (usPlayerDecTotalD / noOfDecSuccess + 0.5);
 				}
 				usTotal = (int) (usPlayerPropTotalP + usPlayerDecTotalD);
-				usAvg = usTotal / noOfUltimatumScores;
+				usAvg = (int) (usTotal / noOfUltimatumScores);
 				
 				lNoOfUltimatumScores.setText("" + noOfUltimatumScores);
 				lTotal.setText("" + (int) usTotal);
@@ -530,7 +534,7 @@ public class UltimatumStatistics extends BasicTWLGameState {
 			}
 		}
 		if(enterState == 1)
-			sbg.enterState(15);
+			sbg.enterState(17);
 		else if(enterState == 2)
 			sbg.enterState(bidstats);
 		else if(enterState == 3)
@@ -543,7 +547,7 @@ public class UltimatumStatistics extends BasicTWLGameState {
 
 	@Override
 	public int getID() {
-		return 23;
+		return 24;
 	}
 
 }

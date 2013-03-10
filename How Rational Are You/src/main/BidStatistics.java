@@ -31,11 +31,14 @@ public class BidStatistics extends BasicTWLGameState {
 	int gcw;
 	int gch;
 	boolean calculated;
-	private final int questionstats = 17;
-	private final int bidstats = 20;
-	private final int prisonerstats = 21;
-	private final int truststats = 22;
-	private final int ultstats = 23;
+	private final int questionstats = 18;
+	private final int questionfeedback = 19;
+	private final int questionnaire = 20;
+	private final int bidstats = 21;
+	private final int prisonerstats = 22;
+	private final int truststats = 23;
+	private final int ultstats = 24;
+	private final int scoreboard = 25;
 	
 	// Ticker variables
 	private int titleFontSize = 60;
@@ -67,8 +70,9 @@ public class BidStatistics extends BasicTWLGameState {
 	private int noOfBidScores;
 	private int noOfBidScoreWin;
 	private int noOfBidScoreLose;
-	private int bsItemValueAvgW, bsItemValueTotalW, bsPlayerBidAvgW, bsPlayerBidTotalW, bsOtherPlayerBidAvgW, bsOtherPlayerBidTotalW, bsAmountWonAvgW, bsAmountWonTotalW;
-	private int bsItemValueAvgL, bsItemValueTotalL, bsPlayerBidAvgL, bsPlayerBidTotalL, bsOtherPlayerBidAvgL, bsOtherPlayerBidTotalL, bsAmountWonAvgL, bsAmountWonTotalL;
+	private int bsItemValueAvgW, bsPlayerBidAvgW, bsOtherPlayerBidAvgW, bsAmountWonAvgW;
+	private double bsAmountWonTotalW, bsItemValueTotalW, bsPlayerBidTotalW, bsOtherPlayerBidTotalW, bsItemValueTotalL, bsPlayerBidTotalL, bsOtherPlayerBidTotalL,bsAmountWonTotalL;
+	private int bsItemValueAvgL, bsPlayerBidAvgL, bsOtherPlayerBidAvgL, bsAmountWonAvgL;
 	private int itemValueW, playerBidW, otherPlayerBidW, amountWonW;
 	private int itemValueL, playerBidL, otherPlayerBidL, amountWonL;
 	private int playerID;
@@ -487,9 +491,9 @@ public class BidStatistics extends BasicTWLGameState {
 				otherPlayerBidL, 
 				amountWonL);
 		
-		if(noOfBidScores > 0)
+		if(noOfBidScoreWin > 0)
 		{
-			biddingScoreResult.setPercentage((int)((bsAmountWonTotalW/playerScore)*100+0.5));
+			biddingScoreResult.setPercentage((int)((bsAmountWonTotalW/playerScore-1000)*100+0.5));
 			lAmountWonTotalW.setText("" + (int) bsAmountWonTotalW + " (" + (int)((bsAmountWonTotalW/(playerScore-1000))*100+0.5) +  "% of your score)");
 		}
 		
@@ -536,7 +540,7 @@ public class BidStatistics extends BasicTWLGameState {
 			}
 		}
 		if(enterState == 1)
-			sbg.enterState(15);
+			sbg.enterState(17);
 		else if(enterState == 2)
 			sbg.enterState(bidstats);
 		else if(enterState == 3)
@@ -549,7 +553,7 @@ public class BidStatistics extends BasicTWLGameState {
 
 	@Override
 	public int getID() {
-		return 20;
+		return 21;
 	}
 
 }

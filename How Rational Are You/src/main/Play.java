@@ -7,6 +7,7 @@ import java.io.IOException;
 import conn.Packet.*;
 
 import org.lwjgl.input.Mouse;
+import org.newdawn.slick.Animation;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -51,6 +52,9 @@ public class Play extends BasicTWLGameState {
 	private Player player2;
 	private boolean p1ShowRollBanner, p1ShowWaitBanner = false;
 	private boolean p2ShowRollBanner, p2ShowWaitBanner = false;
+	private boolean moving;
+	private int glowTimer;
+	Animation glowAnimation;
 	
 	private final int serverlost = -4;
 	private final int cancelled = -2;
@@ -59,12 +63,12 @@ public class Play extends BasicTWLGameState {
 	private final int start_play = 9;
 	private final int play = 10;
 	
-	private final int play_question = 6;
-	private final int play_bidgame = 7;
-    private final int play_trustgame = 8;
-    private final int play_prisongame = 9;
-    private final int play_ultgame = 10;
-	private final int verdict = 15;
+	private final int play_question = 12;
+	private final int play_bidgame = 13;
+    private final int play_trustgame = 14;
+    private final int play_prisongame = 15;
+    private final int play_ultgame = 16;
+	private final int verdict = 17;
 	
 	// states: 0 = idle, 1 = rolling, 2 = navigate board
 	private int state, gameState;
@@ -108,6 +112,8 @@ public class Play extends BasicTWLGameState {
 		rootPane.removeAllChildren();
 		state = 0;
 		clock = 0;
+		moving = false;
+		glowTimer = 0;
 		timer = HRRUClient.cs.getTimer();
 		
 		sessionID = HRRUClient.cs.getSessionID();
@@ -129,7 +135,7 @@ public class Play extends BasicTWLGameState {
 			player = HRRUClient.cs.getP1();
 			p1ShowRollBanner = true;
 			// p1ShowWaitBanner = false;
-			/*
+			
 			ActivityScore list;
 			if(!(player.getActivityScores().isEmpty()))
 			{
@@ -143,10 +149,11 @@ public class Play extends BasicTWLGameState {
 					System.out.println(list.getElapsedtime());
 					System.out.println(list.getOverall());
 					System.out.println(list.getPoints());
+					System.out.println(list.getChoice());
 				}
 			}
 			
-			
+			/*
 			BiddingScore list;
 			if(!(player.getBiddingScores().isEmpty()))
 			{
@@ -251,7 +258,11 @@ public class Play extends BasicTWLGameState {
 		HRRUClient.cs.setP2(player2);
 		HRRUClient.cs.setPlayer(1);
 		*/
-		
+		Image[] glow = {new Image("simple/glowing0.png"), new Image("simple/glowing1.png"), new Image("simple/glowing2.png"),  
+				new Image("simple/glowing3.png"), new Image("simple/glowing4.png"), new Image("simple/glowing5.png")};
+		int[] duration = {100,100,100,100,100,100};
+		glowAnimation = new Animation(glow,duration,true);
+		moving = false;
 		gcw = gc.getWidth();
 		gch = gc.getHeight();
 		scorebackground = new Image("simple/playerscorebackground.png");
@@ -262,7 +273,7 @@ public class Play extends BasicTWLGameState {
 		background3 = new Image("simple/backgroundgreen2.png");
 		background4 = new Image("simple/backgroundgreen3.png");
 		background5 = new Image("simple/backgroundblue.png");
-		
+
 		yourTurnBG = new Image("simple/yourturn.png");
 		yourWaitBG = new Image("simple/yourwait.png");
 		
@@ -387,24 +398,20 @@ public class Play extends BasicTWLGameState {
         backgroundLayout.setVerticalGroup(backgroundLayout.createSequentialGroup()
 				.addGap(60).addGroup(backgroundLayout.createParallelGroup(lblBackground, tBackground0, tBackground1,tBackground2,tBackground3,tBackground4,tBackground5)));
         
-        
+        // set up states
 		sbg.addState(new PlayQuestion(play_question, question_list));
 		sbg.addState(new PlayGame_Bid(play_bidgame));
 		sbg.addState(new PlayGame_Trust(play_trustgame));
 		sbg.addState(new PlayGame_Prisoners(play_prisongame));
 		sbg.addState(new PlayGame_Ultimatum(play_ultgame));
-		//sbg.addState(new PlayPuzzle(play_puzzle, puzzle_list));
-		//sbg.addState(new PlayPuzzle(9));
-		//sbg.addState(new PlayGame(10));
-		// UN DO THIS LATER
+		
 		sbg.getState(play_question).init(gc, sbg);
 		sbg.getState(play_bidgame).init(gc, sbg);
 		sbg.getState(play_trustgame).init(gc, sbg);
 		sbg.getState(play_prisongame).init(gc, sbg);
 		sbg.getState(play_ultgame).init(gc, sbg);
 		
-		//sbg.getState(play_puzzle).init(gc, sbg);
-		
+			
 		lStatus.setPosition(305, 10);
         lStatus.setTheme("statuswhite");
         lStatus.setSize(495, 107);
@@ -432,15 +439,16 @@ public class Play extends BasicTWLGameState {
 		g.scale(1.25f, 1.25f);
 		for(int i = 0; i < board.getScale()*3-3; i++)
 			g.drawImage(board.gridSquares[i].gridSquare.getImage(), board.gridSquares[i].getx(), board.gridSquares[i].gety());
-		
+		if(state>0 && state <= 3)
+		{
+			dice.dice.draw(105, 97+dice.getY());
+		}
+		if(moving)
+			glowAnimation.draw(board.gridSquares[player.getPosition()].getx()-56, board.gridSquares[player.getPosition()].gety()-54);
 		for(int j = board.getSize()-1; j >= board.getScale()*3-3; j--)
 			g.drawImage(board.gridSquares[j].gridSquare.getImage(), board.gridSquares[j].getx(), board.gridSquares[j].gety());
-		
 		g.drawImage(player1.getPlayerCharacter().getCharacterImage(), board.gridSquares[player1.getPosition()].getx(), board.gridSquares[player1.getPosition()].gety());
 		g.drawImage(player2.getPlayerCharacter().getCharacterImage(), board.gridSquares[player2.getPosition()].getx(), board.gridSquares[player2.getPosition()].gety());
-		
-		if(state>0 && state < 3)
-			dice.dice.draw(105, 97+dice.getY());
 	}
 
 	@Override
@@ -557,6 +565,7 @@ public class Play extends BasicTWLGameState {
 		if(currentPlayer)
 		{
 			//roll dice
+			moving = true;
 			lblYourWait.setVisible(false);
 			if(state==1)
 			{
@@ -620,6 +629,7 @@ public class Play extends BasicTWLGameState {
 	
 		if(state == 4)
 		{
+			glowTimer+=delta;
 			// WAIT BANNER if p1 is waiting
 			/*
 			if(p1ShowWaitBanner && playerID == 1)
@@ -634,6 +644,8 @@ public class Play extends BasicTWLGameState {
 				}
 			}
 			*/
+			if(glowTimer>1000)
+				moving = false;
 			if((timer % 2000) < 1000)
 			{
 				lStatus.setTheme("statuswhite");
@@ -699,7 +711,7 @@ public class Play extends BasicTWLGameState {
 
 	@Override
 	public int getID() {
-		return 5;
+		return 11;
 	}
 
 }

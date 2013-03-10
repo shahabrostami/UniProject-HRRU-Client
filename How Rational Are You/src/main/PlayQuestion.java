@@ -37,7 +37,7 @@ public class PlayQuestion extends BasicTWLGameState {
 	private int gameState;
 	private final int serverlost = -4;
 	private final int cancelled = -2;
-	private final int play = 5;
+	private final int play = 11;
 	private final int p1_turn = 7;
 	public final int question_points_amount = 50;
 	
@@ -575,7 +575,7 @@ public class PlayQuestion extends BasicTWLGameState {
 		g.drawString("" + player1.getScore(), 204, 22);
 		g.drawString("" + player2.getScore(), 204, 64);
 
-		g.drawString(mouse, 50, 550);
+		// g.drawString(mouse, 50, 550);
 		
 		g.setFont(timerFont.get());
 		if(timer<100)
@@ -895,6 +895,7 @@ public class PlayQuestion extends BasicTWLGameState {
 				{
 					playerResult = new ActivityScore(1, pointsAvailable, question_difficulty, elapsedTime, pointsGained, win);
 					playerResult.setActivity_id(current_question_id);
+					playerResult.setChoice(currentAnswer);
 					// If Player1, update Player2's new score and add own result to list of results.
 					if(playerID == 1)
 					{
@@ -930,6 +931,6 @@ public class PlayQuestion extends BasicTWLGameState {
 	
 	@Override
 	public int getID() {
-		return 6;
+		return 12;
 	}
 }

@@ -36,7 +36,7 @@ public class TrustScoreResult {
 		this.tsPlayerGiveProfitTotal =  tsPlayerGiveProfitTotal2;
 		this.tsPlayerReturnProfitTotal = tsPlayerReturnProfitTotal2;
 		this.tsAvg = tsAvg;
-		this.tsTotal = tsTotal;
+		this.setTsTotal(tsTotal);
 		this.percentage = 0;
 	}
 	public double getPercentage() {
@@ -53,5 +53,11 @@ public class TrustScoreResult {
 	
 	public void setPointsAvailable(int pointsAvailable) {
 		this.pointsAvailable = pointsAvailable;
+	}
+	public double getTsTotal() {
+		return tsTotal;
+	}
+	public void setTsTotal(double tsTotal) {
+		this.tsTotal = tsTotal;
 	}
 }
