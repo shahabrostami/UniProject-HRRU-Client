@@ -52,7 +52,7 @@ public class Main extends BasicTWLGameState {
 	int enterState = 0;
 	int attempts = 0;
 	Label lConnection;
-	Button btnHost, btnJoin, btnTutorial, btnSummary, btnScoreboard;
+	Button btnHost, btnJoin, btnTutorial, btnSummary, btnScoreboard, btnAbout, btnExit;
 	Button btnHT1, btnHT2, btnHT3;
 	Button btnTestStart;
 	EditField efSessionID;
@@ -81,7 +81,7 @@ public class Main extends BasicTWLGameState {
 		attempts = 0;
 		enterState = 0;
 		rootPane.removeAllChildren();
-		
+		HRRUClient.cs.setTimer(360000);
 		// btnRetry.setEnabled(false);
 		btnHT2.setEnabled(false);
 		btnHT3.setEnabled(false);
@@ -109,6 +109,8 @@ public class Main extends BasicTWLGameState {
 			rootPane.add(btnHost);
 			rootPane.add(btnScoreboard);
 			rootPane.add(btnFullscreen);
+			rootPane.add(btnAbout);
+			rootPane.add(btnExit);
 		}
 		rootPane.setTheme("");
 		
@@ -242,12 +244,35 @@ public class Main extends BasicTWLGameState {
 				rootPane.add(btnHost);
 				rootPane.add(btnScoreboard);
 				rootPane.add(btnFullscreen);
+				rootPane.add(btnAbout);
+				rootPane.add(btnExit);
 				read = true;
 			}
 		});
 		btnSummary.setTheme("menubutton");
 		
-
+		btnAbout = new Button("About");
+		btnAbout.setSize(400, 30);
+		btnAbout.setPosition(gc.getWidth()/2-200, gc.getHeight()/2+90);
+		btnAbout.addCallback(new Runnable() {
+			@Override
+			public void run() {
+				enterState = 7;
+			}
+		});
+		btnAbout.setTheme("menubutton");
+		
+		btnExit = new Button("Exit");
+		btnExit.setSize(400, 30);
+		btnExit.setPosition(gc.getWidth()/2-200, gc.getHeight()/2+125);
+		btnExit.addCallback(new Runnable() {
+			@Override
+			public void run() {
+				enterState = 8;
+			}
+		});
+		btnExit.setTheme("menubutton");
+		
 		
 		btnHT1 = new Button("1) Host Server Create");
 		btnHT1.setSize(200, 20);
@@ -452,6 +477,10 @@ public class Main extends BasicTWLGameState {
 			sbg.enterState(3);
 		else if(enterState == 6)
 			sbg.enterState(4);
+		else if(enterState == 7)
+			sbg.enterState(5);
+		else if(enterState == 8)
+			gc.exit();
 		}
 	}
 

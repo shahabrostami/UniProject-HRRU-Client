@@ -201,13 +201,13 @@ public class Verdict extends BasicTWLGameState {
 			{
 				win = true;
 				ach1 = imgWinner;
-				message1 = "Congratulations, you won!\n";
+				message1 = "Congratulations, " + player.getName() + " you won!\n";
 			}
 			else
 			{
 				win = false;
 				ach1 = imgLose;
-				message1 = "Sorry, you've lost!\n";
+				message1 = "Sorry, " + player.getName() + " you've lost!\n";
 			}
 			
 			// Calculate percentages and achievements
@@ -236,7 +236,8 @@ public class Verdict extends BasicTWLGameState {
 				coopPercentage = (int) ((prisonScore.getNoOfPrisonScoreCoop() / prisonScore.getNoOfPrisonScores()  * 100) + 0.5);
 				betrayPercentage = (int) ((prisonScore.getNoOfPrisonScoreBetray() / prisonScore.getNoOfPrisonScores()  * 100) + 0.5);
 			}
-			resultPercentages[0] = new ResultPercentage("bid", imgHighBidder, bidderPercentage, "\nYou're a bit of a high bidder, you tend to bid above 50% during the bidding games.");
+			resultPercentages[0] = new ResultPercentage("bid", imgHighBidder, bidderPercentage, "\nYou're a bit of a high bidder, you tend to bid around 50% and above during the bidding games.");
+			System.out.println(""+ bidderPercentage);
 			resultPercentages[1] = new ResultPercentage("fast", imgQuick, fastPercentage, "\nYou respond to questions very quickly, on average, in under 40% of the time you have available.");
 			resultPercentages[2] = new ResultPercentage("slow", imgSlow, slowPercentage, "\nYou respond to questions quite slowly, on average, you use over 60% of the time you have available.");
 			resultPercentages[3] = new ResultPercentage("knowledge", imgKnowledge, knowledgePercentage, "\nYou seem very kowledgeable, you've gotten over 70% of your questions correct.");

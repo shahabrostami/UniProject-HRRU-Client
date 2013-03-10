@@ -847,7 +847,7 @@ public class PlayGame_Trust extends BasicTWLGameState {
 			}
 			else if(gameState == 3)
 			{
-				timer = 7;
+				timer = 9;
 				lblSecond.setTheme("label");
 				lblSecond.reapplyTheme();
 				returnValue = player.getCurrentTrustScore().getPlayerReturnValue();
@@ -925,7 +925,7 @@ public class PlayGame_Trust extends BasicTWLGameState {
 				lReturn.setVisible(false);
 				lblKeep2.setVisible(false);
 				lblReturn.setVisible(false);
-				timer = 7;
+				timer = 9;
 				HRRUClient.cs.setGameState(4);
 			}
 			
@@ -961,7 +961,7 @@ public class PlayGame_Trust extends BasicTWLGameState {
 			// 	Set new variables to finish
 				finished = true;
 				overallTimer += timer;
-				timer = 7;
+				timer = 9;
 				timer2 = 999;
 				clock2 = 0;
 				clock3 = 0;

@@ -15,8 +15,8 @@ public class ItemList  {
 		size = 12;
 		item = new Item[size];
 		
-		item[0] = new Item(0, 50, 150, "Maximilian Armor", "<p>Early 16th-century German plate armour.</p>", new Image("simple/items/armorbg.png"));
-		item[1] = new Item(1, 100, 200, "Dane Axe", "Primarily used during the Viking Age.", new Image("simple/items/axebg.png"));
+		item[0] = new Item(0, 50, 150, "Armor", "Maximilian Armor.", new Image("simple/items/armorbg.png"));
+		item[1] = new Item(1, 100, 200, "Axe", "Dane Axe.", new Image("simple/items/axebg.png"));
 		item[2] = new Item(2, 50, 100, "Book", "Siegfried Sassoon's Memoirs of an Infantry Officer.", new Image("simple/items/bookbg.png"));
 		item[3] = new Item(3, 100, 150, "Bow", "Pre 1920 South American Amazonian Native Indian Bow.", new Image("simple/items/bowbg.png"));
 		item[4] = new Item(4, 50, 100, "Coin", "This U.S. copper half cent was minted in 1796.", new Image("simple/items/coinbg.png"));
