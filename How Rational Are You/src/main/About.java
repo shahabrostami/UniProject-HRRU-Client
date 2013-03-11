@@ -6,8 +6,6 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
-import com.esotericsoftware.kryonet.Client;
-
 import TWLSlick.BasicTWLGameState;
 import TWLSlick.RootPane;
 import de.matthiasmann.twl.Button;
