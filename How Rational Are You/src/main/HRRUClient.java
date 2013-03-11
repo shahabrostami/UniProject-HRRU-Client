@@ -14,7 +14,8 @@ public class HRRUClient extends TWLStateBasedGame {
 
 	public static ConnectionState cs;
 	public static Connection conn;
-	public static boolean ConnectionSuccessful = true;
+	public static int ConnectionSuccessful = -1;
+	public static String IP = "2.27.19.165";
 	
 	public static final int main = 0;
 	public static final int host = 1;
@@ -32,7 +33,6 @@ public class HRRUClient extends TWLStateBasedGame {
  public HRRUClient() {
 		super("How Rational Are You");
 		cs = new ConnectionState();
-		conn = new Connection();
 		this.addState(new Main(main));
 		this.addState(new HostServer(host));
 		this.addState(new JoinServer(join));

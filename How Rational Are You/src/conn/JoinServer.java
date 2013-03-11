@@ -76,13 +76,13 @@ public class JoinServer extends BasicTWLGameState {
 	private Packet7Ready readyRequest;
 	
 	public JoinServer(int joinserver) {
-		client = HRRUClient.conn.getClient();
+		
 	}
 	
 	@Override
 	public void enter(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		super.enter(gc, sbg);
-		
+		client = HRRUClient.conn.getClient();
 		// RESET VARIABLES
 		start_message = "";
 		full_start_message = "JOINING A GAME...?";

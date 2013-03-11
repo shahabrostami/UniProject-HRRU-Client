@@ -117,7 +117,6 @@ public class PlayQuestion extends BasicTWLGameState {
 	Packet14QuestionComplete completeMessage;
 	
 	public PlayQuestion(int state, QuestionList ql) {
-		client = HRRUClient.conn.getClient();
 		this.question_list = ql;
 	}
 	
@@ -202,6 +201,7 @@ public class PlayQuestion extends BasicTWLGameState {
 	@Override
 	public void enter(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		super.enter(gc, sbg);
+		client = HRRUClient.conn.getClient();
 		rootPane.removeAllChildren();
 		choicePanel.removeAllChildren();
 		questionPanel.removeAllChildren();

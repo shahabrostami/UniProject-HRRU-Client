@@ -42,7 +42,6 @@ public class Tutorial extends BasicTWLGameState {
 	private int clock3, clock2 = 0;
 	
 	public Tutorial(int main) {
-		client = HRRUClient.conn.getClient();
 	}
 
 	@Override

@@ -113,7 +113,6 @@ public class PlayGame_Bid extends BasicTWLGameState {
     SelectTransition selectTransition;
 	
 	public PlayGame_Bid(int main) {
-		client = HRRUClient.conn.getClient();
 	}
 
 	void disableGUI()
@@ -168,7 +167,7 @@ public class PlayGame_Bid extends BasicTWLGameState {
 	@Override
 	public void enter(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		super.enter(gc, sbg);
-		
+		client = HRRUClient.conn.getClient();
 		rootPane.removeAllChildren();
 		itemPanel.removeAllChildren();
 		

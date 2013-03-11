@@ -71,13 +71,13 @@ public class HostServer extends BasicTWLGameState {
 	private Packet7Ready readyRequest;
 	
 	public HostServer(int hostserver) {
-		client = HRRUClient.conn.getClient();
 	}
 	
 	@Override
 	public void enter(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		super.enter(gc, sbg);
 		// RESET VARIABLES
+		client = HRRUClient.conn.getClient();
 		start_message = "";
 		full_start_message = "HOSTING A GAME...?";
 		full_start_counter = 0;

@@ -99,12 +99,12 @@ public class Play extends BasicTWLGameState {
 	Packet12PlayReady readyMessage;
 	
 	public Play(int main) {
-		client = HRRUClient.conn.getClient();
 	}
 	
 	@Override
 	public void enter(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		super.enter(gc, sbg);
+		client = HRRUClient.conn.getClient();
 		rootPane.removeAllChildren();
 		state = 0;
 		clock = 0;

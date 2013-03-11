@@ -42,7 +42,6 @@ public class ScoreboardMenu extends BasicTWLGameState {
 	
 	private Score[] scores;
 	public ScoreboardMenu(int main) {
-		client = HRRUClient.conn.getClient();
 	}
 
 	@Override

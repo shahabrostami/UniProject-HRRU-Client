@@ -123,7 +123,6 @@ public class PlayGame_Ultimatum extends BasicTWLGameState {
 	Packet00SyncMessage syncMessage;
 	
 	public PlayGame_Ultimatum(int main) {
-		client = HRRUClient.conn.getClient();	
 	}
 	
 	void disableGUI()
@@ -225,6 +224,7 @@ public class PlayGame_Ultimatum extends BasicTWLGameState {
 	@Override
 	public void enter(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		super.enter(gc, sbg);
+		client = HRRUClient.conn.getClient();	
 		/*
 		// Testing
 		Character characters[] = (new CharacterSheet()).getCharacters();

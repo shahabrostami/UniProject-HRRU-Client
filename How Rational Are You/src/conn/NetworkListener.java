@@ -37,8 +37,10 @@ public class NetworkListener extends Listener{
 	}
 
 	public void disconnected(Connection c) {
+		Client client = HRRUClient.conn.getClient();
 		Log.info("[SERVER] Connection lost!");
-		HRRUClient.ConnectionSuccessful = false;
+		HRRUClient.ConnectionSuccessful = 0;
+		client.stop();
 		HRRUClient.cs.setState(serverlost);
 	}
 	

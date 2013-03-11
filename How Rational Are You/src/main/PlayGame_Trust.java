@@ -127,7 +127,6 @@ public class PlayGame_Trust extends BasicTWLGameState {
 	Packet00SyncMessage syncMessage;
 	
 	public PlayGame_Trust(int main) {
-		client = HRRUClient.conn.getClient();	
 	}
 	
 	void disableGUI()
@@ -163,7 +162,6 @@ public class PlayGame_Trust extends BasicTWLGameState {
 	
 	void emulateChoice()
 	{
-		System.out.printf("derp");
 		disableChoices();
 		if(bPlayerGive)
 			lblConfirmation.setText("You want to give '" + vaBid.getValue() + "' points?");
@@ -220,7 +218,7 @@ public class PlayGame_Trust extends BasicTWLGameState {
 		HRRUClient.cs.setP2(player2);
 		HRRUClient.cs.setPlayer(1);
 		*/
-				
+		client = HRRUClient.conn.getClient();	
 		// Reset main variables
 		rootPane.removeAllChildren();
 		timer = 70;

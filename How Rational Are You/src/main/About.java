@@ -15,7 +15,6 @@ import de.matthiasmann.twl.Button;
 
 public class About extends BasicTWLGameState {
 
-	public Client client;
 	private int enterState;
 	Button btnBack;
 	Image aboutbg, questionbg;
@@ -24,7 +23,6 @@ public class About extends BasicTWLGameState {
 	int gch;
 	
 	public About(int main) {
-		client = HRRUClient.conn.getClient();
 	}
 
 	@Override

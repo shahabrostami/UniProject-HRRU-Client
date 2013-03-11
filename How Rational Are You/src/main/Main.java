@@ -39,7 +39,7 @@ public class Main extends BasicTWLGameState {
 	// GUI variables
 	ToggleButton btnFullscreen;
 	boolean isFullscreen;
-	boolean connectionSuccessful;
+	int connectionSuccessful;
 	int enterState = 0;
 	int attempts = 0;
 	Label lConnection;
@@ -47,6 +47,8 @@ public class Main extends BasicTWLGameState {
 	Button btnHT1, btnHT2, btnHT3;
 	Button btnTestStart;
 	EditField efSessionID;
+	EditField efIP;
+	Button btnConnect;
 	Button btnJT1, btnJT2;
 	Button btnRetry;
 	HorizontalSplitTransition horizontalSplitTransition;
@@ -68,7 +70,6 @@ public class Main extends BasicTWLGameState {
 	@Override
 	public void enter(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		super.enter(gc, sbg);
-		client = HRRUClient.conn.getClient();
 		attempts = 0;
 		enterState = 0;
 		rootPane.removeAllChildren();
@@ -79,8 +80,6 @@ public class Main extends BasicTWLGameState {
 		btnJT2.setEnabled(false);
 		btnTestStart.setEnabled(false);
 		
-		
-		// rootPane.add(btnRetry);
 		/*
 		rootPane.add(btnHT1);
 		rootPane.add(efSessionID);
@@ -101,6 +100,7 @@ public class Main extends BasicTWLGameState {
 			rootPane.add(btnScoreboard);
 			rootPane.add(btnFullscreen);
 			rootPane.add(btnAbout);
+			rootPane.add(btnRetry);
 			rootPane.add(btnExit);
 		}
 		rootPane.setTheme("");
@@ -126,9 +126,23 @@ public class Main extends BasicTWLGameState {
 	}
 
 	void emulateRetry() {
-		Connection conn = new Connection();
-		HRRUClient.conn = conn;
+		HRRUClient.conn.reConnect();
 		attempts++;
+	}
+	
+	void emulateConnect() {
+		HRRUClient.conn = new Connection(efIP.getText());
+		client = HRRUClient.conn.getClient();
+		if(HRRUClient.ConnectionSuccessful == 1)
+		{
+			efIP.setVisible(false);
+			btnConnect.setVisible(false);
+			rootPane.add(btnJoin);
+			rootPane.add(btnHost);
+			rootPane.add(btnRetry);
+			rootPane.add(btnScoreboard);
+		}
+			
 	}
 	
 	@Override
@@ -150,18 +164,37 @@ public class Main extends BasicTWLGameState {
 		horizontalSplitTransition = new HorizontalSplitTransition();
 	    emptyTransition = new EmptyTransition();
 	    selectTransition = new SelectTransition();
-		/*
+		
 		btnRetry = new Button("Retry Server");
 		
-		btnRetry.setSize(100, 20);
-		btnRetry.setPosition(gc.getWidth()/2-50, gc.getHeight()/2-85);
+		btnRetry.setSize(400, 30);
+		btnRetry.setPosition(gc.getWidth()/2-200, gc.getHeight()/2-25);
 		btnRetry.addCallback(new Runnable() {
 			@Override
 			public void run() {
 				emulateRetry();
 			}
 		});
-		*/
+		btnRetry.setTheme("menubutton");
+		btnRetry.setVisible(false);
+		
+		btnConnect = new Button("Connect");
+		btnConnect.setSize(400, 30);
+		btnConnect.setPosition(gc.getWidth()/2-200, gc.getHeight()/2-60);
+		btnConnect.addCallback(new Runnable() {
+			@Override
+			public void run() {
+				emulateConnect();
+				
+			}
+		});
+		btnConnect.setTheme("menubutton");
+		
+		efIP = new EditField();
+		efIP.setSize(200,30);
+		efIP.setPosition(gc.getWidth()/2-100, gc.getHeight()/2-95);
+		efIP.setText(HRRUClient.IP);
+		
 	    // setup fullscreen button
 	    btnFullscreen = new ToggleButton("");
 	    btnFullscreen.setSize(25, 25);
@@ -231,9 +264,8 @@ public class Main extends BasicTWLGameState {
 				btnSummary.setVisible(false);
 				rootPane.add(lConnection);
 				rootPane.add(btnTutorial);
-				rootPane.add(btnJoin);
-				rootPane.add(btnHost);
-				rootPane.add(btnScoreboard);
+				rootPane.add(efIP);
+				rootPane.add(btnConnect);
 				rootPane.add(btnFullscreen);
 				rootPane.add(btnAbout);
 				rootPane.add(btnExit);
@@ -427,20 +459,23 @@ public class Main extends BasicTWLGameState {
 		}
 		// Is connection successful?
 		connectionSuccessful = HRRUClient.ConnectionSuccessful;
-		if(connectionSuccessful)
+		if(connectionSuccessful == 1)
 		{
 			btnJoin.setEnabled(true);
 			btnHost.setEnabled(true);
 			// btnRetry.setVisible(false);
 			lConnection.setText("Connection Successful");
 		}
-		else
+		else if(connectionSuccessful == 0)
 		{
 			btnJoin.setEnabled(false);
 			btnHost.setEnabled(false);
-			// btnRetry.setVisible(true);
-			// btnRetry.setEnabled(true);
+			btnRetry.setVisible(true);
 			lConnection.setText("Connection Failed...\nPlease restart application.\nAttemtps: " + attempts);
+		}
+		else
+		{
+			lConnection.setText("Please enter IP address:");
 		}
 		if (enterState == 1)
 		{

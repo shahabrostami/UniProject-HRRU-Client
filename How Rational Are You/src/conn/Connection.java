@@ -12,7 +12,7 @@ public class Connection {
 	
 	private Client client;
 	
-	public Connection() {
+	public Connection(String ip) {
 		client = new Client(65536, 16384);
 		NetworkListener n1 = new NetworkListener();
 		n1.init(client);
@@ -21,12 +21,24 @@ public class Connection {
 		register();
 
 		try{
-			client.connect(5000, "2.27.4.233", 9991);
-			HRRUClient.ConnectionSuccessful = true;
+			client.connect(5000, ip, 9991);
+			HRRUClient.ConnectionSuccessful = 1;
 		} catch (IOException e) {
 			e.printStackTrace();
 			client.stop();
-			HRRUClient.ConnectionSuccessful = false;
+			HRRUClient.ConnectionSuccessful = 0;
+		}
+	}
+	
+	public void reConnect(){
+		client.stop();
+		client.start();
+		try {
+            client.reconnect();
+            HRRUClient.ConnectionSuccessful = 1;
+		} catch (IOException ex) {
+            ex.printStackTrace();
+			 HRRUClient.ConnectionSuccessful = 0;
 		}
 	}
 	

@@ -108,7 +108,6 @@ public class PlayGame_Prisoners extends BasicTWLGameState {
 	Packet00SyncMessage syncMessage;
 	
 	public PlayGame_Prisoners(int main) {
-		client = HRRUClient.conn.getClient();
 	}
 
 	void disableGUI()
@@ -174,7 +173,7 @@ public class PlayGame_Prisoners extends BasicTWLGameState {
 	@Override
 	public void enter(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		super.enter(gc, sbg);
-		
+		client = HRRUClient.conn.getClient();
 		rootPane.removeAllChildren();
 		
 		// Reset variables
