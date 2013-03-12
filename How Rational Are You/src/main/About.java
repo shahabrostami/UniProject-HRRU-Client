@@ -73,7 +73,6 @@ public class About extends BasicTWLGameState {
 
 	@Override
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
-	
 		if(enterState == 1)
 			sbg.enterState(0);
 	}

@@ -89,20 +89,47 @@ public class Main extends BasicTWLGameState {
 		rootPane.add(btnHT3);
 		rootPane.add(btnTestStart);
 		*/
-		
-		rootPane.add(btnSummary);
+		rootPane.add(btnJoin);
+		rootPane.add(btnHost);
+		rootPane.add(btnScoreboard);
+		rootPane.add(lConnection);
+		rootPane.add(efIP);
+		rootPane.add(btnConnect);
+		rootPane.add(btnTutorial);
+		rootPane.add(btnFullscreen);
+		rootPane.add(btnAbout);
+		rootPane.add(btnRetry);
+		rootPane.add(btnExit);
 		if(read)
 		{
-			rootPane.add(lConnection);
-			rootPane.add(btnTutorial);
-			rootPane.add(btnJoin);
-			rootPane.add(btnHost);
-			rootPane.add(btnScoreboard);
-			rootPane.add(btnFullscreen);
-			rootPane.add(btnAbout);
-			rootPane.add(btnRetry);
-			rootPane.add(btnExit);
+			if(HRRUClient.ConnectionSuccessful == 1)
+			{
+				lConnection.setVisible(true);
+				btnJoin.setVisible(true);
+				btnHost.setVisible(true);
+				btnScoreboard.setVisible(true);
+				btnTutorial.setVisible(true);
+				btnExit.setVisible(true);
+				btnAbout.setVisible(true);
+				btnRetry.setVisible(false);
+				efIP.setVisible(false);
+				btnConnect.setVisible(false);
+			}
+			else {
+				btnRetry.setVisible(true);
+				efIP.setVisible(true);
+				btnConnect.setVisible(true);
+				lConnection.setVisible(true);
+				btnTutorial.setVisible(true);
+				btnExit.setVisible(true);
+				btnAbout.setVisible(true);
+				btnJoin.setVisible(false);
+				btnHost.setVisible(false);
+				btnScoreboard.setVisible(false);
+			}
 		}
+		rootPane.add(btnSummary);
+
 		rootPane.setTheme("");
 		
 		// RESET VARIABLES
@@ -137,10 +164,10 @@ public class Main extends BasicTWLGameState {
 		{
 			efIP.setVisible(false);
 			btnConnect.setVisible(false);
-			rootPane.add(btnJoin);
-			rootPane.add(btnHost);
-			rootPane.add(btnRetry);
-			rootPane.add(btnScoreboard);
+			btnJoin.setVisible(true);
+			btnHost.setVisible(true);
+			btnRetry.setVisible(false);
+			btnScoreboard.setVisible(true);
 		}
 			
 	}
@@ -262,13 +289,13 @@ public class Main extends BasicTWLGameState {
 			@Override
 			public void run() {
 				btnSummary.setVisible(false);
-				rootPane.add(lConnection);
-				rootPane.add(btnTutorial);
-				rootPane.add(efIP);
-				rootPane.add(btnConnect);
-				rootPane.add(btnFullscreen);
-				rootPane.add(btnAbout);
-				rootPane.add(btnExit);
+				lConnection.setVisible(true);
+				btnTutorial.setVisible(true);
+				efIP.setVisible(true);
+				btnConnect.setVisible(true);
+				btnFullscreen.setVisible(true);
+				btnAbout.setVisible(true);
+				btnExit.setVisible(true);
 				read = true;
 			}
 		});
@@ -410,7 +437,18 @@ public class Main extends BasicTWLGameState {
 				enterState = 4;
 			}
 		});
-		
+		// default to false for GUI
+		btnRetry.setVisible(false);
+		efIP.setVisible(false);
+		btnConnect.setVisible(false);
+		lConnection.setVisible(false);
+		btnTutorial.setVisible(false);
+		btnExit.setVisible(false);
+		btnAbout.setVisible(false);
+		btnJoin.setVisible(false);
+		btnHost.setVisible(false);
+		btnScoreboard.setVisible(false);
+		read = false;
 		summaryImg = new Image("tutorial/summary2.png");
 	}
 

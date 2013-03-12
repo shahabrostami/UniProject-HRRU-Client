@@ -262,7 +262,7 @@ public class CharacterSelect extends BasicTWLGameState {
 			g.drawImage(selectGrid, startx+selectx*37, starty+selecty*37);
 			g.drawImage(selectedCharacter.getCharacterImage(), 225, 100);
 		}
-		
+		 
 		for(int i = 0; i < 5; i++)
 			for(int j = 0; j < 5; j++)
 				g.drawImage(characters[(i)+(j*5)].getCharacterImage(), startx+i*37, starty+j*37);
@@ -342,7 +342,7 @@ public class CharacterSelect extends BasicTWLGameState {
 			lStatus.setTheme("statusgreen");
 			lStatus.reapplyTheme();
 			btnSelect.setEnabled(true);
-			if((xpos>startx*2 && xpos < startx*2+(74*5)) && (ypos>80 && ypos<gch-starty*2)) {
+			if((xpos>startx*2 && xpos < startx*2+(74*5)) && (ypos>35 && ypos<gch-starty*2)) {
 				currentx = (xpos-startx*2)/74;
 				currenty = ((gch-ypos)-starty*2)/74;
 				if(input.isMouseButtonDown(0)) {

@@ -6,7 +6,7 @@ import main.Score;
 public class ConnectionState {
 	
 	private final int initial = -1;
-	private int timer = 360000;	
+	private int timer = 270000;	
 	private int player;
 	private Player p1;
 	private Player p2;

@@ -93,6 +93,8 @@ public class HostServer extends BasicTWLGameState {
         lName.setLabelFor(efName);
 
         lPassword.setLabelFor(efPassword);
+        disableAllGUI();
+        enableGUI();
         btnStart.setVisible(false);
         btnReady.setVisible(false);
         btnCancel.setEnabled(false);

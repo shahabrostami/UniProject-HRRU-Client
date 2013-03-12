@@ -744,7 +744,7 @@ public class PlayQuestion extends BasicTWLGameState {
 			if(otherPlayerReady == 1)
 			{
 				// Setup new UI
-				timer = 5; // should be 10
+				timer = 8; // should be 10
 				timer2 = 999;
 				clock2 = 0;
 				clock3 = 0;

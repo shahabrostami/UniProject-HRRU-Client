@@ -100,6 +100,8 @@ public class JoinServer extends BasicTWLGameState {
         lName.setLabelFor(efName);
         lName.setLabelFor(efSessionID);
         lPassword.setLabelFor(efPassword);
+        disableAllGUI();
+        enableGUI();
         btnReady.setVisible(false);
         btnCancel.setEnabled(false);
 

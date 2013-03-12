@@ -56,7 +56,7 @@ public class ScoreboardMenu extends BasicTWLGameState {
 		clock2 = 0;
 		clock3 = 0;
 		enterState = 0;
-		
+		scores = HRRUClient.cs.getScores();
 		// SETUP GUI
 		rootPane.removeAllChildren();
 		rootPane.add(btnBack);
@@ -106,8 +106,6 @@ public class ScoreboardMenu extends BasicTWLGameState {
 			}
 		});
 		btnBack.setTheme("menubutton");
-		
-		scores = HRRUClient.cs.getScores();
 	}
 
 	@Override
