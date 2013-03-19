@@ -1,15 +1,16 @@
 package main;
 
 public class PrisonScore {
-	private int playerChoice;
-	private int otherPlayerChoice;
-	private int playerProfit;
-	private int otherPlayerProfit;
-	private int playerTime;
-	private int otherPlayerTime;
-	private boolean bPlayerProfit;
-	private boolean bOtherPlayerProfit;
-	
+	// set up prisoner score for player
+	private int playerChoice; // what was this players choicse
+	private int otherPlayerChoice; // what was the other players choice
+	private int playerProfit; // what profit this player made
+	private int otherPlayerProfit; // what profit other player made
+	private int playerTime; // time taken to decide 
+	private int otherPlayerTime; // time taken for other player to decide 
+	private boolean bPlayerProfit; // did they make a profit
+	private boolean bOtherPlayerProfit; // did the other player make a profit
+	// initialise the prison score
 	public PrisonScore(int playerChoice, int otherPlayerChoice, int playerProfit, int otherPlayerProfit, 
 			boolean bPlayerProfit, boolean bOtherPlayerProfit)
 	{
@@ -20,7 +21,7 @@ public class PrisonScore {
 		this.setbPlayerProfit(bPlayerProfit);
 		this.setbOtherPlayerProfit(bOtherPlayerProfit);
 	}
-
+	// get and set functions for prison scores
 	public int getPlayerChoice() {
 		return playerChoice;
 	}

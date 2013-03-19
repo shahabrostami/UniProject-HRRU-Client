@@ -13,8 +13,9 @@ import de.matthiasmann.twl.TextArea;
 import de.matthiasmann.twl.textarea.HTMLTextAreaModel;
 
 public class Chat {
-	
+	// create the chat frame for the game
 	public static class ChatFrame extends ResizableFrame {
+		// set up GUI variables
         private final StringBuilder sb;
         private final HTMLTextAreaModel textAreaModel;
         private final TextArea textArea;
@@ -28,6 +29,7 @@ public class Chat {
     	Packet10ChatMessage chatMessage;
 
         public ChatFrame() {
+        	// initiate the chat frame variables for the game
         	client = HRRUClient.conn.getClient();
         	setTitle("Chat");
 
@@ -50,12 +52,13 @@ public class Chat {
             scrollPane.setFixed(ScrollPane.Fixed.HORIZONTAL);
 
             DialogLayout l = new DialogLayout();
+            // add the groups for the chat position
             l.setTheme("content");
             l.setHorizontalGroup(l.createParallelGroup(scrollPane, editField));
             l.setVerticalGroup(l.createSequentialGroup(scrollPane, editField));
 
             add(l);
-            
+            // return the player IDs
             playerID = HRRUClient.cs.getPlayer();
             if(playerID == 1)
             	player = HRRUClient.cs.getP1();

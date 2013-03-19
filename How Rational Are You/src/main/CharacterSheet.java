@@ -4,12 +4,12 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
 
 public class CharacterSheet  {
-
-	private int size;
-	private int scale = 5;
+	// initiliase character sheet, where all characters are returned 
+	private int size; // size of character sheet
+	private int scale = 5; // scaling of characters
 	private Character characters[];
 	private SpriteSheet characterSheet;
-	
+	// initialise character sheet
 	public CharacterSheet() throws SlickException {
 		size = scale*scale;
 		this.characterSheet = new SpriteSheet("simple/characters.png", 36,36);
@@ -41,7 +41,7 @@ public class CharacterSheet  {
 		characters[23] = new Character(23, 3, 4, "Sir Odd");
 		characters[24] = new Character(24, 4, 4, "Flower");
 	}
-	
+	// get and set for character sheet
 	public Character[] getCharacters(){
 		return characters;	
 	}

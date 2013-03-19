@@ -5,12 +5,12 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
 
 public class Character  {
-
+	// set up character variables for player
 	private int id, positionx, positiony;
 	private String name;
 	private Image characterImage;
 	private SpriteSheet characterSheet = new SpriteSheet("simple/characters.png", 36,36);
-	
+	// initialise characters
 	public Character(int id, int positionx, int positiony, String name) throws SlickException {
 		this.setId(id);
 		this.setCharacterImage(characterSheet.getSprite(positionx, positiony));
@@ -18,7 +18,7 @@ public class Character  {
 		this.positiony = positiony; 
 		this.setName(name);
 	}
-
+	// get and set variables for character
 	public Image getCharacterImage() {
 		return characterImage;
 	}

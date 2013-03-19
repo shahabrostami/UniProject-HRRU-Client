@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
-
+// set up player variables
 public class Player {
-	
+	// initial player variables for characters, names, scores and so on.
 	SpriteSheet sheet;
 	private String name;
 	private int score;
@@ -18,21 +18,19 @@ public class Player {
 	CharacterSheet characterSheet = new CharacterSheet();
 	Character[] characters = characterSheet.getCharacters();
 	
+	// set up question score, bidding score, trust score, ult score and prisoner score lists
+	// this allows us to score every result of every game and question for each player
 	private ActivityScore currentActivityScore;
 	private ArrayList<ActivityScore> activityScores;
-	
 	private BiddingScore currentBiddingScore;
 	private ArrayList<BiddingScore> biddingScores;
-	
 	private TrustScore currentTrustScore;
 	private ArrayList<TrustScore> trustScores;
-	
 	private PrisonScore currentPrisonScore;
 	private ArrayList<PrisonScore> prisonScores;
-	
 	private UltimatumScore currentUltimatumScore;
 	private ArrayList<UltimatumScore> ultimatumScores;
-	
+	// this is the overall scores for each game and question accumlated statistics
 	private BiddingScoreResult biddingScoreResult;
 	private PrisonerScoreResult prisonerScoreResult;
 	private TrustScoreResult trustScoreResult;
@@ -41,6 +39,7 @@ public class Player {
 	
 	public Player(String name) throws SlickException
 	{
+		// initialise all variables to 0 to ensure no null error exceptions from sync problems
 		this.setName(name);
 		this.setScore(0);
 		this.setReady(0);
@@ -61,6 +60,7 @@ public class Player {
 		this.ultScoreResult = new UltScoreResult(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
 	}
 
+	// get and set functions for players
 	public String getName() {
 		return name;
 	}

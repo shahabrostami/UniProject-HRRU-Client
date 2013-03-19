@@ -1,16 +1,17 @@
 package main;
 
 public class TrustScore {
-	private int playerGive;
-	private int playerReturn;
-	private int maxToGive;
-	private int maxToReturn;
-	private int playerGiveValue;
-	private int playerReturnValue;
-	private int multiplier;
-	private int playerGiveProfit;
-	private int playerReturnProfit;
+	private int playerGive; // who is first
+	private int playerReturn; // who is second
+	private int maxToGive; // amount first can give 
+	private int maxToReturn; // amount second can return 
+	private int playerGiveValue; // amount first gave
+	private int playerReturnValue; // amount second returned
+	private int multiplier; // multiplier of first value 
+	private int playerGiveProfit; // how much did giver profit
+	private int playerReturnProfit; // how much did returner profit
 	
+	// intialise default and initialise finished 
 	public TrustScore(int playerGive, int playerReturn, int maxToGive, int playerGiveValue, int playerReturnValue, int multiplier)
 	{
 		this.setPlayerGive(playerGive);

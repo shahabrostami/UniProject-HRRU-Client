@@ -7,19 +7,20 @@ import java.io.IOException;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Client;
-
+// set up connection object for player
 public class Connection {
 	
 	private Client client;
 	
 	public Connection(String ip) {
+		// initaite and start the connection object
 		client = new Client(65536, 16384);
 		NetworkListener n1 = new NetworkListener();
 		n1.init(client);
 		client.addListener(n1);
 		client.start();
 		register();
-
+		// try to connect to the server
 		try{
 			client.connect(5000, ip, 9991);
 			HRRUClient.ConnectionSuccessful = 1;
@@ -31,6 +32,7 @@ public class Connection {
 	}
 	
 	public void reConnect(){
+		// try to reconnect to the server
 		client.stop();
 		client.start();
 		try {
@@ -43,6 +45,7 @@ public class Connection {
 	}
 	
 	private void register(){
+		// register necessary network classes
 		Kryo kryo = client.getKryo();
 		kryo.register(Packet00SyncMessage.class);
 		kryo.register(Packet0CreateRequest.class);

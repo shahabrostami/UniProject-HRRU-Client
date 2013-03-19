@@ -33,6 +33,7 @@ import de.matthiasmann.twl.ValueAdjusterInt;
 
 public class PlayGame_Bid extends BasicTWLGameState {
 	
+	// bid game stat variables
 	private int gameState;
 	private final int serverlost = -4;
 	private final int cancelled = -2;
@@ -80,28 +81,28 @@ public class PlayGame_Bid extends BasicTWLGameState {
 	Button btnYes, btnNo;
 	TextArea description;
 	HTMLTextAreaModel descriptionModel;
-	
+	// render variables
 	Image scorebackground, background;
 	private int header_x = 330;
 	private int header_y = 25;
 	private int timer_x = 600;
 	private int timer_y = 550;
 	private int fixed_y = 200;
-	
+	// ticker variables
 	private String start_message = "";
 	private String full_start_message = "MAKE YOUR BID...";
 	private int full_start_counter = 0;
 	private String ticker = "";
 	private boolean tickerBoolean = true;
-	
+	// font size variables
 	private int mainFontSize = 24;
 	private int titleFontSize = 36;
 	private int timerFontSize = 40;
 	private int timerMFontSize = 18;
-	
+	// font variables
 	private Font loadFont, loadMainFont, loadTitleFont, loadTimerFont, loadTimerMFont;
 	private BasicFont mainFont, titleFont, readyFont, timerFont, timerMFont;
-	
+	// clock variables
 	private int clock2,clock3,timer,timer2,overallTimer = 0;
 	private boolean end, ready, finished, resume = false;
 	
@@ -236,7 +237,7 @@ public class PlayGame_Bid extends BasicTWLGameState {
 				+ "</div></body></html>");
 		
 		// Setup new item variables
-		item_id = 0; // HRRUClient.cs.getSecondary_id();
+		item_id = HRRUClient.cs.getSecondary_id();
 		currentItem = items[item_id];
         itemValue = HRRUClient.cs.getSecondary_value();
         

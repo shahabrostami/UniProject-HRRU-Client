@@ -1,8 +1,8 @@
 package main;
 
 public class TrustScoreResult {
-
-	private double tsTotal, percentage;
+	// stores the total results from trust games
+	private double tsTotal, percentage; // total points gained, and percentage of score belonging to main score
 	private int pointsAvailable;
 	
 	public TrustScoreResult(

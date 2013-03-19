@@ -31,14 +31,14 @@ import de.matthiasmann.twl.Label;
 import de.matthiasmann.twl.ResizableFrame.ResizableAxis;
 
 public class PlayQuestion extends BasicTWLGameState {
-	
+	// question state variables
 	private int gameState;
 	private final int serverlost = -4;
 	private final int cancelled = -2;
 	private final int play = 11;
 	private final int p1_turn = 7;
 	public final int question_points_amount = 50;
-	
+	// question GUI variables
 	public Client client;
 	DialogLayout choicePanel, questionPanel;
 	EmptyTransition emptyTransition;
@@ -51,6 +51,7 @@ public class PlayQuestion extends BasicTWLGameState {
 	
 	Image scorebackground;
 	
+	// variables for each player
 	private int playerID;
 	private int otherPlayerID;
 	private Player player;
@@ -67,6 +68,7 @@ public class PlayQuestion extends BasicTWLGameState {
 	private int pointsGained = 0;
 	boolean ready = false;
 	
+	// initiate each question variables
 	private int current_question_id;
 	private QuestionList question_list;
 	private Question[] questions;
@@ -81,23 +83,23 @@ public class PlayQuestion extends BasicTWLGameState {
 	private int full_start_counter = 0;
 	private String ticker = "";
 	private boolean tickerBoolean = true;
-	
+	// set up coordinates
 	private int header_x = 330;
 	private int header_y = 50;
 	private int timer_x = 600;
 	private int timer_y = 550;
-	
+	// set up font sizes
 	private int mainFontSize = 24;
 	private int titleFontSize = 36;
 	private int timerFontSize = 40;
 	private int timerMFontSize = 18;
-	
+	// set up fonts
 	private Font loadFont, loadMainFont, loadTitleFont, loadTimerFont, loadTimerMFont;
 	private BasicFont mainFont, titleFont, readyFont, timerFont, timerMFont;;
-	
+	// set up clocks
 	private int clock2,clock3,timer,timer2,overallTimer = 0;
 	private boolean end, win, finished, resume = false;
-	
+	// set up GUI 
 	TextPageFrame textpageframe;
 	DialogLayout p1ResultPanel, p2ResultPanel;
 	

@@ -3,6 +3,7 @@ package main.grid;
 import org.newdawn.slick.SlickException;
 
 public class GridSquareContainer {
+	// initialise the grid square container, contains all other grid squares
 	private int id = 0;
 	private int x;
 	private int y;
@@ -11,11 +12,13 @@ public class GridSquareContainer {
 	
 	public GridSquareContainer(int tileType, int x, int y) throws SlickException
 	{
+		// check the tile id and coordinates
 		this.setId(this.getId() + 1);
 		this.x = x;
 		this.y = y;
 		this.tile_type = tileType;
 		
+		// depending on the tile, create the required grid square and store it at this position
 		if(this.tile_type == GridSquare.easyTile)
 		{
 			gridSquare = new QuestionGridSquare(GridSquare.easyTile);

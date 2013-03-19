@@ -27,14 +27,14 @@ import de.matthiasmann.twl.Label;
 import de.matthiasmann.twl.TextArea;
 
 public class PlayGame_Prisoners extends BasicTWLGameState {
-	
+	// set up game variables
 	private int gameState;
 	private final int serverlost = -4;
 	private final int cancelled = -2;
 	private final int play = 11;
 	private final int p1_turn = 7;
 	public final int question_points_amount = 100;
-	
+	// GUI variables
 	public Client client;
 	DialogLayout p1ResultPanel, p2ResultPanel;
 	Label lProfit, lProfit2, lblProfit, lblProfit2;
@@ -85,18 +85,18 @@ public class PlayGame_Prisoners extends BasicTWLGameState {
 	private int timer_x = 600;
 	private int timer_y = 550;
 	private int fixed_y = 150;
-	
+	// ticker variables
 	private String start_message = "";
 	private String full_start_message = "COOPERATE OR BETRAY?";
 	private int full_start_counter = 0;
 	private String ticker = "";
 	private boolean tickerBoolean = true;
-	
+	// font size variables
 	private int mainFontSize = 24;
 	private int titleFontSize = 36;
 	private int timerFontSize = 40;
 	private int timerMFontSize = 18;
-	
+	// font variables
 	private Font loadFont, loadMainFont, loadTitleFont, loadTimerFont, loadTimerMFont;
 	private BasicFont mainFont, titleFont, readyFont, timerFont, timerMFont;;
 	

@@ -2,8 +2,8 @@ package main;
 
 public class UltScoreResult {
 
-	double usTotal;
-	private double percentage;
+	double usTotal; // total score gained from ultimatums
+	private double percentage; // percentage of main score from ultimatums
 	private int pointsAvailable;
 	
 	public UltScoreResult(

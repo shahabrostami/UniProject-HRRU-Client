@@ -1,15 +1,16 @@
 package main;
 
 public class BiddingScore {
-
-	private int item_id;
-	private int itemValue;
-	private int playerBid;
-	private int otherPlayerBid;
-	private int playerWon;
-	private int amountWon;
-	private boolean win;
+	// create bidding score for bidding game
+	private int item_id; // item bid on
+	private int itemValue; // value of item
+	private int playerBid; // this players bid
+	private int otherPlayerBid; // other players bid
+	private int playerWon; // who won
+	private int amountWon; // amount won
+	private boolean win; // did this player win
 	
+	// initiate default bidding score
 	public BiddingScore(int playerBid, int otherPlayerBid, int playerWon, boolean win)
 	{
 		this.playerBid = playerBid;
@@ -17,7 +18,7 @@ public class BiddingScore {
 		this.playerWon = playerWon;
 		this.win = win;
 	}
-	
+	// initiate new bidding score
 	public BiddingScore(int item_id, int itemValue, int playerBid, int otherPlayerBid, int playerWon, int amountWon, boolean win)
 	{
 		this.item_id = item_id;
@@ -29,7 +30,7 @@ public class BiddingScore {
 		this.win = win;
 	}
 
-
+	// set and get functions for bidding score
 	public int getPlayerBid() {
 		return playerBid;
 	}

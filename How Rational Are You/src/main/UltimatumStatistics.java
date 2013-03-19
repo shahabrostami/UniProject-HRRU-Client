@@ -21,7 +21,7 @@ import de.matthiasmann.twl.Label;
 import de.matthiasmann.twl.ToggleButton;
 
 public class UltimatumStatistics extends BasicTWLGameState {
-
+	// initialise ultimatum statistics variables and GUI
 	public Client client;
 	DialogLayout ultStatPanel, leftPanel, rightPanel;
 	Button btnBack;
@@ -493,6 +493,7 @@ public class UltimatumStatistics extends BasicTWLGameState {
 
 	@Override
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
+		// draw main graphics for screen and title
 		g.drawImage(new Image("simple/questionbg.png"), 0, 0);
 		g.setFont(titleFont.get());
 		g.drawString("> " + start_message + "" + ticker, 50, 25);

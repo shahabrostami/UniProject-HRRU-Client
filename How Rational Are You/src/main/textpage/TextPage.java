@@ -18,7 +18,7 @@ import de.matthiasmann.twl.textarea.StyleSheet;
 import de.matthiasmann.twl.textarea.TextAreaModel;
 import de.matthiasmann.twl.textarea.Value;
 import de.matthiasmann.twl.utils.TextUtil;
-
+// PROVIDED BY TWL, CREATES THE QUESTOIN PAGE FOR FEEDBACK
 public class TextPage {
 
     public static class TextPageFrame extends ResizableFrame {

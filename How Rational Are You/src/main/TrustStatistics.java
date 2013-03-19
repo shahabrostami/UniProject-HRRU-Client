@@ -21,7 +21,7 @@ import de.matthiasmann.twl.Label;
 import de.matthiasmann.twl.ToggleButton;
 
 public class TrustStatistics extends BasicTWLGameState {
-
+	// set up state variables
 	public Client client;
 	DialogLayout trustStatPanel, leftPanel, rightPanel;
 	Button btnBack;

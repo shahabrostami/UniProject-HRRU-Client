@@ -18,7 +18,7 @@ import de.matthiasmann.twl.textarea.StyleSheet;
 import de.matthiasmann.twl.textarea.TextAreaModel;
 import de.matthiasmann.twl.textarea.Value;
 import de.matthiasmann.twl.utils.TextUtil;
-
+// PROVIDED BY TWL, CREATES THE ANSWER PAGE FOR FEEDBACK
 public class AnswerPage {
 
     public static class AnswerPageFrame extends ResizableFrame {

@@ -73,7 +73,7 @@ public class Main extends BasicTWLGameState {
 		attempts = 0;
 		enterState = 0;
 		rootPane.removeAllChildren();
-		HRRUClient.cs.setTimer(360000);
+		HRRUClient.cs.setTimer(480000);
 		// btnRetry.setEnabled(false);
 		btnHT2.setEnabled(false);
 		btnHT3.setEnabled(false);

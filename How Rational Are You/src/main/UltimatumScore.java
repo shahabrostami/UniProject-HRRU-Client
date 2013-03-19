@@ -1,12 +1,12 @@
 package main;
 
 public class UltimatumScore {
-	private int playerProp;
-	private int playerDec;
-	private int playerPropValue;
-	private int playerDecValue;
-	private int overallValue;
-	private boolean success;
+	private int playerProp; // who is proposing
+	private int playerDec; // who is deciding
+	private int playerPropValue; // how much for proposer
+	private int playerDecValue; // how much for decider
+	private int overallValue; // overall value available
+	private boolean success; // was it successful
 	
 	public UltimatumScore(int playerProp, int playerDec, int playerPropValue, int playerDecValue, int overallValue, boolean success)
 	{

@@ -29,14 +29,14 @@ import main.Chat.ChatFrame;
 import main.board.*;
 
 public class Play extends BasicTWLGameState {
-
+	// set up client variables
 	public Client client;
 	DialogLayout firstPanel;
 	
 	Input input;
 	int gcw;
 	int gch;
-	
+	// set up the main board variables
 	private Board board;
 	private Dice dice;
 	private QuestionList question_list;
@@ -51,14 +51,13 @@ public class Play extends BasicTWLGameState {
 	private boolean moving;
 	private int glowTimer;
 	Animation glowAnimation;
-	
+	// set up state variables
 	private final int serverlost = -4;
 	private final int cancelled = -2;
 	private final int p1_turn = 7;
 	private final int p2_turn = 8;
 	private final int start_play = 9;
 	private final int play = 10;
-	
 	private final int play_question = 12;
 	private final int play_bidgame = 13;
     private final int play_trustgame = 14;
@@ -72,12 +71,12 @@ public class Play extends BasicTWLGameState {
 	private int clock, timer;
 	
 	String mouse = "no input";
-	
+	// set up font variables
 	private int mainFontSize = 24;
 	private int timerFontSize = 30;
 	private Font loadFont, loadMainFont, loadTimerFont;
 	private BasicFont mainFont, timerFont;
-	
+	// set up GUI variables
 	DialogLayout playerPanel;
 	Label lStatus, lPlayer1, lPlayer2, lPlayer1Score, lPlayer2Score;
 	Label player1turn, lblYourTurn, lblYourWait;
@@ -85,15 +84,14 @@ public class Play extends BasicTWLGameState {
 	ToggleButton btnRoll;
 	DialogLayout rollPanel, backgroundLayout;
 	BasicFont header; 
-	
 	DialogLayout backgroundChoices;
 	Image background0, background1, background2, background3, background4, background5;
 	ToggleButton tBackground0, tBackground1, tBackground2, tBackground3, tBackground4, tBackground5;
-	
+	// chat frame variables
 	public static ChatFrame chatFrame;
 	
 	Image scorebackground, background, yourTurnBG, yourWaitBG;
-	
+	// packet variables
 	Packet00SyncMessage syncMessage;
 	Packet11TurnMessage turnMessage;
 	Packet12PlayReady readyMessage;

@@ -30,7 +30,7 @@ import de.matthiasmann.twl.TextArea;
 import de.matthiasmann.twl.ValueAdjusterInt;
 
 public class PlayGame_Ultimatum extends BasicTWLGameState {
-	
+	// game stat variables
 	Input input;
 	private int gameState, overallState, sessionID;
 	private final int serverlost = -4;
@@ -38,7 +38,7 @@ public class PlayGame_Ultimatum extends BasicTWLGameState {
 	private final int play = 11;
 	private final int p1_turn = 7;
 	public final int question_points_amount = 100;
-	
+	// gui variables
 	public Client client;
 	DialogLayout p1ResultPanel, p2ResultPanel;
 	Label lShare, lShare2, lblShare, lblShare2;

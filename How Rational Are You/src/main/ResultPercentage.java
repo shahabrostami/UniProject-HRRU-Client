@@ -3,11 +3,11 @@ package main;
 import org.newdawn.slick.Image;
 
 public class ResultPercentage implements Comparable<ResultPercentage>{
-	private String name;
-	private Image imgRank;
-	private int percentage;
-	private String achievementDescription;
-	
+	private String name; // name of achievement
+	private Image imgRank; // the achievements rank
+	private int percentage; // the percentage gained for this achievement
+	private String achievementDescription; // the description for this achievement
+	// create comparable implementation for the achievements
 	public ResultPercentage(String name, Image imgRank, int percentage, String achievementDescription)
 	{
 		super();

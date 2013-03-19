@@ -106,6 +106,7 @@ public class HostServer extends BasicTWLGameState {
 	}
 	
 	void enableGUI() {
+		// enable the initial GUI 
 		lName.setVisible(true);
 	    lPassword.setVisible(true);
 	    efName.setVisible(true);
@@ -126,6 +127,7 @@ public class HostServer extends BasicTWLGameState {
 	}
 	
 	void disableAllGUI() {
+		// disable ALL GUI
 		lName.setVisible(false);
 	    lPassword.setVisible(false);
 	    efName.setVisible(false);
@@ -142,6 +144,7 @@ public class HostServer extends BasicTWLGameState {
 	}
 	
 	void disableGUI() {
+		// disbable the main GUI
 	    lName.setVisible(false);
 	    lPassword.setVisible(false);
 	    efName.setVisible(false);
@@ -155,6 +158,7 @@ public class HostServer extends BasicTWLGameState {
 	}
 	
 	void emulateStart() {
+		// send the start packet to other player
 		Packet8Start startRequest = new Packet8Start();
 		startRequest.sessionID = HRRUClient.cs.getSessionID();
 		client.sendTCP(startRequest);
@@ -162,6 +166,8 @@ public class HostServer extends BasicTWLGameState {
 	}
 	
 	void emulateReady() {
+		// send the ready packet to the other player
+		// this lets the other player know that this player is ready
 		btnReady.setVisible(false);
 		HRRUClient.cs.setState(ready);
 		readyRequest = new Packet7Ready();
@@ -174,16 +180,19 @@ public class HostServer extends BasicTWLGameState {
 	}
 	
 	void emulateCancel() {
+		// send the cancel packet, letting the other know that the game has been cancelled
 		Packet5CancelRequest cancelRequest = new Packet5CancelRequest();
 	    cancelRequest.sessionID = HRRUClient.cs.getSessionID();
 	    HRRUClient.cs.setState(cancelled);
 	    client.sendTCP(cancelRequest);
-	    
+	    // set up a notification
 	    lStatus.setText("Enter your name and a password for your game.");
 	    enableGUI();
 	}
 	
 	void emulateLogin() {
+		// send the login packet, letting the server know that you have created a game
+		// if no name entered, prompt for a name
 		if(efName.getText().isEmpty())
 			lStatus.setText("Please enter a name.");
 		else
@@ -200,6 +209,7 @@ public class HostServer extends BasicTWLGameState {
 	}
 	
 	void resetPosition() {
+		// reset GUI position
 		hostPanel.adjustSize();
 		hostPanel.setPosition(
 	               (gcw/2 - hostPanel.getWidth()/2),
@@ -340,6 +350,7 @@ public class HostServer extends BasicTWLGameState {
 
 	@Override
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
+		// draw the game graphics
 		g.setFont(titleFont.get());
 		g.drawString("> " + start_message + "" + ticker, 50, 50);
 	}
@@ -351,6 +362,7 @@ public class HostServer extends BasicTWLGameState {
 		clock2 += delta;
 		input = gc.getInput();
 		
+		// check whether player has pressed tab, tab into relevant GUI if so
 		if(input.isKeyPressed(Input.KEY_TAB))
 		{
 			if(efName.hasKeyboardFocus())
@@ -359,7 +371,7 @@ public class HostServer extends BasicTWLGameState {
 				efName.requestKeyboardFocus();
 		}
 		
-		
+		// reset the variabels if player has clicked back into main menu
 		if(back) {
 			lStatus.setText("Enter your name and a password for your game.");
 			sbg.enterState(0);
@@ -424,6 +436,7 @@ public class HostServer extends BasicTWLGameState {
 			btnReady.setVisible(true);
 			disableGUI();
 		}
+		// if both playres are ready, give start prompt
 		else if(state == ready)
 		{
 			if((p1ready == true) && (p2ready == true))
@@ -433,6 +446,7 @@ public class HostServer extends BasicTWLGameState {
 				state = start;
 			}
 		}
+		// if player has started, initiate next game state
 		else if(state == start)
 		{
 			HRRUClient.cs.setP1(player1);

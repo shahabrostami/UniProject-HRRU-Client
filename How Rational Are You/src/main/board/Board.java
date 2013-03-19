@@ -8,7 +8,7 @@ import org.newdawn.slick.SlickException;
 public class Board {
 	private int size;
 	private int scale;
-	
+	// set up board coordinates
 	private int shiftx;
 	private int shifty;
 	private int middlex = 600/2 + 150;
@@ -19,6 +19,7 @@ public class Board {
 	
 	public Board(int scale) throws SlickException
 	{
+		// set up size and coordinates
 		this.size = (scale*4)-4;
 		this.setScale(scale);
 		int tempxpos = 0;
@@ -32,7 +33,7 @@ public class Board {
 		
 		int[] tileOrder = HRRUClient.cs.getBoard();
 		
-		// create board grid
+		// create board grid, row by row starting at top left
 		for(int row1 = 0; row1 < scale-1; row1++)
 		{
 			gridSquares[counter] = new GridSquareContainer(tileOrder[counter], shiftx+tempxpos, shifty);

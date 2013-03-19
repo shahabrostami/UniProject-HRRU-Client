@@ -21,11 +21,11 @@ import de.matthiasmann.twl.Label;
 import de.matthiasmann.twl.ToggleButton;
 
 public class BidStatistics extends BasicTWLGameState {
-
+	// initialise gui
 	public Client client;
 	DialogLayout bidStatPanel, leftPanel, rightPanel;
 	ToggleButton btnBid, btnUlt, btnTrust, btnPrisoner;
-
+	// initialise state variables
 	int gcw;
 	int gch;
 	boolean calculated;

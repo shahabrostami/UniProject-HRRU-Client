@@ -3,12 +3,11 @@ package main.grid;
 import org.newdawn.slick.*;
 
 public class GameGridSquare implements GridSquare{
-
+	// game grid square represents a game
 	private Image tile_image;
-	
+	// get game grid image
 	SpriteSheet sheet = new SpriteSheet("img/tileset/tile2.png", width,height);
 	private Image game_tile_image = sheet.getSprite(2,0);
-	// private Image questionTileImage = new Image("res/img/tileset/DirtBlock.png");
 
 	
 	public GameGridSquare() throws SlickException {

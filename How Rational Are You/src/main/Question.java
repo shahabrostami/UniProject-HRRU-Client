@@ -3,15 +3,15 @@ package main;
 import org.newdawn.slick.SlickException;
 
 public class Question {
-
-	private String file;
-	private String answerFile;
-	private int amountOfAnswers;
-	private int answer;
-	private int appeared;
-	private int difficulty;
-	private String[] choices;
-	
+	// this is the question object that holds each individual question attributes
+	private String file; // question file name
+	private String answerFile; // answer file name 
+	private int amountOfAnswers; // amount of answers for question 
+	private int answer; // answer id for answer
+	private int appeared; // has the question appeared
+	private int difficulty; // whats the difficulty
+	private String[] choices; // what are the choices
+	// initialise question
 	public Question (int id, int amountOfAnswers, int answer, int difficulty, String description, String answerDescription, String[] choices) throws SlickException
 	{
 		this.file = description;

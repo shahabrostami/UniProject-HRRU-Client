@@ -1,15 +1,15 @@
 package main;
 
 public class PrisonerScoreResult {
-
-	private int noOfPrisonScores;
-	private int noOfPrisonScoreCoop;
-	private int noOfPrisonScoreBetray;
-	private double psTotal;
-	private int pointsAvailable;
+	// set up prisoner score result
+	private int noOfPrisonScores; // number of prison scores
+	private int noOfPrisonScoreCoop; // number of games cooperated
+	private int noOfPrisonScoreBetray; // number of games betrayed
+	private double psTotal; // total points 
+	private int pointsAvailable; // total points that would be available
 	
-	private double percentage;
-	
+	private double percentage; // % of game score from prisoner
+	// initiate prisoner score results
 	public PrisonerScoreResult(
 			int noOfPrisonScores,
 			int noOfPrisonScoreCoop,
@@ -43,7 +43,7 @@ public class PrisonerScoreResult {
 	public double getPercentage() {
 		return percentage;
 	}
-	
+	// get and set variables for results
 	public void setPercentage(double percentage) {
 		this.percentage = percentage;
 	}

@@ -9,14 +9,14 @@ import main.Main;
 import conn.*;
 
 import TWLSlick.TWLStateBasedGame;
-
+// set up overall game variables
 public class HRRUClient extends TWLStateBasedGame {
-
+	// set up connection variables
 	public static ConnectionState cs;
 	public static Connection conn;
 	public static int ConnectionSuccessful = -1;
 	public static String IP = "2.27.19.165";
-	
+	// set up game variables
 	public static final int main = 0;
 	public static final int host = 1;
 	public static final int join = 2;
@@ -31,6 +31,7 @@ public class HRRUClient extends TWLStateBasedGame {
 	public static final int resY = 600;
 	
  public HRRUClient() {
+	 	// initialise states
 		super("How Rational Are You");
 		cs = new ConnectionState();
 		this.addState(new Main(main));
@@ -46,6 +47,7 @@ public class HRRUClient extends TWLStateBasedGame {
 
 	public static void main(String[] args) {
 		try {
+			// set up container variables
 			AppGameContainer app = new AppGameContainer(new HRRUClient());
 			app.setTargetFrameRate(60);
 			app.setMaximumLogicUpdateInterval(16);

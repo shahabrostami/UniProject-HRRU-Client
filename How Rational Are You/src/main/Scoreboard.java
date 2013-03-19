@@ -18,6 +18,7 @@ import de.matthiasmann.twl.Button;
 
 public class Scoreboard extends BasicTWLGameState {
 
+	// set up initial vairables for client and GUI
 	public Client client;
 	private int enterState;
 	Button btnBack;
@@ -29,17 +30,17 @@ public class Scoreboard extends BasicTWLGameState {
 	// Ticker variables and font variables
 	private int mainFontSize = 14;
 	private int titleFontSize = 20;
-	
+	// font variables
 	private Font loadFont, loadMainFont, loadTitleFont;
 	private BasicFont mainFont, titleFont;
-	
+	// ticker variables
 	private String start_message = "";
 	private String full_start_message = "TOP 10 SCOREBOARD...";
 	private int full_start_counter = 0;
 	private String ticker = "";
 	private boolean tickerBoolean = true;
 	private int clock3, clock2 = 0;
-	
+	// the scors and player score
 	private Score[] scores;
 	private int playerScore;
 	private int playerID;
@@ -129,6 +130,7 @@ public class Scoreboard extends BasicTWLGameState {
 
 	@Override
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
+		// darw the scoreboard
 		g.drawImage(questionbg, 0, 0);
 		g.drawImage(scorebg, 0, 0);
 		g.setFont(titleFont.get());
@@ -136,6 +138,7 @@ public class Scoreboard extends BasicTWLGameState {
 		g.setFont(mainFont.get());
 		for(int i = 0; i < scores.length; i++)
 		{
+			// if the score is belonging to the current player, highlight it
 			if(scores[i].getName().equals(playerName) && scores[i].getScore() == playerScore)
 			{
 				g.drawString(">> " + (i+1), 95, (i*40)+145);

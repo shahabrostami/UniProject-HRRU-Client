@@ -6,7 +6,7 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.util.ResourceLoader;
 
 public class QuestionList {
-	
+	// create a list array of questions
 	private Question[] question_list;
 	private String FILE_NAME;
 	private static int number_of_questions;
@@ -25,7 +25,7 @@ public class QuestionList {
 		number_of_questions = Integer.parseInt(strLine);
 		HRRUClient.cs.no_of_questions = number_of_questions;
 		question_list = new Question[number_of_questions];
-		
+		// set up question variables
 		int question_id, number_of_answers, answer, difficulty;
 		String file, answerFile;
 		String choices[];

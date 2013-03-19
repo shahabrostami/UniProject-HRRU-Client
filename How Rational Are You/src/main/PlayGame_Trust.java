@@ -30,7 +30,7 @@ import de.matthiasmann.twl.TextArea;
 import de.matthiasmann.twl.ValueAdjusterInt;
 
 public class PlayGame_Trust extends BasicTWLGameState {
-	
+	// set up state variables
 	Input input;
 	private int gameState, overallState, sessionID;
 	private final int serverlost = -4;
@@ -38,7 +38,7 @@ public class PlayGame_Trust extends BasicTWLGameState {
 	private final int play = 11;
 	private final int p1_turn = 7;
 	public final int question_points_amount = 100;
-	
+	// set up GUI variables
 	public Client client;
 	DialogLayout giveResultPanel, returnResultPanel;
 	Label lGive, lblGive, lChoose, lblChoose, lKeep, lblKeep;

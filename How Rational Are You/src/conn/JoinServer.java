@@ -116,6 +116,7 @@ public class JoinServer extends BasicTWLGameState {
 	}
 	
 	void enableGUI() {
+		// enable GUI for the menu
 		lName.setVisible(true);
 	    lSessionID.setVisible(true);
 	    lPassword.setVisible(true);
@@ -137,6 +138,7 @@ public class JoinServer extends BasicTWLGameState {
 	}
 	
 	void disableAllGUI() {
+		// disable all gui objects
 		lName.setVisible(false);
 	    lSessionID.setVisible(false);
 	    lPassword.setVisible(false);
@@ -154,6 +156,7 @@ public class JoinServer extends BasicTWLGameState {
 	}
 
 	void disableGUI() {
+		// disable only main gui objects
 	    lName.setVisible(false);
 	    lSessionID.setVisible(false);
 	    lPassword.setVisible(false);
@@ -169,6 +172,7 @@ public class JoinServer extends BasicTWLGameState {
 	}
 	
 	void emulateReady() {
+		// let other player know that this player is ready
 		btnReady.setVisible(false);
 		HRRUClient.cs.setState(ready);
 		readyRequest = new Packet7Ready();
@@ -179,21 +183,25 @@ public class JoinServer extends BasicTWLGameState {
 	}
 	
 	void emulateCancel() {
+		// let the other player know that the game has been cancelled
 		Packet5CancelRequest cancelRequest = new Packet5CancelRequest();
 	    cancelRequest.sessionID = HRRUClient.cs.getSessionID();
 	    HRRUClient.cs.setState(cancelled);
 	    client.sendTCP(cancelRequest);
-	    
+	    // update the prompts
 	    lStatus.setText("Enter your name and game details.");
 	    enableGUI();
 	}
 	
 	void emulateLogin() {
+		// if the player has joined, let other player know that the game has started
 		try {
+			// make sure a name ahs been entered
 			if(efName.getText().isEmpty())
 				lStatus.setText("Please enter a name.");
 			else
 			{
+				// reset prompts for next game state
 				disableGUI();
 				String.valueOf(joinSessionID);
 				joinSessionID = Integer.parseInt(efSessionID.getText());
@@ -208,6 +216,7 @@ public class JoinServer extends BasicTWLGameState {
 			}
 	
 		 } catch (NumberFormatException e) {
+			 // make sure a numerical sessionID has been entered
 			 	HRRUClient.cs.setState(initial);
 		        lStatus.setText("Please enter numbers only for the Session ID.");
 		        enableGUI();
@@ -216,6 +225,7 @@ public class JoinServer extends BasicTWLGameState {
 	}
 	
 	void resetPosition() {
+		// reset GUI positions
 		joinPanel.adjustSize();
 		joinPanel.setPosition(
 	               (gcw/2 - joinPanel.getWidth()/2),
@@ -358,6 +368,7 @@ public class JoinServer extends BasicTWLGameState {
 
 	@Override
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
+		// draw main graphics for title
 		g.setFont(titleFont.get());
 		g.drawString("> " + start_message + "" + ticker, 50, 50);
 	}
@@ -365,6 +376,7 @@ public class JoinServer extends BasicTWLGameState {
 	@Override
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
 		input = gc.getInput();
+		// if tab is pressed, tab into relevant GUI
 		if(input.isKeyPressed(Input.KEY_TAB))
 		{
 			if (efName.hasKeyboardFocus())
@@ -374,6 +386,7 @@ public class JoinServer extends BasicTWLGameState {
 			else if(efPassword.hasKeyboardFocus())
 				efName.requestKeyboardFocus();
 		}
+		// if back pressed, reset variables and go backt o main menu
 		if(back)
 		{
 			lStatus.setText("Enter your name and game details.");
@@ -447,6 +460,7 @@ public class JoinServer extends BasicTWLGameState {
 			lPlayer2.setText("Player 2: \t" + HRRUClient.cs.getP2().getName() + " is ready!");
 			resetPosition();
 		}
+		// if game started, go into next game state
 		else if(state == start)
 		{
 			HRRUClient.cs.setP2(player2);

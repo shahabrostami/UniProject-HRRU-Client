@@ -1,15 +1,15 @@
 package main;
 
 public class QuestionScoreResult {
-
+	// set up question point scale
 	private final int easyPoints = 50;
 	private final int mediumPoints = 100;
 	private final int hardPoints = 150;
 	
-	private int noOfTotalQuestions;
-	private int noOfTotalQCorrect;
-	private double totalQTimeBonusOverall;
-	private double totalQPointsOverall;
+	private int noOfTotalQuestions; // number of questions asked
+	private int noOfTotalQCorrect; // total of question correct
+	private double totalQTimeBonusOverall; // total time bonus gained 
+	private double totalQPointsOverall; // total points gained
 	
 	private int pointsAvailable;
 	

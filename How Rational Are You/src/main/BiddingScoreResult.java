@@ -1,18 +1,18 @@
 package main;
 
 public class BiddingScoreResult {
-
-	double bsOtherPlayerBidTotalW;
-	double bsPlayerBidTotalW;
-	double bsItemValueTotalW;
-	double bsAmountWonTotalW;
-	double bsAmountWonTotalL;
-	double bsOtherPlayerBidTotalL;
-	double bsItemValueTotalL;
-	double bsPlayerBidTotalL;
-	private double percentage;
-	private double pointsAvailable;
-	
+	// store the overall results for playing the bidding game 
+	double bsOtherPlayerBidTotalW; // other player total winnings
+	double bsPlayerBidTotalW; // this player total winnings 
+	double bsItemValueTotalW; // overall values for items
+	double bsAmountWonTotalW; // amount total won 
+	double bsAmountWonTotalL; // amount total lost 
+	double bsOtherPlayerBidTotalL; // other player bid total 
+	double bsItemValueTotalL; // overall value for items lost 
+	double bsPlayerBidTotalL; // this player bid total
+	private double percentage; // % of points from bidding 
+	private double pointsAvailable; // points that were available in bidding
+	// initiate bidding score result object
 	public BiddingScoreResult(
 			int noOfBidScores,
 			int noOfBidScoreWin,
@@ -53,7 +53,7 @@ public class BiddingScoreResult {
 		this.percentage = 0;
 		this.setPointsAvailable((bsItemValueTotalL2 + bsItemValueTotalW2)/2);
 	}
-
+	// get and set function for bidding score results
 	public double getPercentage() {
 		return percentage;
 	}

@@ -2,16 +2,16 @@ package conn;
 
 import main.Player;
 import main.Score;
-
+// store the state of the game
 public class ConnectionState {
-	
+	// initiate required variables for the game
 	private final int initial = -1;
-	private int timer = 300000;	
+	private int timer = 480000;	// start the games timer at this many ms
 	private int player;
 	private Player p1;
 	private Player p2;
 	private int state = initial;
-	private int gameState = 0;
+	private int gameState = 0; 
 	private int activity;
 	private int activity_id;
 	private int secondary_id;
@@ -27,7 +27,7 @@ public class ConnectionState {
 	
 	public ConnectionState(){
 	}
-	
+	// initialise the games connection state
 	public void init(int sessionID, String password, int player){
 		this.player = player;
 		this.sessionID = sessionID;
@@ -35,6 +35,7 @@ public class ConnectionState {
 		this.state = 0;
 	}
 	
+	// get and set functions for the connection state
 	public int getPlayer()
 	{
 		return player;

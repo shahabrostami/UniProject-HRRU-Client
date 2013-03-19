@@ -4,12 +4,12 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
 public class Item {
-
-	private int minValue;
-	private int maxValue;
-	private String name;
-	private String description;
-	private Image itemImage;
+	// initialise item for bid game
+	private int minValue; // minimum value for item
+	private int maxValue; // maximum value for item
+	private String name; // item name 
+	private String description; // item description
+	private Image itemImage; // item image
 	
 	public Item(int id, int minValue, int maxValue, String name, String description, Image itemImage) throws SlickException {
 		this.setMinValue(minValue);

@@ -17,7 +17,7 @@ import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.ToggleButton;
 
 public class Tutorial extends BasicTWLGameState {
-
+	// set up state variables and GUI variables
 	public Client client;
 	private int enterState;
 	Button btnBack, btnNext, btnPrevious;
@@ -70,6 +70,8 @@ public class Tutorial extends BasicTWLGameState {
 	
 	void emulateNext()
 	{
+		// go to next tutorial image. 
+		// if at the end, disable next button
 		if(tutorial_counter < (tutorials.length-1))
 		{
 			tutorial_counter++;
@@ -82,6 +84,8 @@ public class Tutorial extends BasicTWLGameState {
 	
 	void emulatePrevious()
 	{
+		// go to previous tutorial image
+		// if at start, enable next button
 		if(tutorial_counter > 0)
 		{
 			tutorial_counter--;
@@ -173,6 +177,7 @@ public class Tutorial extends BasicTWLGameState {
 
 	@Override
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
+		// draw current tutorial and overall images
 		g.drawImage(questionbg, 0, 0);
 		g.drawImage(currentTutorial, 50, 50);
 		g.setFont(titleFont.get());

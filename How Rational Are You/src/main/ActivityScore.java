@@ -1,16 +1,16 @@
 package main;
 
 public class ActivityScore {
-
-	private int activity;
-	private int activity_id;
-	private int choice;
-	private int points;
-	private int difficulty;
-	private int elapsedtime;
-	private int overall;
-	private boolean correct;
-	
+	// create activity score for players question answer
+	private int activity; // activity, question or game
+	private int activity_id; // which question or game
+	private int choice; // question choice
+	private int points; // points won
+	private int difficulty; // dificulty of question
+	private int elapsedtime; // time taken to answer
+	private int overall; // overall points 
+	private boolean correct; // correct or not
+	// initiate activity score
 	public ActivityScore(int activity, int points, int difficulty, int elapsedtime, int overall, boolean correct)
 	{
 		this.setActivity(activity);
@@ -20,7 +20,7 @@ public class ActivityScore {
 		this.setOverall(overall);
 		this.setCorrect(correct);
 	}
-
+	// get and set functions for activity score
 	public int getActivity() {
 		return activity;
 	}

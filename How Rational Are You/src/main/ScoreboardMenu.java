@@ -17,7 +17,7 @@ import TWLSlick.RootPane;
 import de.matthiasmann.twl.Button;
 
 public class ScoreboardMenu extends BasicTWLGameState {
-
+	// state variables and GUI variables
 	public Client client;
 	private int enterState;
 	Button btnBack;
@@ -110,6 +110,7 @@ public class ScoreboardMenu extends BasicTWLGameState {
 
 	@Override
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
+		// draw the scores for the top 10 
 		g.drawImage(questionbg, 0, 0);
 		g.drawImage(scorebg, 0, 0);
 		g.setFont(titleFont.get());
