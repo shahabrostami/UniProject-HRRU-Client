@@ -6,7 +6,7 @@ import main.Score;
 public class ConnectionState {
 	// initiate required variables for the game
 	private final int initial = -1;
-	private int timer = 480000;	// start the games timer at this many ms
+	private int timer = 100;	// start the games timer at this many ms
 	private int player;
 	private Player p1;
 	private Player p2;

@@ -211,7 +211,7 @@ public class PlayQuestion extends BasicTWLGameState {
 		// Set up question variables
 		questions = question_list.getQuestion_list();
 		
-		current_question_id = HRRUClient.cs.getActivity_id();
+		current_question_id = 6;
 		
 		current_question = questions[current_question_id];
 
